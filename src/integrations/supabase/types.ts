@@ -9,7 +9,57 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      affiliate_clicks: {
+        Row: {
+          clicked_at: string
+          created_at: string
+          id: string
+          marketplace_id: string
+          product_id: string
+          referrer: string | null
+          user_id: string | null
+        }
+        Insert: {
+          clicked_at: string
+          created_at?: string
+          id?: string
+          marketplace_id: string
+          product_id: string
+          referrer?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          clicked_at?: string
+          created_at?: string
+          id?: string
+          marketplace_id?: string
+          product_id?: string
+          referrer?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      marketplace_credentials: {
+        Row: {
+          credentials: Json
+          id: string
+          last_updated: string
+          marketplace_id: string
+        }
+        Insert: {
+          credentials: Json
+          id?: string
+          last_updated?: string
+          marketplace_id: string
+        }
+        Update: {
+          credentials?: Json
+          id?: string
+          last_updated?: string
+          marketplace_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

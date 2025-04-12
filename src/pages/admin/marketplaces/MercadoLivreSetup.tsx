@@ -8,6 +8,12 @@ import { AlertCircle, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
+interface MarketplaceCredentials {
+  marketplace_id: string;
+  credentials: Record<string, string>;
+  last_updated: string;
+}
+
 const MercadoLivreSetup = () => {
   const [apiStatus, setApiStatus] = useState<'connected' | 'disconnected' | 'error' | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,14 +26,11 @@ const MercadoLivreSetup = () => {
       // Save credentials to Supabase
       const { error } = await supabase
         .from('marketplace_credentials')
-        .upsert(
-          { 
-            marketplace_id: 'mercadolivre',
-            credentials: data,
-            last_updated: new Date().toISOString()
-          },
-          { onConflict: 'marketplace_id' }
-        );
+        .upsert({
+          marketplace_id: 'mercadolivre',
+          credentials: data,
+          last_updated: new Date().toISOString()
+        }, { onConflict: 'marketplace_id' });
       
       if (error) throw error;
       

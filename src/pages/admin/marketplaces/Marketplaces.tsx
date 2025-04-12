@@ -12,6 +12,11 @@ interface MarketplaceStatus {
   lastSync?: string;
 }
 
+interface MarketplaceCredentialsData {
+  marketplace_id: string;
+  last_updated: string;
+}
+
 const Marketplaces = () => {
   const [marketplaceStatuses, setMarketplaceStatuses] = useState<MarketplaceStatus[]>([
     { id: 'amazon', status: 'inactive' },
@@ -33,7 +38,7 @@ const Marketplaces = () => {
         if (data && data.length > 0) {
           const newStatuses = [...marketplaceStatuses];
           
-          data.forEach(item => {
+          data.forEach((item: MarketplaceCredentialsData) => {
             const index = newStatuses.findIndex(s => s.id === item.marketplace_id);
             if (index !== -1) {
               newStatuses[index] = {

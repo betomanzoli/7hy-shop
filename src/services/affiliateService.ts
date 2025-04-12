@@ -6,23 +6,24 @@ interface ClickTrackingData {
   productId: string;
   userId?: string;
   referrer?: string;
+  platformType: 'amazon' | 'shopee' | 'mercadolivre';
 }
 
 export async function trackAffiliateClick(data: ClickTrackingData): Promise<void> {
   try {
-    const { marketplaceId, productId, userId, referrer } = data;
+    const { marketplaceId, productId, userId, referrer, platformType } = data;
     
-    const { error } = await supabase
-      .from('affiliate_clicks')
-      .insert([
-        { 
-          marketplace_id: marketplaceId,
-          product_id: productId,
-          user_id: userId,
-          referrer: referrer,
-          clicked_at: new Date().toISOString()
-        }
-      ]);
+    // Call the Supabase Edge Function to track the click
+    const { error } = await supabase.functions.invoke('track-affiliate-click', {
+      body: {
+        marketplaceId,
+        productId,
+        userId,
+        referrer,
+        platformType,
+        originalUrl: window.location.href
+      }
+    });
     
     if (error) {
       console.error('Error tracking affiliate click:', error);
@@ -68,7 +69,8 @@ export function handleProductRedirect(
     marketplaceId,
     productId,
     userId,
-    referrer: window.location.href
+    referrer: window.location.href,
+    platformType
   });
   
   return affiliateUrl;
