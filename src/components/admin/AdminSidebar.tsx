@@ -10,6 +10,7 @@ import {
   LogOut,
   Store
 } from 'lucide-react';
+import { Logo } from '@/components/ui/logo';
 
 const sidebarLinks = [
   {
@@ -45,10 +46,7 @@ export function AdminSidebar() {
   return (
     <aside className="hidden md:flex h-screen w-64 flex-col border-r bg-muted/40 fixed top-0 left-0">
       <div className="flex h-14 items-center border-b px-4">
-        <Link to="/admin" className="flex items-center gap-2 font-semibold">
-          <span className="font-bold text-xl text-brand-700">7hy<span className="text-brand-500">.shop</span></span>
-          <span className="text-xs font-normal text-muted-foreground">Admin</span>
-        </Link>
+        <Logo variant="admin" />
       </div>
       <div className="flex-1 overflow-auto py-2">
         <nav className="grid items-start px-2 text-sm font-medium">

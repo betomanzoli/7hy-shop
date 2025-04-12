@@ -21,6 +21,7 @@ import MercadoLivreSetup from "./pages/admin/marketplaces/MercadoLivreSetup";
 import ProductsPage from "./pages/admin/products/ProductsPage";
 import OrdersPage from "./pages/admin/orders/OrdersPage";
 import AffiliateAnalytics from "./pages/admin/analytics/AffiliateAnalytics";
+import Cart from "./pages/Cart";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
           <Route path="/amazon" element={<Amazon />} />
           <Route path="/shopee" element={<Shopee />} />
           <Route path="/mercadolivre" element={<MercadoLivre />} />
+          <Route path="/cart" element={<Cart />} />
           
           {/* Admin Pages */}
           <Route path="/admin-login" element={<AdminLogin />} />

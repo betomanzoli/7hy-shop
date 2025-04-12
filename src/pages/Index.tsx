@@ -3,7 +3,11 @@ import React from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, ArrowRight } from 'lucide-react';
+import { ShoppingBag, ArrowRight, Search, CircleDollarSign, ShieldCheck, HelpCircle } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { MarketplaceLogo } from '@/components/marketplace/MarketplaceLogo';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Info } from 'lucide-react';
 
 const Index = () => {
   return (
@@ -40,35 +44,91 @@ const Index = () => {
               Integrado com seus marketplaces favoritos
             </p>
             <div className="flex flex-wrap justify-center gap-8 md:gap-16">
-              <div className="flex items-center h-8">
-                <div className="marketplace-icon amazon mr-2">A</div>
-                <span className="font-semibold">Amazon</span>
+              <div className="group flex items-center transform transition-all duration-300 hover:scale-110">
+                <MarketplaceLogo type="amazon" size="md" />
               </div>
-              <div className="flex items-center h-8">
-                <div className="marketplace-icon shopee mr-2">S</div>
-                <span className="font-semibold">Shopee</span>
+              <div className="group flex items-center transform transition-all duration-300 hover:scale-110">
+                <MarketplaceLogo type="shopee" size="md" />
               </div>
-              <div className="flex items-center h-8">
-                <div className="marketplace-icon mercadolivre mr-2">M</div>
-                <span className="font-semibold">Mercado Livre</span>
+              <div className="group flex items-center transform transition-all duration-300 hover:scale-110">
+                <MarketplaceLogo type="mercadolivre" size="md" />
               </div>
             </div>
           </div>
         </div>
       </section>
       
-      {/* Features Section */}
-      <section className="py-20 bg-white dark:bg-gray-950">
+      {/* How It Works Section */}
+      <section className="py-16 bg-white dark:bg-gray-950">
         <div className="container px-4">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
+            <Badge variant="outline" className="mb-4 px-3 py-1 text-sm">Como Funciona</Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Tudo o que Você Precisa em Um Só Lugar</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Compre em várias plataformas sem o incômodo de alternar entre sites.
+              Nós simplificamos sua experiência de compras, mas a compra e o pagamento são sempre realizados 
+              diretamente na plataforma original do marketplace.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div className="flex flex-col items-center text-center p-6">
+              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-4">
+                <Search className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Pesquise & Compare</h3>
+              <p className="text-muted-foreground">
+                Busque produtos em diversos marketplaces simultaneamente e compare preços, avaliações e condições de entrega.
+              </p>
+            </div>
+            
+            <div className="flex flex-col items-center text-center p-6">
+              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-4">
+                <CircleDollarSign className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Escolha o Melhor</h3>
+              <p className="text-muted-foreground">
+                Identifique o marketplace que oferece as melhores condições para o produto que você deseja comprar.
+              </p>
+            </div>
+            
+            <div className="flex flex-col items-center text-center p-6">
+              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-4">
+                <ShieldCheck className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Compra Segura</h3>
+              <p className="text-muted-foreground">
+                Finalize sua compra diretamente no site oficial do marketplace escolhido, com toda a segurança e garantias.
+              </p>
+            </div>
+          </div>
+          
+          <div className="mt-12">
+            <Alert className="max-w-3xl mx-auto">
+              <Info className="h-4 w-4" />
+              <AlertTitle>Importante</AlertTitle>
+              <AlertDescription>
+                O 7hy.shop não é uma loja virtual. Somos um agregador que facilita sua pesquisa e comparação de produtos. 
+                Todas as compras e pagamentos são realizados diretamente nos sites oficiais dos marketplaces (Amazon, Shopee, Mercado Livre), 
+                garantindo total segurança nas suas transações.
+              </AlertDescription>
+            </Alert>
+          </div>
+        </div>
+      </section>
+      
+      {/* Features Section */}
+      <section className="py-20 bg-blue-50 dark:bg-gray-900">
+        <div className="container px-4">
+          <div className="text-center mb-16">
+            <Badge variant="outline" className="mb-4 px-3 py-1 text-sm">Benefícios</Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Por que usar o 7hy.shop?</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Economize tempo e dinheiro enquanto encontra os melhores produtos em múltiplas plataformas.
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-blue-50 dark:bg-gray-900 p-6 rounded-lg">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm transition-all hover:shadow-md">
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 dark:text-blue-400"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
               </div>
@@ -78,23 +138,59 @@ const Index = () => {
               </p>
             </div>
             
-            <div className="bg-blue-50 dark:bg-gray-900 p-6 rounded-lg">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm transition-all hover:shadow-md">
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 dark:text-blue-400"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 dark:text-blue-400"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Checkout Simplificado</h3>
+              <h3 className="text-xl font-semibold mb-2">Comparação de Preços</h3>
               <p className="text-muted-foreground">
-                Um carrinho para todas as suas compras, independentemente do marketplace de origem.
+                Compare preços entre Amazon, Shopee e Mercado Livre para encontrar as melhores ofertas.
               </p>
             </div>
             
-            <div className="bg-blue-50 dark:bg-gray-900 p-6 rounded-lg">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm transition-all hover:shadow-md">
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 dark:text-blue-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
               </div>
               <h3 className="text-xl font-semibold mb-2">Produtos Verificados</h3>
               <p className="text-muted-foreground">
                 Todos os anúncios são verificados quanto à autenticidade e qualidade em todos os marketplaces.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* FAQ Section */}
+      <section className="py-20 bg-white dark:bg-gray-950">
+        <div className="container px-4">
+          <div className="text-center mb-12">
+            <Badge variant="outline" className="mb-4 px-3 py-1 text-sm">Perguntas Frequentes</Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Como Podemos Ajudar?</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Respostas para as dúvidas mais comuns sobre o 7hy.shop
+            </p>
+          </div>
+          
+          <div className="max-w-3xl mx-auto space-y-6">
+            <div className="bg-blue-50 dark:bg-gray-900 p-6 rounded-lg">
+              <h3 className="text-lg font-semibold mb-2">Como o 7hy.shop ganha dinheiro?</h3>
+              <p className="text-muted-foreground">
+                Somos parceiros dos programas de afiliados oficiais da Amazon, Shopee e Mercado Livre. Quando você realiza uma compra através dos nossos links, recebemos uma pequena comissão, sem qualquer custo adicional para você.
+              </p>
+            </div>
+            
+            <div className="bg-blue-50 dark:bg-gray-900 p-6 rounded-lg">
+              <h3 className="text-lg font-semibold mb-2">Os preços são os mesmos dos sites oficiais?</h3>
+              <p className="text-muted-foreground">
+                Sim! Você verá exatamente os mesmos preços que estão nos sites oficiais dos marketplaces. Não adicionamos nenhuma taxa ou custo extra.
+              </p>
+            </div>
+            
+            <div className="bg-blue-50 dark:bg-gray-900 p-6 rounded-lg">
+              <h3 className="text-lg font-semibold mb-2">Onde faço o pagamento da minha compra?</h3>
+              <p className="text-muted-foreground">
+                Todas as compras e pagamentos são realizados diretamente nos sites oficiais dos marketplaces. O 7hy.shop apenas direciona você para o produto desejado no site oficial.
               </p>
             </div>
           </div>

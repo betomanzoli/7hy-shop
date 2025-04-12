@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { ShoppingCart, User, Menu } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { MobileNav } from './MobileNav';
+import { Logo } from '@/components/ui/logo';
 
 export function Header() {
   return (
@@ -23,9 +24,7 @@ export function Header() {
             </SheetContent>
           </Sheet>
           
-          <Link to="/" className="flex items-center gap-2">
-            <span className="font-bold text-2xl text-brand-700">7hy<span className="text-brand-500">.shop</span></span>
-          </Link>
+          <Logo />
         </div>
         
         <nav className="hidden md:flex items-center gap-6">

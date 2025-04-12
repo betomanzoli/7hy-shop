@@ -2,7 +2,8 @@
 import React, { useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Home, ArrowLeft, Search } from "lucide-react";
+import { Home, ArrowLeft, Search, HelpCircle } from "lucide-react";
+import { Logo } from "@/components/ui/logo";
 
 const NotFound = () => {
   const location = useLocation();
@@ -25,7 +26,15 @@ const NotFound = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-muted/40 p-6 text-center">
       <div className="max-w-md w-full">
-        <h1 className="text-9xl font-bold text-brand-600">404</h1>
+        <div className="mb-6 flex justify-center">
+          <Logo animated={false} />
+        </div>
+        
+        <div className="relative">
+          <h1 className="text-9xl font-bold text-brand-600 opacity-90">404</h1>
+          <HelpCircle className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white h-20 w-20" />
+        </div>
+        
         <h2 className="text-3xl font-semibold mt-6 mb-2">Página Não Encontrada</h2>
         
         <p className="text-lg text-muted-foreground mb-8">
