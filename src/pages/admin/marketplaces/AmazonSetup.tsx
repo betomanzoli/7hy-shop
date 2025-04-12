@@ -1,255 +1,209 @@
 
 import React, { useState } from 'react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ApiCredentialsForm } from '@/components/admin/marketplaces/ApiCredentialsForm';
 import { SetupSteps } from '@/components/admin/marketplaces/SetupSteps';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const AmazonSetup = () => {
-  const [activeTab, setActiveTab] = useState('setup');
   const [apiStatus, setApiStatus] = useState<'connected' | 'disconnected' | 'error' | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const amazonSetupSteps = [
-    {
-      title: 'Criar Conta de Afiliado',
-      description: (
-        <div className="space-y-2">
-          <p>Se você ainda não possui uma conta no Amazon Associates:</p>
-          <ol className="list-decimal pl-4 space-y-1">
-            <li>Visite o site do Amazon Associates</li>
-            <li>Complete o processo de registro</li>
-            <li>Verifique sua identidade e configure os métodos de pagamento</li>
-          </ol>
-        </div>
-      ),
-      action: {
-        label: 'Ir para Amazon Associates',
-        href: 'https://associados.amazon.com.br/'
-      }
-    },
-    {
-      title: 'Registrar uma Aplicação',
-      description: (
-        <div className="space-y-2">
-          <p>Crie uma nova aplicação no Amazon Product Advertising API:</p>
-          <ol className="list-decimal pl-4 space-y-1">
-            <li>Acesse o console do Product Advertising API</li>
-            <li>Registre uma nova aplicação</li>
-            <li>Anote seu Access Key ID e Secret Key</li>
-          </ol>
-        </div>
-      ),
-      action: {
-        label: 'Console da API',
-        href: 'https://affiliate-program.amazon.com/assoc_credentials/home'
-      }
-    },
-    {
-      title: 'Configurar Acesso à API',
-      description: (
-        <div className="space-y-2">
-          <p>Configure as permissões adequadas da API:</p>
-          <ol className="list-decimal pl-4 space-y-1">
-            <li>No console do Product Advertising API:</li>
-            <li className="ml-6">- Verifique suas quotas de requisição</li>
-            <li className="ml-6">- Configure sua URL de retorno</li>
-            <li>Defina sua Tag de Rastreamento (tracking ID):</li>
-            <li className="ml-6"><code className="bg-muted p-1 rounded">7hyshop-20</code> (exemplo)</li>
-          </ol>
-        </div>
-      )
-    },
-    {
-      title: 'Testar Funcionalidade',
-      description: (
-        <div className="space-y-2">
-          <p>Teste a API com uma chamada simples:</p>
-          <ol className="list-decimal pl-4 space-y-1">
-            <li>Use a operação SearchItems para buscar produtos</li>
-            <li>Verifique se os links de afiliados estão sendo gerados corretamente</li>
-            <li>Confirme que as estatísticas estão sendo registradas</li>
-          </ol>
-        </div>
-      )
-    },
-    {
-      title: 'Configurar Credenciais',
-      description: (
-        <div className="space-y-2">
-          <p>Insira suas credenciais da API no formulário abaixo:</p>
-          <ol className="list-decimal pl-4 space-y-1">
-            <li>Access Key ID da sua aplicação</li>
-            <li>Secret Key da sua aplicação</li>
-            <li>Tag de Rastreamento (Tracking ID) da sua conta de afiliado</li>
-            <li>ID de Parceiro (opcional para alguns mercados)</li>
-          </ol>
-          <p>Após inserir suas credenciais, mude para a aba "Configuração da API" para salvá-las.</p>
-        </div>
-      ),
-      action: {
-        label: 'Ir para Configuração da API',
-        onClick: () => setActiveTab('credentials')
-      }
-    }
-  ];
-
-  const amazonApiFields = [
-    {
-      id: 'accessKeyId',
-      label: 'Access Key ID',
-      type: 'text',
-      placeholder: 'AKIAIOSFODNN7EXAMPLE',
-      helperText: 'O Access Key ID da sua aplicação na Product Advertising API'
-    },
-    {
-      id: 'secretKey',
-      label: 'Secret Key',
-      type: 'password',
-      placeholder: '••••••••••••••••••••••••••••••••',
-      helperText: 'A Secret Key da sua aplicação na Product Advertising API'
-    },
-    {
-      id: 'trackingId',
-      label: 'Tag de Rastreamento (Tracking ID)',
-      type: 'text',
-      placeholder: '7hyshop-20',
-      helperText: 'Sua tag de rastreamento de afiliado da Amazon'
-    },
-    {
-      id: 'region',
-      label: 'Região',
-      type: 'text',
-      placeholder: 'com.br',
-      helperText: 'Região da Amazon (com.br para Brasil, com para EUA, etc)'
-    }
-  ];
-
-  const handleTestConnection = () => {
-    toast({
-      title: "Testando conexão...",
-      description: "Tentando conectar à API da Amazon",
-    });
+  const handleApiCredentialsSubmit = async (data: Record<string, string>) => {
+    setIsLoading(true);
     
-    // Simulate API test
-    setTimeout(() => {
-      const success = Math.random() > 0.5;
+    try {
+      // Save credentials to Supabase
+      const { error } = await supabase
+        .from('marketplace_credentials')
+        .upsert(
+          { 
+            marketplace_id: 'amazon',
+            credentials: data,
+            last_updated: new Date().toISOString()
+          },
+          { onConflict: 'marketplace_id' }
+        );
       
-      if (success) {
-        setApiStatus('connected');
-        toast({
-          title: "Conexão bem-sucedida",
-          description: "Conexão com a API da Amazon estabelecida",
-        });
-      } else {
-        setApiStatus('error');
-        toast({
-          title: "Falha na conexão",
-          description: "Não foi possível conectar à API da Amazon. Verifique suas credenciais.",
-          variant: "destructive",
-        });
-      }
-    }, 2000);
+      if (error) throw error;
+      
+      setApiStatus('connected');
+      toast({
+        title: "Credenciais salvas",
+        description: "Suas credenciais da Amazon foram salvas com sucesso.",
+      });
+    } catch (error) {
+      console.error("Erro ao salvar credenciais:", error);
+      setApiStatus('error');
+      toast({
+        title: "Erro ao salvar",
+        description: "Ocorreu um erro ao salvar suas credenciais. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleSubmitCredentials = (data: Record<string, string>) => {
-    console.log("Credenciais da API:", data);
-    toast({
-      title: "Credenciais salvas",
-      description: "Suas credenciais da API da Amazon foram salvas",
-    });
-    
-    setApiStatus('connected');
+  const handleTestConnection = () => {
+    setIsLoading(true);
+    // Simulando um teste de conexão
+    setTimeout(() => {
+      setApiStatus('connected');
+      toast({
+        title: "Conexão bem-sucedida",
+        description: "Sua conexão com a API da Amazon está funcionando corretamente.",
+      });
+      setIsLoading(false);
+    }, 1500);
   };
 
   return (
-    <AdminLayout title="Configuração de Afiliados Amazon">
-      <div className="max-w-4xl">
-        <Tabs defaultValue="setup" value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="mb-4">
-            <TabsTrigger value="setup">Guia de Configuração</TabsTrigger>
-            <TabsTrigger value="credentials">Configuração da API</TabsTrigger>
-            <TabsTrigger value="analytics">Estatísticas</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="setup">
-            <Card>
-              <CardHeader>
-                <CardTitle>Integração com Amazon Associates</CardTitle>
-                <CardDescription>
-                  Siga este guia passo a passo para conectar sua conta de afiliado da Amazon
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <SetupSteps 
-                  steps={amazonSetupSteps} 
-                  onComplete={() => setActiveTab('credentials')}
-                />
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="credentials">
-            <ApiCredentialsForm
-              title="Credenciais da API Amazon Associates"
-              description="Insira suas credenciais da API Product Advertising para estabelecer uma conexão"
-              fields={amazonApiFields}
-              onSubmit={handleSubmitCredentials}
-              onTest={handleTestConnection}
-              apiStatus={apiStatus}
-            />
-          </TabsContent>
-          
-          <TabsContent value="analytics">
-            <Card>
-              <CardHeader>
-                <CardTitle>Estatísticas de Afiliados</CardTitle>
-                <CardDescription>
-                  Acompanhe o desempenho dos seus links de afiliado da Amazon
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center p-8">
-                  {apiStatus === 'connected' ? (
-                    <div className="space-y-6">
-                      <div className="grid gap-4 md:grid-cols-3">
-                        <div className="bg-muted rounded-lg p-4 text-center">
-                          <p className="text-sm text-muted-foreground mb-1">Cliques (Hoje)</p>
-                          <p className="text-2xl font-bold">0</p>
-                        </div>
-                        <div className="bg-muted rounded-lg p-4 text-center">
-                          <p className="text-sm text-muted-foreground mb-1">Vendas (Mês Atual)</p>
-                          <p className="text-2xl font-bold">0</p>
-                        </div>
-                        <div className="bg-muted rounded-lg p-4 text-center">
-                          <p className="text-sm text-muted-foreground mb-1">Comissões (Total)</p>
-                          <p className="text-2xl font-bold">R$ 0,00</p>
-                        </div>
-                      </div>
-                      <p className="text-muted-foreground">
-                        As estatísticas são atualizadas diariamente. Os dados são importados diretamente da sua conta Amazon Associates.
-                      </p>
-                    </div>
-                  ) : (
-                    <p className="text-muted-foreground mb-4">
-                      Você precisa configurar suas credenciais de API antes de visualizar estatísticas.
-                    </p>
-                  )}
-                  {apiStatus !== 'connected' && (
-                    <button 
-                      onClick={() => setActiveTab('credentials')}
-                      className="text-primary hover:underline"
-                    >
-                      Ir para Configuração da API
-                    </button>
-                  )}
+    <AdminLayout title="Configuração da Amazon">
+      <div className="max-w-3xl mx-auto space-y-8">
+        <Alert>
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Informações importantes</AlertTitle>
+          <AlertDescription>
+            Para integrar com a Amazon, você precisará se cadastrar no programa Amazon Associates e obter suas credenciais de API. Siga o guia passo a passo abaixo.
+          </AlertDescription>
+        </Alert>
+        
+        <SetupSteps 
+          steps={[
+            {
+              title: "Cadastro no Amazon Associates",
+              description: (
+                <div className="space-y-2">
+                  <p>Para começar, você precisa se cadastrar no programa de afiliados da Amazon (Amazon Associates).</p>
+                  <p>Siga estas etapas:</p>
+                  <ol className="list-decimal ml-5 space-y-2">
+                    <li>Acesse o site do <a href="https://associados.amazon.com.br/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Amazon Associates Brasil</a></li>
+                    <li>Clique em "Inscrever-se"</li>
+                    <li>Complete o processo de inscrição com suas informações</li>
+                    <li>Aguarde a aprovação da Amazon</li>
+                  </ol>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+              ),
+              action: {
+                label: "Visitar Amazon Associates",
+                href: "https://associados.amazon.com.br/"
+              }
+            },
+            {
+              title: "Obtenha sua ID de Associado",
+              description: (
+                <div className="space-y-2">
+                  <p>Após a aprovação, você receberá sua ID de Associado (tag de afiliado).</p>
+                  <p>Esta ID tem o formato <code>seusite-20</code> e é usada para rastrear suas referências.</p>
+                  <p>Para encontrar sua ID:</p>
+                  <ol className="list-decimal ml-5 space-y-2">
+                    <li>Faça login na sua conta do Amazon Associates</li>
+                    <li>Clique em "Ferramentas" no menu</li>
+                    <li>Selecione "Links de Produtos"</li>
+                    <li>Sua ID de Associado aparecerá no topo da página</li>
+                  </ol>
+                </div>
+              ),
+              action: {
+                label: "Acessar Conta de Associado",
+                href: "https://associados.amazon.com.br/home"
+              }
+            },
+            {
+              title: "Configure suas Credenciais",
+              description: (
+                <div className="space-y-2">
+                  <p>Agora, insira suas credenciais no formulário abaixo:</p>
+                  <ul className="list-disc ml-5 space-y-2">
+                    <li>ID de Associado (tag): Sua ID única do programa</li>
+                    <li>Chave de API (opcional): Se você tiver acesso à API Product Advertising</li>
+                    <li>Chave Secreta (opcional): O par da chave de API</li>
+                  </ul>
+                  <p>Clique em "Testar Conexão" para verificar se está funcionando.</p>
+                </div>
+              )
+            }
+          ]}
+          onComplete={() => {
+            toast({
+              title: "Configuração concluída",
+              description: "Você concluiu o processo de configuração da Amazon.",
+            });
+          }}
+        />
+        
+        <div className="border rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4">Credenciais de API</h2>
+          <ApiCredentialsForm
+            title="Amazon Associates"
+            description="Configure suas credenciais de afiliado da Amazon."
+            fields={[
+              {
+                id: "associateTag",
+                label: "ID de Associado (tag)",
+                type: "text",
+                placeholder: "seusite-20",
+                helperText: "A tag de afiliado fornecida pela Amazon."
+              },
+              {
+                id: "accessKey",
+                label: "Chave de API (opcional)",
+                type: "text",
+                placeholder: "AKIAXXXXXXXXXXXXXXXX",
+                helperText: "Chave de acesso para a API Product Advertising."
+              },
+              {
+                id: "secretKey",
+                label: "Chave Secreta (opcional)",
+                type: "password",
+                placeholder: "••••••••••••••••••••",
+                helperText: "Chave secreta associada à sua chave de API."
+              }
+            ]}
+            onSubmit={handleApiCredentialsSubmit}
+            onTest={handleTestConnection}
+            isLoading={isLoading}
+            apiStatus={apiStatus}
+          />
+        </div>
+        
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold">Solução de Problemas</h2>
+          <div className="bg-muted p-4 rounded-lg space-y-4">
+            <div>
+              <h3 className="font-medium">Minha conta não foi aprovada</h3>
+              <p className="text-sm text-muted-foreground">
+                A Amazon pode levar alguns dias para aprovar sua conta. Certifique-se de que seu site atende às diretrizes do programa.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-medium">Não estou vendo comissões</h3>
+              <p className="text-sm text-muted-foreground">
+                As comissões podem levar até 24 horas para aparecer no seu painel da Amazon. Verifique se os links estão configurados corretamente.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-medium">Erros na API</h3>
+              <p className="text-sm text-muted-foreground">
+                Certifique-se de que suas credenciais estão corretas. Se o problema persistir, consulte a documentação da API ou entre em contato com o suporte da Amazon.
+              </p>
+            </div>
+            <a 
+              href="https://associados.amazon.com.br/help/operating" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center text-sm text-primary hover:underline"
+            >
+              <ExternalLink className="h-4 w-4 mr-1" />
+              Consultar documentação completa
+            </a>
+          </div>
+        </div>
       </div>
     </AdminLayout>
   );

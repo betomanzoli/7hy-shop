@@ -13,6 +13,7 @@ import AmazonSetup from "./pages/admin/marketplaces/AmazonSetup";
 import ShopeeSetup from "./pages/admin/marketplaces/ShopeeSetup";
 import MercadoLivreSetup from "./pages/admin/marketplaces/MercadoLivreSetup";
 import ProductsPage from "./pages/admin/products/ProductsPage";
+import AffiliateAnalytics from "./pages/admin/analytics/AffiliateAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/admin/marketplaces/shopee" element={<ShopeeSetup />} />
           <Route path="/admin/marketplaces/mercadolivre" element={<MercadoLivreSetup />} />
           <Route path="/admin/products" element={<ProductsPage />} />
+          <Route path="/admin/analytics" element={<AffiliateAnalytics />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

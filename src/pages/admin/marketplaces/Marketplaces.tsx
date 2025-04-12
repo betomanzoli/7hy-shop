@@ -1,11 +1,67 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { MarketplaceCard } from '@/components/admin/marketplaces/MarketplaceCard';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+
+interface MarketplaceStatus {
+  id: string;
+  status: 'active' | 'inactive' | 'pending' | 'error';
+  lastSync?: string;
+}
 
 const Marketplaces = () => {
+  const [marketplaceStatuses, setMarketplaceStatuses] = useState<MarketplaceStatus[]>([
+    { id: 'amazon', status: 'inactive' },
+    { id: 'shopee', status: 'inactive' },
+    { id: 'mercadolivre', status: 'inactive' }
+  ]);
+  
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMarketplaceCredentials = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('marketplace_credentials')
+          .select('marketplace_id, last_updated');
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          const newStatuses = [...marketplaceStatuses];
+          
+          data.forEach(item => {
+            const index = newStatuses.findIndex(s => s.id === item.marketplace_id);
+            if (index !== -1) {
+              newStatuses[index] = {
+                ...newStatuses[index],
+                status: 'active',
+                lastSync: new Date(item.last_updated).toLocaleDateString('pt-BR', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })
+              };
+            }
+          });
+          
+          setMarketplaceStatuses(newStatuses);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar credenciais:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMarketplaceCredentials();
+  }, []);
+
   return (
     <AdminLayout title="Integrações de Afiliados">
       <div className="max-w-5xl">
@@ -24,7 +80,8 @@ const Marketplaces = () => {
             icon={
               <div className="text-marketplace-amazon font-bold text-xl">A</div>
             }
-            status="inactive"
+            status={marketplaceStatuses.find(s => s.id === 'amazon')?.status || 'inactive'}
+            lastSync={marketplaceStatuses.find(s => s.id === 'amazon')?.lastSync}
             setupLink="/admin/marketplaces/amazon"
             docsLink="https://associados.amazon.com.br/"
           />
@@ -35,7 +92,8 @@ const Marketplaces = () => {
             icon={
               <div className="text-marketplace-shopee font-bold text-xl">S</div>
             }
-            status="inactive"
+            status={marketplaceStatuses.find(s => s.id === 'shopee')?.status || 'inactive'}
+            lastSync={marketplaceStatuses.find(s => s.id === 'shopee')?.lastSync}
             setupLink="/admin/marketplaces/shopee"
             docsLink="https://affiliate.shopee.com.br/"
           />
@@ -46,7 +104,8 @@ const Marketplaces = () => {
             icon={
               <div className="text-marketplace-mercadolivre font-bold text-xl">M</div>
             }
-            status="inactive"
+            status={marketplaceStatuses.find(s => s.id === 'mercadolivre')?.status || 'inactive'}
+            lastSync={marketplaceStatuses.find(s => s.id === 'mercadolivre')?.lastSync}
             setupLink="/admin/marketplaces/mercadolivre"
             docsLink="https://www.mercadolivre.com.br/brandprotection/affiliates"
           />

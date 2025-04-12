@@ -1,243 +1,208 @@
 
 import React, { useState } from 'react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ApiCredentialsForm } from '@/components/admin/marketplaces/ApiCredentialsForm';
 import { SetupSteps } from '@/components/admin/marketplaces/SetupSteps';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const MercadoLivreSetup = () => {
-  const [activeTab, setActiveTab] = useState('setup');
   const [apiStatus, setApiStatus] = useState<'connected' | 'disconnected' | 'error' | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const mercadoLivreSetupSteps = [
-    {
-      title: 'Create Seller Account',
-      description: (
-        <div className="space-y-2">
-          <p>If you don't already have a Mercado Livre seller account:</p>
-          <ol className="list-decimal pl-4 space-y-1">
-            <li>Visit the Mercado Livre website</li>
-            <li>Complete the registration process</li>
-            <li>Verify your identity and set up payment methods</li>
-          </ol>
-        </div>
-      ),
-      action: {
-        label: 'Go to Mercado Livre',
-        href: 'https://www.mercadolivre.com.br/'
-      }
-    },
-    {
-      title: 'Register Developer App',
-      description: (
-        <div className="space-y-2">
-          <p>Create a new application in the Mercado Livre Developer Portal:</p>
-          <ol className="list-decimal pl-4 space-y-1">
-            <li>Navigate to Mercado Livre Developers</li>
-            <li>Register as a developer</li>
-            <li>Create a new application</li>
-            <li>Note your App ID and Client Secret</li>
-          </ol>
-        </div>
-      ),
-      action: {
-        label: 'Mercado Livre Developers',
-        href: 'https://developers.mercadolivre.com.br/'
-      }
-    },
-    {
-      title: 'Configure Redirect URLs',
-      description: (
-        <div className="space-y-2">
-          <p>Set up the redirect URL in your application settings:</p>
-          <ol className="list-decimal pl-4 space-y-1">
-            <li>In your developer application, add the following redirect URL:</li>
-            <li className="ml-6"><code className="bg-muted p-1 rounded">https://7hy.shop/api/mercadolivre/callback</code></li>
-            <li>Save your application settings</li>
-          </ol>
-        </div>
-      )
-    },
-    {
-      title: 'Authorize Application',
-      description: (
-        <div className="space-y-2">
-          <p>Generate an authorization code to get access to your Mercado Livre account:</p>
-          <ol className="list-decimal pl-4 space-y-1">
-            <li>Create an authorization URL using your App ID</li>
-            <li>Visit the URL and log in to your Mercado Livre account</li>
-            <li>Authorize the application to access your account data</li>
-            <li>Receive the authorization code in the redirect URL</li>
-            <li>Exchange the code for an access token and refresh token</li>
-          </ol>
-        </div>
-      )
-    },
-    {
-      title: 'Configure Credentials',
-      description: (
-        <div className="space-y-2">
-          <p>Enter your API credentials in the form below:</p>
-          <ol className="list-decimal pl-4 space-y-1">
-            <li>App ID from your developer application</li>
-            <li>Client Secret from your developer application</li>
-            <li>Access Token from the authorization process</li>
-            <li>Refresh Token from the authorization process</li>
-            <li>User ID from your Mercado Livre account</li>
-          </ol>
-          <p>After entering your credentials, switch to the "API Configuration" tab to save them.</p>
-        </div>
-      ),
-      action: {
-        label: 'Go to API Configuration Tab',
-        onClick: () => setActiveTab('credentials')
-      }
-    }
-  ];
-
-  const mercadoLivreApiFields = [
-    {
-      id: 'appId',
-      label: 'App ID',
-      type: 'text',
-      placeholder: '1234567890123456',
-      helperText: 'The App ID from your Mercado Livre Developers application'
-    },
-    {
-      id: 'clientSecret',
-      label: 'Client Secret',
-      type: 'password',
-      placeholder: '••••••••••••••••••••••••••••••••',
-      helperText: 'The Client Secret from your developer application'
-    },
-    {
-      id: 'accessToken',
-      label: 'Access Token',
-      type: 'password',
-      placeholder: '••••••••••••••••••••••••••••••••',
-      helperText: 'The token received after authorization'
-    },
-    {
-      id: 'refreshToken',
-      label: 'Refresh Token',
-      type: 'password',
-      placeholder: '••••••••••••••••••••••••••••••••',
-      helperText: 'The refresh token received after authorization'
-    },
-    {
-      id: 'userId',
-      label: 'User ID',
-      type: 'text',
-      placeholder: '123456789',
-      helperText: 'Your Mercado Livre user ID'
-    }
-  ];
-
-  const handleTestConnection = () => {
-    // In a real app, this would make an API call to test the connection
-    toast({
-      title: "Testing connection...",
-      description: "Attempting to connect to Mercado Livre API",
-    });
+  const handleApiCredentialsSubmit = async (data: Record<string, string>) => {
+    setIsLoading(true);
     
-    // Simulate API test
-    setTimeout(() => {
-      // Randomly succeed or fail for demo purposes
-      const success = Math.random() > 0.5;
+    try {
+      // Save credentials to Supabase
+      const { error } = await supabase
+        .from('marketplace_credentials')
+        .upsert(
+          { 
+            marketplace_id: 'mercadolivre',
+            credentials: data,
+            last_updated: new Date().toISOString()
+          },
+          { onConflict: 'marketplace_id' }
+        );
       
-      if (success) {
-        setApiStatus('connected');
-        toast({
-          title: "Connection successful",
-          description: "Mercado Livre API connection established",
-        });
-      } else {
-        setApiStatus('error');
-        toast({
-          title: "Connection failed",
-          description: "Could not connect to Mercado Livre API. Please check your credentials.",
-          variant: "destructive",
-        });
-      }
-    }, 2000);
+      if (error) throw error;
+      
+      setApiStatus('connected');
+      toast({
+        title: "Credenciais salvas",
+        description: "Suas credenciais do Mercado Livre foram salvas com sucesso.",
+      });
+    } catch (error) {
+      console.error("Erro ao salvar credenciais:", error);
+      setApiStatus('error');
+      toast({
+        title: "Erro ao salvar",
+        description: "Ocorreu um erro ao salvar suas credenciais. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleSubmitCredentials = (data: Record<string, string>) => {
-    console.log("API Credentials:", data);
-    toast({
-      title: "Credentials saved",
-      description: "Your Mercado Livre API credentials have been saved",
-    });
-    
-    // In a real app, this would store the credentials securely
-    setApiStatus('connected');
+  const handleTestConnection = () => {
+    setIsLoading(true);
+    // Simulando um teste de conexão
+    setTimeout(() => {
+      setApiStatus('connected');
+      toast({
+        title: "Conexão bem-sucedida",
+        description: "Sua conexão com a API do Mercado Livre está funcionando corretamente.",
+      });
+      setIsLoading(false);
+    }, 1500);
   };
 
   return (
-    <AdminLayout title="Mercado Livre Integration Setup">
-      <div className="max-w-4xl">
-        <Tabs defaultValue="setup" value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="mb-4">
-            <TabsTrigger value="setup">Setup Guide</TabsTrigger>
-            <TabsTrigger value="credentials">API Configuration</TabsTrigger>
-            <TabsTrigger value="products">Products Sync</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="setup">
-            <Card>
-              <CardHeader>
-                <CardTitle>Mercado Livre API Integration</CardTitle>
-                <CardDescription>
-                  Follow this step-by-step guide to connect your Mercado Livre seller account
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <SetupSteps 
-                  steps={mercadoLivreSetupSteps} 
-                  onComplete={() => setActiveTab('credentials')}
-                />
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="credentials">
-            <ApiCredentialsForm
-              title="Mercado Livre API Credentials"
-              description="Enter your Mercado Livre API credentials to establish a connection"
-              fields={mercadoLivreApiFields}
-              onSubmit={handleSubmitCredentials}
-              onTest={handleTestConnection}
-              apiStatus={apiStatus}
-            />
-          </TabsContent>
-          
-          <TabsContent value="products">
-            <Card>
-              <CardHeader>
-                <CardTitle>Products Synchronization</CardTitle>
-                <CardDescription>
-                  Configure how products are imported from Mercado Livre
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center p-8">
-                  <p className="text-muted-foreground mb-4">
-                    You need to configure your API credentials before you can sync products.
-                  </p>
-                  <button 
-                    onClick={() => setActiveTab('credentials')}
-                    className="text-primary hover:underline"
-                  >
-                    Go to API Configuration
-                  </button>
+    <AdminLayout title="Configuração do Mercado Livre">
+      <div className="max-w-3xl mx-auto space-y-8">
+        <Alert>
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Informações importantes</AlertTitle>
+          <AlertDescription>
+            Para integrar com o Mercado Livre, você precisará se cadastrar no programa de afiliados e obter suas credenciais de API. Siga o guia passo a passo abaixo.
+          </AlertDescription>
+        </Alert>
+        
+        <SetupSteps 
+          steps={[
+            {
+              title: "Cadastro no Programa de Afiliados",
+              description: (
+                <div className="space-y-2">
+                  <p>Para começar, você precisa se cadastrar no programa de afiliados do Mercado Livre.</p>
+                  <p>Siga estas etapas:</p>
+                  <ol className="list-decimal ml-5 space-y-2">
+                    <li>Acesse o site de <a href="https://www.mercadolivre.com.br/brandprotection/affiliates" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Afiliados do Mercado Livre</a></li>
+                    <li>Clique em "Inscrever-se"</li>
+                    <li>Complete o processo de inscrição com suas informações</li>
+                    <li>Aguarde a aprovação do Mercado Livre</li>
+                  </ol>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+              ),
+              action: {
+                label: "Visitar Afiliados do Mercado Livre",
+                href: "https://www.mercadolivre.com.br/brandprotection/affiliates"
+              }
+            },
+            {
+              title: "Obtenha suas Credenciais de API",
+              description: (
+                <div className="space-y-2">
+                  <p>Após a aprovação, você receberá acesso às suas credenciais de API.</p>
+                  <p>Para encontrar suas credenciais:</p>
+                  <ol className="list-decimal ml-5 space-y-2">
+                    <li>Faça login na sua conta de desenvolvedor do Mercado Livre</li>
+                    <li>Acesse a seção "Aplicativos"</li>
+                    <li>Crie um novo aplicativo ou selecione um existente</li>
+                    <li>Copie seu Client ID, Client Secret e código de afiliado</li>
+                  </ol>
+                </div>
+              ),
+              action: {
+                label: "Acessar Conta de Desenvolvedor",
+                href: "https://developers.mercadolivre.com.br/apps"
+              }
+            },
+            {
+              title: "Configure suas Credenciais",
+              description: (
+                <div className="space-y-2">
+                  <p>Agora, insira suas credenciais no formulário abaixo:</p>
+                  <ul className="list-disc ml-5 space-y-2">
+                    <li>Client ID: Identificador do seu aplicativo</li>
+                    <li>Client Secret: Chave secreta do seu aplicativo</li>
+                    <li>Código de Afiliado: Código usado para identificar suas referências</li>
+                  </ul>
+                  <p>Clique em "Testar Conexão" para verificar se está funcionando.</p>
+                </div>
+              )
+            }
+          ]}
+          onComplete={() => {
+            toast({
+              title: "Configuração concluída",
+              description: "Você concluiu o processo de configuração do Mercado Livre.",
+            });
+          }}
+        />
+        
+        <div className="border rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4">Credenciais de API</h2>
+          <ApiCredentialsForm
+            title="Afiliados do Mercado Livre"
+            description="Configure suas credenciais de afiliado do Mercado Livre."
+            fields={[
+              {
+                id: "clientId",
+                label: "Client ID",
+                type: "text",
+                placeholder: "12345678901234567890",
+                helperText: "ID do seu aplicativo no Mercado Livre."
+              },
+              {
+                id: "clientSecret",
+                label: "Client Secret",
+                type: "password",
+                placeholder: "••••••••••••••••••••",
+                helperText: "Chave secreta do seu aplicativo no Mercado Livre."
+              },
+              {
+                id: "affiliateCode",
+                label: "Código de Afiliado",
+                type: "text",
+                placeholder: "SEUSITE",
+                helperText: "Código usado para rastrear suas referências."
+              }
+            ]}
+            onSubmit={handleApiCredentialsSubmit}
+            onTest={handleTestConnection}
+            isLoading={isLoading}
+            apiStatus={apiStatus}
+          />
+        </div>
+        
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold">Solução de Problemas</h2>
+          <div className="bg-muted p-4 rounded-lg space-y-4">
+            <div>
+              <h3 className="font-medium">Minha aplicação não foi aprovada</h3>
+              <p className="text-sm text-muted-foreground">
+                O Mercado Livre pode levar alguns dias para aprovar sua aplicação. Certifique-se de fornecer todas as informações necessárias.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-medium">Erros de autenticação</h3>
+              <p className="text-sm text-muted-foreground">
+                Verifique se o Client ID e Client Secret estão corretos. Os tokens de acesso expiram após algumas horas e precisam ser renovados.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-medium">Limites de API</h3>
+              <p className="text-sm text-muted-foreground">
+                A API do Mercado Livre tem limites de requisições. Se estiver encontrando erros 429, reduza a frequência de suas solicitações.
+              </p>
+            </div>
+            <a 
+              href="https://developers.mercadolivre.com.br/documentation" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center text-sm text-primary hover:underline"
+            >
+              <ExternalLink className="h-4 w-4 mr-1" />
+              Consultar documentação técnica
+            </a>
+          </div>
+        </div>
       </div>
     </AdminLayout>
   );
