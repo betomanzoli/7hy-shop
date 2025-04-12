@@ -18,6 +18,15 @@ export function MobileNav() {
         <Link to="/products" className="text-sm font-medium p-2 hover:bg-muted rounded-lg transition-colors">
           Produtos
         </Link>
+        <Link to="/amazon" className="text-sm font-medium p-2 hover:bg-muted rounded-lg transition-colors">
+          Amazon
+        </Link>
+        <Link to="/shopee" className="text-sm font-medium p-2 hover:bg-muted rounded-lg transition-colors">
+          Shopee
+        </Link>
+        <Link to="/mercadolivre" className="text-sm font-medium p-2 hover:bg-muted rounded-lg transition-colors">
+          Mercado Livre
+        </Link>
         <Link to="/about" className="text-sm font-medium p-2 hover:bg-muted rounded-lg transition-colors">
           Sobre
         </Link>

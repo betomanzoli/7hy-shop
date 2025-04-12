@@ -7,48 +7,48 @@ import { AlertCircle } from 'lucide-react';
 
 const Marketplaces = () => {
   return (
-    <AdminLayout title="Marketplace Integrations">
+    <AdminLayout title="Integrações de Afiliados">
       <div className="max-w-5xl">
         <Alert className="mb-6">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Integration Guidelines</AlertTitle>
+          <AlertTitle>Diretrizes de Integração</AlertTitle>
           <AlertDescription>
-            Start by setting up your Amazon integration. Once that's working, you can proceed with Shopee and Mercado Livre. Follow the step-by-step guides for each marketplace.
+            Comece configurando sua integração com a Amazon. Uma vez funcionando, você pode prosseguir com Shopee e Mercado Livre. Siga os guias passo a passo para cada plataforma de afiliados.
           </AlertDescription>
         </Alert>
         
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <MarketplaceCard
             title="Amazon"
-            description="Connect to Amazon Seller Central API"
+            description="Conectar ao programa Amazon Associates"
             icon={
               <div className="text-marketplace-amazon font-bold text-xl">A</div>
             }
             status="inactive"
             setupLink="/admin/marketplaces/amazon"
-            docsLink="https://developer-docs.amazon.com/sp-api/"
+            docsLink="https://associados.amazon.com.br/"
           />
           
           <MarketplaceCard
             title="Shopee"
-            description="Connect to Shopee Open Platform API"
+            description="Conectar ao programa Shopee Affiliates"
             icon={
               <div className="text-marketplace-shopee font-bold text-xl">S</div>
             }
             status="inactive"
             setupLink="/admin/marketplaces/shopee"
-            docsLink="https://open.shopee.com/"
+            docsLink="https://affiliate.shopee.com.br/"
           />
           
           <MarketplaceCard
             title="Mercado Livre"
-            description="Connect to Mercado Livre API"
+            description="Conectar ao programa de afiliados do Mercado Livre"
             icon={
               <div className="text-marketplace-mercadolivre font-bold text-xl">M</div>
             }
             status="inactive"
             setupLink="/admin/marketplaces/mercadolivre"
-            docsLink="https://developers.mercadolivre.com.br/"
+            docsLink="https://www.mercadolivre.com.br/brandprotection/affiliates"
           />
         </div>
       </div>
