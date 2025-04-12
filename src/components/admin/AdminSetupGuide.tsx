@@ -37,7 +37,7 @@ export function AdminSetupGuide({ title, description, steps, tips, alertInfo }: 
       </CardHeader>
       <CardContent className="space-y-6">
         {alertInfo && (
-          <Alert variant={alertInfo.type === 'warning' ? 'destructive' : alertInfo.type === 'success' ? 'success' : undefined}>
+          <Alert variant={alertInfo.type === 'warning' ? 'destructive' : alertInfo.type === 'success' ? 'success' : 'default'}>
             {alertInfo.type === 'warning' ? (
               <AlertCircle className="h-4 w-4" />
             ) : alertInfo.type === 'success' ? (
