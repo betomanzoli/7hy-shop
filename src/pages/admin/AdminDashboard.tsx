@@ -7,19 +7,19 @@ import { Link } from 'react-router-dom';
 
 const AdminDashboard = () => {
   return (
-    <AdminLayout title="Dashboard">
+    <AdminLayout title="Painel">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Active Marketplaces
+              Marketplaces Ativos
             </CardTitle>
             <Store className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">1/3</div>
             <p className="text-xs text-muted-foreground">
-              Amazon connected
+              Amazon conectada
             </p>
           </CardContent>
         </Card>
@@ -27,14 +27,14 @@ const AdminDashboard = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Products
+              Total de Produtos
             </CardTitle>
             <ShoppingBag className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">0</div>
             <p className="text-xs text-muted-foreground">
-              Sync products from marketplaces
+              Sincronize produtos dos marketplaces
             </p>
           </CardContent>
         </Card>
@@ -42,14 +42,14 @@ const AdminDashboard = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Orders
+              Total de Pedidos
             </CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">0</div>
             <p className="text-xs text-muted-foreground">
-              No orders yet
+              Nenhum pedido ainda
             </p>
           </CardContent>
         </Card>
@@ -57,14 +57,14 @@ const AdminDashboard = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Customers
+              Total de Clientes
             </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">0</div>
             <p className="text-xs text-muted-foreground">
-              No customers yet
+              Nenhum cliente ainda
             </p>
           </CardContent>
         </Card>
@@ -73,9 +73,9 @@ const AdminDashboard = () => {
       <div className="grid gap-4 md:grid-cols-2 mt-6">
         <Card>
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
+            <CardTitle>Ações Rápidas</CardTitle>
             <CardDescription>
-              Common tasks to manage your multi-marketplace store
+              Tarefas comuns para gerenciar sua loja multi-marketplace
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-2">
@@ -83,28 +83,28 @@ const AdminDashboard = () => {
               to="/admin/marketplaces" 
               className="flex items-center justify-between rounded-lg border p-3 text-sm hover:bg-muted"
             >
-              <div className="font-medium">Configure Marketplaces</div>
+              <div className="font-medium">Configurar Marketplaces</div>
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link 
               to="/admin/products" 
               className="flex items-center justify-between rounded-lg border p-3 text-sm hover:bg-muted"
             >
-              <div className="font-medium">Manage Products</div>
+              <div className="font-medium">Gerenciar Produtos</div>
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link 
               to="/admin/orders" 
               className="flex items-center justify-between rounded-lg border p-3 text-sm hover:bg-muted"
             >
-              <div className="font-medium">View Orders</div>
+              <div className="font-medium">Visualizar Pedidos</div>
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link 
               to="/admin/settings" 
               className="flex items-center justify-between rounded-lg border p-3 text-sm hover:bg-muted"
             >
-              <div className="font-medium">Store Settings</div>
+              <div className="font-medium">Configurações da Loja</div>
               <ArrowRight className="h-4 w-4" />
             </Link>
           </CardContent>
@@ -112,9 +112,9 @@ const AdminDashboard = () => {
         
         <Card>
           <CardHeader>
-            <CardTitle>Getting Started</CardTitle>
+            <CardTitle>Primeiros Passos</CardTitle>
             <CardDescription>
-              Follow these steps to set up your multi-marketplace integration
+              Siga estas etapas para configurar sua integração multi-marketplace
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-2">
@@ -122,25 +122,25 @@ const AdminDashboard = () => {
               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
                 1
               </div>
-              <div className="font-medium">Connect your first marketplace (Amazon)</div>
+              <div className="font-medium">Conecte seu primeiro marketplace (Amazon)</div>
             </div>
             <div className="flex items-center gap-3 rounded-lg border p-3 text-sm bg-muted/50">
               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-muted-foreground">
                 2
               </div>
-              <div className="font-medium text-muted-foreground">Import products from Amazon</div>
+              <div className="font-medium text-muted-foreground">Importe produtos da Amazon</div>
             </div>
             <div className="flex items-center gap-3 rounded-lg border p-3 text-sm bg-muted/50">
               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-muted-foreground">
                 3
               </div>
-              <div className="font-medium text-muted-foreground">Connect additional marketplaces</div>
+              <div className="font-medium text-muted-foreground">Conecte marketplaces adicionais</div>
             </div>
             <div className="flex items-center gap-3 rounded-lg border p-3 text-sm bg-muted/50">
               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-muted-foreground">
                 4
               </div>
-              <div className="font-medium text-muted-foreground">Configure your store settings</div>
+              <div className="font-medium text-muted-foreground">Configure as definições da sua loja</div>
             </div>
           </CardContent>
         </Card>

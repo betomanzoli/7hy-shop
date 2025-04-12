@@ -70,10 +70,10 @@ export function ApiCredentialsForm({
                 <AlertCircle className="h-4 w-4" />
                 <span>
                   {apiStatus === 'connected' 
-                    ? 'API connection successful!' 
+                    ? 'Conexão com a API bem-sucedida!' 
                     : apiStatus === 'error'
-                    ? 'API connection failed. Please check your credentials.'
-                    : 'API not connected. Please configure your credentials.'}
+                    ? 'Falha na conexão com a API. Verifique suas credenciais.'
+                    : 'API não conectada. Configure suas credenciais.'}
                 </span>
               </div>
             </div>
@@ -104,12 +104,12 @@ export function ApiCredentialsForm({
               disabled={isLoading}
             >
               <TestTube className="mr-2 h-4 w-4" />
-              Test Connection
+              Testar Conexão
             </Button>
           )}
           <Button type="submit" disabled={isLoading}>
             <Save className="mr-2 h-4 w-4" />
-            Save Credentials
+            Salvar Credenciais
           </Button>
         </CardFooter>
       </form>

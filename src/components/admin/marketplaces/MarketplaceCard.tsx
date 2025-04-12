@@ -27,10 +27,10 @@ export function MarketplaceCard({
   docsLink
 }: MarketplaceCardProps) {
   const statusLabel = {
-    active: 'Active',
-    inactive: 'Not Configured',
-    pending: 'Setup in Progress',
-    error: 'Connection Error'
+    active: 'Ativo',
+    inactive: 'Não Configurado',
+    pending: 'Configuração em Andamento',
+    error: 'Erro de Conexão'
   };
   
   return (
@@ -56,7 +56,7 @@ export function MarketplaceCard({
           </div>
           {lastSync && (
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Last Synced</span>
+              <span className="text-muted-foreground">Última Sincronização</span>
               <span>{lastSync}</span>
             </div>
           )}
@@ -66,13 +66,13 @@ export function MarketplaceCard({
         <Link to={setupLink} className="w-full">
           <Button variant="default" className="w-full gap-1">
             <Settings className="h-4 w-4 mr-1" />
-            {status === 'inactive' ? 'Setup Integration' : 'Manage Integration'}
+            {status === 'inactive' ? 'Configurar Integração' : 'Gerenciar Integração'}
           </Button>
         </Link>
         <a href={docsLink} target="_blank" rel="noopener noreferrer" className="w-full">
           <Button variant="outline" className="w-full gap-1">
             <ExternalLink className="h-4 w-4 mr-1" />
-            View Documentation
+            Ver Documentação
           </Button>
         </a>
       </CardFooter>

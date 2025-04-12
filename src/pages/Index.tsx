@@ -12,21 +12,21 @@ const Index = () => {
       <section className="relative bg-gradient-to-b from-white to-blue-50 dark:from-gray-950 dark:to-gray-900">
         <div className="container px-4 py-20 md:py-32 flex flex-col items-center text-center">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-            Your One-Stop Marketplace <span className="text-brand-600">Integration Hub</span>
+            Seu Hub de Integração <span className="text-brand-600">de Marketplaces</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl">
-            Discover products from Amazon, Shopee, and Mercado Livre all in one place. Shop smarter, faster, and easier with 7hy.shop.
+            Descubra produtos da Amazon, Shopee e Mercado Livre em um só lugar. Compre de forma mais inteligente, rápida e fácil com 7hy.shop.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Link to="/products">
               <Button size="lg" className="gap-2">
                 <ShoppingBag className="h-5 w-5" />
-                Browse Products
+                Ver Produtos
               </Button>
             </Link>
             <Link to="/about">
               <Button size="lg" variant="outline" className="gap-2">
-                Learn More
+                Saiba Mais
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
@@ -37,7 +37,7 @@ const Index = () => {
         <div className="container px-4 pb-12 flex flex-col items-center">
           <div className="w-full max-w-4xl">
             <p className="text-sm text-center text-muted-foreground mb-6">
-              Integrated with your favorite marketplaces
+              Integrado com seus marketplaces favoritos
             </p>
             <div className="flex flex-wrap justify-center gap-8 md:gap-16">
               <div className="flex items-center h-8">
@@ -61,9 +61,9 @@ const Index = () => {
       <section className="py-20 bg-white dark:bg-gray-950">
         <div className="container px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Everything You Need in One Place</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Tudo o que Você Precisa em Um Só Lugar</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Shop across multiple platforms without the hassle of switching between sites.
+              Compre em várias plataformas sem o incômodo de alternar entre sites.
             </p>
           </div>
           
@@ -72,9 +72,9 @@ const Index = () => {
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 dark:text-blue-400"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Unified Shopping Experience</h3>
+              <h3 className="text-xl font-semibold mb-2">Experiência Unificada de Compras</h3>
               <p className="text-muted-foreground">
-                Browse products from multiple marketplaces in a single, seamless interface.
+                Navegue por produtos de diversos marketplaces em uma única interface intuitiva.
               </p>
             </div>
             
@@ -82,9 +82,9 @@ const Index = () => {
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 dark:text-blue-400"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Simplified Checkout</h3>
+              <h3 className="text-xl font-semibold mb-2">Checkout Simplificado</h3>
               <p className="text-muted-foreground">
-                One cart for all your purchases, regardless of which marketplace they come from.
+                Um carrinho para todas as suas compras, independentemente do marketplace de origem.
               </p>
             </div>
             
@@ -92,9 +92,9 @@ const Index = () => {
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 dark:text-blue-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Verified Products</h3>
+              <h3 className="text-xl font-semibold mb-2">Produtos Verificados</h3>
               <p className="text-muted-foreground">
-                All listings are verified for authenticity and quality across all marketplaces.
+                Todos os anúncios são verificados quanto à autenticidade e qualidade em todos os marketplaces.
               </p>
             </div>
           </div>
@@ -104,13 +104,13 @@ const Index = () => {
       {/* CTA Section */}
       <section className="py-20 bg-brand-600 text-white">
         <div className="container px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Shopping Experience?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Pronto para Transformar sua Experiência de Compras?</h2>
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Join thousands of satisfied shoppers who have simplified their online shopping with 7hy.shop.
+            Junte-se a milhares de compradores satisfeitos que simplificaram suas compras online com o 7hy.shop.
           </p>
           <Link to="/products">
             <Button size="lg" variant="secondary" className="gap-2">
-              Start Shopping Now
+              Comece a Comprar Agora
               <ArrowRight className="h-5 w-5" />
             </Button>
           </Link>

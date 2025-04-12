@@ -13,19 +13,19 @@ export function MobileNav() {
       
       <nav className="flex flex-col gap-2 px-6">
         <Link to="/" className="text-sm font-medium p-2 hover:bg-muted rounded-lg transition-colors">
-          Home
+          Início
         </Link>
         <Link to="/products" className="text-sm font-medium p-2 hover:bg-muted rounded-lg transition-colors">
-          Products
+          Produtos
         </Link>
         <Link to="/about" className="text-sm font-medium p-2 hover:bg-muted rounded-lg transition-colors">
-          About
+          Sobre
         </Link>
         <Link to="/contact" className="text-sm font-medium p-2 hover:bg-muted rounded-lg transition-colors">
-          Contact
+          Contato
         </Link>
         <Link to="/admin-login" className="text-sm font-medium p-2 hover:bg-muted rounded-lg transition-colors">
-          Admin Area
+          Área do Administrador
         </Link>
       </nav>
     </div>

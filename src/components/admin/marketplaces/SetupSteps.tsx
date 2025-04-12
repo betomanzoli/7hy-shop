@@ -131,17 +131,17 @@ export function SetupSteps({ steps, onComplete }: SetupStepsProps) {
           disabled={currentStep === 0}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Previous
+          Anterior
         </Button>
         <Button onClick={handleNext}>
           {currentStep === steps.length - 1 ? (
             <>
-              Complete Setup
+              Concluir Configuração
               <CheckCircle className="ml-2 h-4 w-4" />
             </>
           ) : (
             <>
-              Next Step
+              Próxima Etapa
               <ArrowRight className="ml-2 h-4 w-4" />
             </>
           )}
