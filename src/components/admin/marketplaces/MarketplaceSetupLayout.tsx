@@ -5,7 +5,7 @@ import { SetupSteps } from '@/components/admin/marketplaces/SetupSteps';
 import { ApiCredentialsForm } from '@/components/admin/marketplaces/ApiCredentialsForm';
 import { TroubleshootingSection } from '@/components/admin/marketplaces/TroubleshootingSection';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Mail } from 'lucide-react';
 import { useMarketplaceCredentials, MarketplaceId } from '@/hooks/useMarketplaceCredentials';
 import { useToast } from '@/hooks/use-toast';
 
@@ -96,6 +96,17 @@ export function MarketplaceSetupLayout({
         </div>
         
         <TroubleshootingSection items={troubleshootingItems} docsLink={docsLink} />
+        
+        <div className="border rounded-lg p-6 bg-muted/40">
+          <h2 className="text-xl font-semibold mb-4">Suporte Administrativo</h2>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Mail className="h-4 w-4" />
+            <span>Para qualquer dúvida administrativa, entre em contato: 7hyckshop@gmail.com</span>
+          </div>
+          <p className="text-xs text-muted-foreground mt-4">
+            Este email é apenas para uso administrativo interno. Por favor, não compartilhe com usuários finais.
+          </p>
+        </div>
       </div>
     </AdminLayout>
   );

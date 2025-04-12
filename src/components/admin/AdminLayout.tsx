@@ -3,8 +3,9 @@ import React from 'react';
 import { AdminSidebar } from './AdminSidebar';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Menu } from 'lucide-react';
+import { Menu, HelpCircle } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -35,6 +36,19 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
           )}
           
           <div className="ml-auto flex items-center gap-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <HelpCircle className="h-5 w-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Suporte Admin: 7hyckshop@gmail.com</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            
             <Link to="/" target="_blank">
               <Button variant="outline" size="sm">
                 View Store

@@ -73,11 +73,6 @@ const Contact = () => {
               
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-base font-medium mb-1">Email</h3>
-                  <p className="text-muted-foreground">contato@7hy.shop</p>
-                </div>
-                
-                <div>
                   <h3 className="text-base font-medium mb-1">Horário de Atendimento</h3>
                   <p className="text-muted-foreground">Segunda a Sexta: 9h às 18h</p>
                   <p className="text-muted-foreground">Sábado: 9h às 13h</p>
