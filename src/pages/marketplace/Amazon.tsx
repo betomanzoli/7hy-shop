@@ -1,6 +1,8 @@
 
 import React from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { InfoIcon } from 'lucide-react';
 
 const Amazon = () => {
   return (
@@ -11,6 +13,14 @@ const Amazon = () => {
             <div className="text-marketplace-amazon font-bold text-3xl">A</div>
             <h1 className="text-4xl font-bold">Amazon</h1>
           </div>
+          
+          <Alert className="mb-6">
+            <InfoIcon className="h-4 w-4" />
+            <AlertTitle>Parceiro Oficial Amazon Associates</AlertTitle>
+            <AlertDescription>
+              Como participante do programa Amazon Associates, podemos receber comissões pelas compras qualificadas realizadas através dos nossos links.
+            </AlertDescription>
+          </Alert>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-2">

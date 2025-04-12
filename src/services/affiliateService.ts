@@ -1,6 +1,13 @@
 
 import { supabase } from "@/integrations/supabase/client";
 
+// Default affiliate IDs
+const DEFAULT_AFFILIATE_IDS = {
+  amazon: "7hy01-20",
+  shopee: "",
+  mercadolivre: ""
+};
+
 interface ClickTrackingData {
   marketplaceId: string;
   productId: string;
@@ -35,18 +42,21 @@ export async function trackAffiliateClick(data: ClickTrackingData): Promise<void
 }
 
 export function generateAffiliateUrl(baseUrl: string, affiliateCode: string, platformType: 'amazon' | 'shopee' | 'mercadolivre'): string {
+  // If no affiliate code is provided, use the default for the platform
+  const code = affiliateCode || DEFAULT_AFFILIATE_IDS[platformType];
+  
   switch (platformType) {
     case 'amazon':
       // Amazon affiliate URL format
-      return `${baseUrl}?tag=${affiliateCode}`;
+      return `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}tag=${code}`;
     
     case 'shopee':
       // Shopee affiliate URL format
-      return `${baseUrl}?smtt=${affiliateCode}`;
+      return `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}smtt=${code}`;
     
     case 'mercadolivre':
       // Mercado Livre affiliate URL format
-      return `${baseUrl}?af=${affiliateCode}`;
+      return `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}af=${code}`;
     
     default:
       return baseUrl;
@@ -61,8 +71,11 @@ export function handleProductRedirect(
   marketplaceId: string,
   userId?: string
 ): string {
+  // Use the default affiliate code if none is provided
+  const code = affiliateCode || DEFAULT_AFFILIATE_IDS[platformType];
+  
   // Generate the affiliate URL
-  const affiliateUrl = generateAffiliateUrl(productUrl, affiliateCode, platformType);
+  const affiliateUrl = generateAffiliateUrl(productUrl, code, platformType);
   
   // Track the click
   trackAffiliateClick({
@@ -74,4 +87,9 @@ export function handleProductRedirect(
   });
   
   return affiliateUrl;
+}
+
+// Function to get the default affiliate ID for a platform
+export function getDefaultAffiliateId(platform: 'amazon' | 'shopee' | 'mercadolivre'): string {
+  return DEFAULT_AFFILIATE_IDS[platform];
 }

@@ -3,6 +3,9 @@ import React from 'react';
 import { MarketplaceSetupLayout } from '@/components/admin/marketplaces/MarketplaceSetupLayout';
 import { AdminSetupGuide } from '@/components/admin/AdminSetupGuide';
 
+// Amazon Associate ID configured in the application
+const AMAZON_ASSOCIATE_ID = "7hy01-20";
+
 const AmazonSetup = () => {
   return (
     <>
@@ -12,19 +15,23 @@ const AmazonSetup = () => {
         steps={[
           {
             title: "Crie uma conta no programa Amazon Associates",
-            description: "Acesse o site oficial e complete o cadastro fornecendo as informações necessárias."
+            description: "Acesse o site oficial e complete o cadastro fornecendo as informações necessárias.",
+            completed: true
           },
           {
             title: "Aguarde a aprovação da Amazon",
-            description: "O processo de aprovação pode levar de 1 a 3 dias úteis."
+            description: "O processo de aprovação pode levar de 1 a 3 dias úteis.",
+            completed: true
           },
           {
             title: "Obtenha sua ID de Associado (tag)",
-            description: "Será algo como 'seusite-20', encontrada na área de configurações da sua conta."
+            description: "Sua ID de Associado é 7hy01-20, já configurada no sistema.",
+            completed: true
           },
           {
             title: "Configure suas credenciais na plataforma",
-            description: "Insira as credenciais no formulário abaixo e teste a conexão."
+            description: "Insira as credenciais no formulário abaixo e teste a conexão.",
+            completed: true
           }
         ]}
         tips={[
@@ -34,69 +41,69 @@ const AmazonSetup = () => {
           "Monitore regularmente suas estatísticas para identificar quais produtos geram mais comissões."
         ]}
         alertInfo={{
-          title: "Importante",
-          message: "A Amazon exige que você divulgue claramente em seu site que é um participante do programa Amazon Associates e que pode receber comissões pelas compras realizadas através dos seus links.",
-          type: "info"
+          title: "ID de Associado Configurado",
+          message: "Sua ID de Associado da Amazon (7hy01-20) já está configurada no sistema. Você pode usar esta ID para criar links de afiliados e acompanhar suas comissões.",
+          type: "success"
         }}
       />
       
       <MarketplaceSetupLayout
         marketplaceId="amazon"
         title="Configuração da Amazon"
-        alertMessage="Para integrar com a Amazon, você precisará se cadastrar no programa Amazon Associates e obter suas credenciais de API. Siga o guia passo a passo abaixo."
+        alertMessage="Sua integração com a Amazon já está configurada com o ID de Associado 7hy01-20. Você pode ajustar as configurações abaixo se necessário."
         steps={[
           {
             title: "Cadastro no Amazon Associates",
             description: (
               <div className="space-y-2">
-                <p>Para começar, você precisa se cadastrar no programa de afiliados da Amazon (Amazon Associates).</p>
-                <p>Siga estas etapas:</p>
-                <ol className="list-decimal ml-5 space-y-2">
-                  <li>Acesse o site do <a href="https://associados.amazon.com.br/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Amazon Associates Brasil</a></li>
-                  <li>Clique em "Inscrever-se"</li>
-                  <li>Complete o processo de inscrição com suas informações</li>
-                  <li>Aguarde a aprovação da Amazon</li>
-                </ol>
+                <p>Você já está cadastrado no programa de afiliados da Amazon (Amazon Associates).</p>
+                <p>Detalhes da sua conta:</p>
+                <ul className="list-disc ml-5 space-y-2">
+                  <li>ID de Associado: <span className="font-semibold">7hy01-20</span></li>
+                  <li>ID exclusiva: <span className="font-semibold">7hy01</span></li>
+                </ul>
               </div>
             ),
             action: {
-              label: "Visitar Amazon Associates",
+              label: "Acessar Amazon Associates",
               href: "https://associados.amazon.com.br/"
             }
           },
           {
-            title: "Obtenha sua ID de Associado",
+            title: "Verificar Status da Conta",
             description: (
               <div className="space-y-2">
-                <p>Após a aprovação, você receberá sua ID de Associado (tag de afiliado).</p>
-                <p>Esta ID tem o formato <code>seusite-20</code> e é usada para rastrear suas referências.</p>
-                <p>Para encontrar sua ID:</p>
+                <p>Recomendamos verificar regularmente o status da sua conta de associado.</p>
+                <p>Certifique-se de que seu site (7hy.shop) está corretamente vinculado à sua conta de associado.</p>
                 <ol className="list-decimal ml-5 space-y-2">
                   <li>Faça login na sua conta do Amazon Associates</li>
-                  <li>Clique em "Ferramentas" no menu</li>
-                  <li>Selecione "Links de Produtos"</li>
-                  <li>Sua ID de Associado aparecerá no topo da página</li>
+                  <li>Navegue até "Sua conta de associado"</li>
+                  <li>Selecione "Alterar a lista de sites e apps"</li>
+                  <li>Verifique se 7hy.shop está listado e aprovado</li>
                 </ol>
               </div>
             ),
             action: {
-              label: "Acessar Conta de Associado",
+              label: "Verificar Conta de Associado",
               href: "https://associados.amazon.com.br/home"
             }
           },
           {
-            title: "Configure suas Credenciais",
+            title: "Monitorar Relatórios",
             description: (
               <div className="space-y-2">
-                <p>Agora, insira suas credenciais no formulário abaixo:</p>
+                <p>Acompanhe o desempenho dos seus links de afiliados regularmente:</p>
                 <ul className="list-disc ml-5 space-y-2">
-                  <li>ID de Associado (tag): Sua ID única do programa</li>
-                  <li>Chave de API (opcional): Se você tiver acesso à API Product Advertising</li>
-                  <li>Chave Secreta (opcional): O par da chave de API</li>
+                  <li>Verifique se as comissões estão sendo reportadas corretamente sob o ID 7hy01-20</li>
+                  <li>Analise quais produtos estão gerando mais cliques e conversões</li>
+                  <li>Ajuste sua estratégia de conteúdo com base nos relatórios</li>
                 </ul>
-                <p>Clique em "Testar Conexão" para verificar se está funcionando.</p>
               </div>
-            )
+            ),
+            action: {
+              label: "Ver Relatórios",
+              href: "https://associados.amazon.com.br/gp/associates/network/reports/main.html"
+            }
           }
         ]}
         formFields={[
@@ -104,7 +111,7 @@ const AmazonSetup = () => {
             id: "associateTag",
             label: "ID de Associado (tag)",
             type: "text",
-            placeholder: "seusite-20",
+            placeholder: "7hy01-20",
             helperText: "A tag de afiliado fornecida pela Amazon."
           },
           {
@@ -123,19 +130,19 @@ const AmazonSetup = () => {
           }
         ]}
         formTitle="Amazon Associates"
-        formDescription="Configure suas credenciais de afiliado da Amazon."
+        formDescription="Suas credenciais de afiliado da Amazon estão configuradas com o ID 7hy01-20."
         troubleshootingItems={[
           {
-            title: "Minha conta não foi aprovada",
-            description: "A Amazon pode levar alguns dias para aprovar sua conta. Certifique-se de que seu site atende às diretrizes do programa."
+            title: "Links não estão gerando comissões",
+            description: "Verifique se todos os links contêm seu ID de associado (7hy01-20) corretamente. As comissões podem levar até 24 horas para aparecer no painel."
           },
           {
-            title: "Não estou vendo comissões",
-            description: "As comissões podem levar até 24 horas para aparecer no seu painel da Amazon. Verifique se os links estão configurados corretamente."
+            title: "Erros na API Product Advertising",
+            description: "Se você estiver usando a API Product Advertising, certifique-se de que suas chaves de API estão corretas e que você está usando o formato adequado nas requisições."
           },
           {
-            title: "Erros na API",
-            description: "Certifique-se de que suas credenciais estão corretas. Se o problema persistir, consulte a documentação da API ou entre em contato com o suporte da Amazon."
+            title: "Problemas com rastreamento de cliques",
+            description: "Assegure-se de que os parâmetros de rastreamento estão presentes em todos os links. Para a Amazon, o parâmetro é '?tag=7hy01-20'."
           }
         ]}
         docsLink={{

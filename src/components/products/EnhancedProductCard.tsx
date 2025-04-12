@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ExternalLink, Star, ShoppingCart } from 'lucide-react';
 import { RedirectModal } from './RedirectModal';
-import { handleProductRedirect } from '@/services/affiliateService';
+import { handleProductRedirect, getDefaultAffiliateId } from '@/services/affiliateService';
 
 interface Product {
   id: string;
@@ -20,12 +20,15 @@ interface Product {
 
 interface EnhancedProductCardProps {
   product: Product;
-  affiliateCode: string;
+  affiliateCode?: string;
   userId?: string;
 }
 
 export function EnhancedProductCard({ product, affiliateCode, userId }: EnhancedProductCardProps) {
   const [isRedirectModalOpen, setIsRedirectModalOpen] = useState(false);
+  
+  // Use provided affiliate code or get the default one for the marketplace
+  const effectiveAffiliateCode = affiliateCode || getDefaultAffiliateId(product.marketplace);
   
   const marketplaceNames = {
     amazon: 'Amazon',
@@ -53,7 +56,7 @@ export function EnhancedProductCard({ product, affiliateCode, userId }: Enhanced
   const handleConfirmRedirect = () => {
     const affiliateUrl = handleProductRedirect(
       product.originalUrl,
-      affiliateCode,
+      effectiveAffiliateCode,
       product.marketplace,
       product.id,
       product.marketplaceId,
