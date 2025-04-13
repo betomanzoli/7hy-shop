@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
+import { ShoppingBag, ShoppingCart, Shield } from 'lucide-react';
 
 export function FeaturesSection() {
   return (
@@ -17,7 +18,7 @@ export function FeaturesSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm transition-all hover:shadow-md">
             <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 dark:text-blue-400"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
+              <ShoppingBag className="text-blue-600 dark:text-blue-400" size={24} />
             </div>
             <h3 className="text-xl font-semibold mb-2">Experiência Unificada de Compras</h3>
             <p className="text-muted-foreground">
@@ -27,7 +28,7 @@ export function FeaturesSection() {
           
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm transition-all hover:shadow-md">
             <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 dark:text-blue-400"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+              <ShoppingCart className="text-blue-600 dark:text-blue-400" size={24} />
             </div>
             <h3 className="text-xl font-semibold mb-2">Comparação de Preços</h3>
             <p className="text-muted-foreground">
@@ -37,7 +38,7 @@ export function FeaturesSection() {
           
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm transition-all hover:shadow-md">
             <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 dark:text-blue-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+              <Shield className="text-blue-600 dark:text-blue-400" size={24} />
             </div>
             <h3 className="text-xl font-semibold mb-2">Produtos Verificados</h3>
             <p className="text-muted-foreground">
