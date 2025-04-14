@@ -4,88 +4,92 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { ExternalLink, Settings } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { MarketplaceLogo, MarketplaceType } from '@/components/marketplace/MarketplaceLogo';
 
-export type MarketplaceStatus = 'active' | 'inactive' | 'pending' | 'error' | 'connected' | 'not_connected';
+export type MarketplaceStatus = 'connected' | 'disconnected' | 'pending';
 
 interface MarketplaceCardProps {
   title: string;
   description: string;
-  icon?: React.ReactNode;
   status: MarketplaceStatus;
-  lastSync?: string;
   setupLink: string;
-  docsLink?: string;
-  type: 'amazon' | 'shopee';
+  docsLink: string;
+  type: MarketplaceType;
 }
 
-export function MarketplaceCard({
-  title,
-  description,
-  icon,
-  status,
-  lastSync,
-  setupLink,
-  docsLink = '#',
+export function MarketplaceCard({ 
+  title, 
+  description, 
+  status, 
+  setupLink, 
+  docsLink,
   type
 }: MarketplaceCardProps) {
-  const statusLabel = {
-    active: 'Ativo',
-    inactive: 'Não Configurado',
-    pending: 'Configuração em Andamento',
-    error: 'Erro de Conexão',
-    connected: 'Conectado',
-    not_connected: 'Não Conectado'
-  };
-  
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="flex flex-row items-center gap-4 pb-2">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-          {icon || (
-            <div className={`w-10 h-10 flex items-center justify-center rounded-full ${
-              type === 'amazon' ? 'bg-amber-500' : 'bg-orange-500'
-            } text-white font-bold text-xl`}>
-              {type === 'amazon' ? 'A' : 'S'}
-            </div>
-          )}
+    <Card>
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <MarketplaceLogo type={type} />
+          <StatusBadge status={status} />
         </div>
-        <div className="grid gap-1">
-          <CardTitle className="text-xl">{title}</CardTitle>
-          <CardDescription className="line-clamp-1">
-            {description}
-          </CardDescription>
-        </div>
+        <CardTitle className="mt-2">{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="pb-2">
-        <div className="grid gap-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Status</span>
-            <span className={`status-badge ${status}`}>
-              {statusLabel[status]}
-            </span>
+        <div className="rounded bg-muted px-3 py-2 text-sm">
+          <div className="flex items-center justify-between text-muted-foreground">
+            <span>Status:</span>
+            <span>{getStatusText(status)}</span>
           </div>
-          {lastSync && (
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Última Sincronização</span>
-              <span>{lastSync}</span>
+          {status === 'connected' && (
+            <div className="flex items-center justify-between mt-1 text-muted-foreground">
+              <span>Última atualização:</span>
+              <span>Hoje</span>
             </div>
           )}
         </div>
       </CardContent>
-      <CardFooter className="flex flex-col items-stretch gap-2 pt-2">
-        <Link to={setupLink} className="w-full">
-          <Button variant="default" className="w-full gap-1">
-            <Settings className="h-4 w-4 mr-1" />
-            {status === 'inactive' || status === 'not_connected' ? 'Configurar Integração' : 'Gerenciar Integração'}
-          </Button>
-        </Link>
-        <a href={docsLink} target="_blank" rel="noopener noreferrer" className="w-full">
-          <Button variant="outline" className="w-full gap-1">
-            <ExternalLink className="h-4 w-4 mr-1" />
-            Ver Documentação
-          </Button>
-        </a>
+      <CardFooter className="flex justify-between">
+        <Button variant="outline" asChild>
+          <a href={docsLink} target="_blank" rel="noopener noreferrer">
+            <ExternalLink className="mr-2 h-4 w-4" />
+            Documentação
+          </a>
+        </Button>
+        <Button asChild>
+          <Link to={setupLink}>
+            <Settings className="mr-2 h-4 w-4" />
+            Configurar
+          </Link>
+        </Button>
       </CardFooter>
     </Card>
   );
+}
+
+function StatusBadge({ status }: { status: MarketplaceStatus }) {
+  switch (status) {
+    case 'connected':
+      return <Badge variant="success">Conectado</Badge>;
+    case 'disconnected':
+      return <Badge variant="outline">Desconectado</Badge>;
+    case 'pending':
+      return <Badge variant="warning">Pendente</Badge>;
+    default:
+      return null;
+  }
+}
+
+function getStatusText(status: MarketplaceStatus) {
+  switch (status) {
+    case 'connected':
+      return 'Conectado e funcionando';
+    case 'disconnected':
+      return 'Não configurado';
+    case 'pending':
+      return 'Aguardando aprovação';
+    default:
+      return '';
+  }
 }

@@ -1,24 +1,10 @@
 
 import React from 'react';
-import { AdminLayout } from '@/components/admin/AdminLayout';
-import { ApiCredentialsForm } from '@/components/admin/marketplaces/ApiCredentialsForm';
-import { SetupSteps } from '@/components/admin/marketplaces/SetupSteps';
-import { TroubleshootingSection } from '@/components/admin/marketplaces/TroubleshootingSection';
-import { useToast } from '@/hooks/use-toast';
+import { MarketplaceSetupLayout } from '@/components/admin/marketplaces/MarketplaceSetupLayout';
 import { useMarketplaceCredentials } from '@/hooks/useMarketplaceCredentials';
 
 const ShopeeSetup = () => {
-  const { toast } = useToast();
-  const { saveCredentials, credentials } = useMarketplaceCredentials();
-  
-  const handleSaveCredentials = (data: any) => {
-    saveCredentials('shopee', data);
-    
-    toast({
-      title: "Credenciais salvas",
-      description: "Suas credenciais da Shopee foram salvas com sucesso.",
-    });
-  };
+  const { credentials } = useMarketplaceCredentials();
   
   const setupSteps = [
     {
@@ -59,45 +45,35 @@ const ShopeeSetup = () => {
   ];
   
   return (
-    <AdminLayout title="Configuração da Shopee">
-      <div className="max-w-3xl mx-auto space-y-8">
-        <div className="grid gap-8">
-          <ApiCredentialsForm
-            title="Credenciais da Shopee Affiliates"
-            description="Configure suas credenciais para integração com o programa de afiliados da Shopee"
-            fields={[
-              {
-                id: "username",
-                label: "Nome de Usuário",
-                type: "text",
-                placeholder: "Seu nome de usuário",
-                helperText: "Seu nome de usuário na plataforma de afiliados"
-              },
-              {
-                id: "affiliateId",
-                label: "ID de Afiliado",
-                type: "text",
-                placeholder: "Seu ID de afiliado",
-                helperText: "Seu ID único de afiliado Shopee"
-              }
-            ]}
-            onSubmit={handleSaveCredentials}
-            isLoading={false}
-            apiStatus={credentials.shopee?.username ? "connected" : "disconnected"}
-          />
-          
-          <SetupSteps steps={setupSteps} />
-          
-          <TroubleshootingSection 
-            items={troubleshootingItems} 
-            docsLink={{
-              url: "https://affiliate.shopee.com.br/support",
-              label: "Ver documentação completa"
-            }} 
-          />
-        </div>
-      </div>
-    </AdminLayout>
+    <MarketplaceSetupLayout
+      marketplaceId="shopee"
+      title="Configuração da Shopee"
+      alertMessage="Para integrar com a Shopee, você precisará se cadastrar no programa de afiliados e obter suas credenciais. Configure abaixo."
+      steps={setupSteps}
+      formFields={[
+        {
+          id: "username",
+          label: "Nome de Usuário",
+          type: "text",
+          placeholder: "Seu nome de usuário",
+          helperText: "Seu nome de usuário na plataforma de afiliados"
+        },
+        {
+          id: "affiliateId",
+          label: "ID de Afiliado",
+          type: "text",
+          placeholder: "Seu ID de afiliado",
+          helperText: "Seu ID único de afiliado Shopee"
+        }
+      ]}
+      formTitle="Credenciais da Shopee Affiliates"
+      formDescription="Configure suas credenciais para integração com o programa de afiliados da Shopee"
+      troubleshootingItems={troubleshootingItems}
+      docsLink={{
+        url: "https://affiliate.shopee.com.br/support",
+        label: "Ver documentação completa"
+      }}
+    />
   );
 };
 

@@ -5,16 +5,20 @@ import { useToast } from '@/hooks/use-toast';
 
 export type MarketplaceId = 'amazon' | 'shopee';
 
-interface MarketplaceCredentials {
-  amazon?: {
-    accessKeyId?: string;
-    secretAccessKey?: string;
-    associateTag?: string;
-  };
-  shopee?: {
-    username?: string;
-    affiliateId?: string;
-  };
+interface AmazonCredentials {
+  accessKeyId?: string;
+  secretAccessKey?: string;
+  associateTag?: string;
+}
+
+interface ShopeeCredentials {
+  username?: string;
+  affiliateId?: string;
+}
+
+export interface MarketplaceCredentials {
+  amazon?: AmazonCredentials;
+  shopee?: ShopeeCredentials;
 }
 
 export function useMarketplaceCredentials(marketplaceId?: MarketplaceId) {
@@ -44,11 +48,16 @@ export function useMarketplaceCredentials(marketplaceId?: MarketplaceId) {
         if (error) throw error;
         
         if (data && data.length > 0) {
-          const credentialsData: MarketplaceCredentials = {};
+          const credentialsData: MarketplaceCredentials = {
+            amazon: {},
+            shopee: {}
+          };
           
           data.forEach((item) => {
-            if (item.marketplace_id === 'amazon' || item.marketplace_id === 'shopee') {
-              credentialsData[item.marketplace_id] = item.credentials;
+            if (item.marketplace_id === 'amazon') {
+              credentialsData.amazon = item.credentials as AmazonCredentials;
+            } else if (item.marketplace_id === 'shopee') {
+              credentialsData.shopee = item.credentials as ShopeeCredentials;
             }
           });
           

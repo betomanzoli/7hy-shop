@@ -32,7 +32,7 @@ const Marketplaces = () => {
         <MarketplaceCard
           title="Amazon"
           description="Maior marketplace global com milhões de produtos em diversas categorias."
-          status={credentials.amazon?.accessKeyId ? "connected" : "not_connected"}
+          status={credentials.amazon?.accessKeyId ? "connected" : "disconnected"}
           setupLink="/admin/marketplaces/amazon"
           docsLink="https://associados.amazon.com.br/"
           type="amazon"
@@ -41,7 +41,7 @@ const Marketplaces = () => {
         <MarketplaceCard
           title="Shopee"
           description="Marketplace popular no Brasil com foco em produtos a preços acessíveis."
-          status={credentials.shopee?.username ? "connected" : "not_connected"}
+          status={credentials.shopee?.username ? "connected" : "disconnected"}
           setupLink="/admin/marketplaces/shopee"
           docsLink="https://affiliate.shopee.com.br/"
           type="shopee"

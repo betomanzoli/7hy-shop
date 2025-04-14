@@ -61,6 +61,10 @@ export function MarketplaceSetupLayout({
   const { apiStatus, isLoading, saveCredentials, testConnection } = useMarketplaceCredentials(marketplaceId);
   const { toast } = useToast();
 
+  const handleSaveCredentials = (data: Record<string, string>) => {
+    saveCredentials(marketplaceId, data);
+  };
+
   return (
     <AdminLayout title={title}>
       <div className="max-w-3xl mx-auto space-y-8">
@@ -88,7 +92,7 @@ export function MarketplaceSetupLayout({
             title={formTitle}
             description={formDescription}
             fields={formFields}
-            onSubmit={saveCredentials}
+            onSubmit={handleSaveCredentials}
             onTest={testConnection}
             isLoading={isLoading}
             apiStatus={apiStatus}

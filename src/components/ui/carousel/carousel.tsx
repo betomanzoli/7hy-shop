@@ -1,6 +1,6 @@
 
 import * as React from "react";
-import { UseEmblaCarouselType } from "embla-carousel-react";
+import useEmblaCarousel from "embla-carousel-react";
 import { cn } from "@/lib/utils";
 import { CarouselContext } from "./carousel-context";
 import { CarouselApi } from "./types";
@@ -26,25 +26,16 @@ const Carousel = React.forwardRef<
     },
     ref
   ) => {
-    // Import dynamically to avoid build errors
-    const [emblaCarousel, setEmblaCarousel] = React.useState<typeof UseEmblaCarouselType | null>(null);
-    const [carouselRef, api] = React.useMemo(() => {
-      if (!emblaCarousel) return [null, null];
-      return emblaCarousel({
+    const [carouselRef, api] = useEmblaCarousel(
+      {
         ...opts,
         axis: orientation === "horizontal" ? "x" : "y",
-      }, plugins);
-    }, [emblaCarousel, opts, orientation, plugins]);
+      },
+      plugins
+    );
     
     const [canScrollPrev, setCanScrollPrev] = React.useState(false);
     const [canScrollNext, setCanScrollNext] = React.useState(false);
-
-    // Load the carousel module dynamically
-    React.useEffect(() => {
-      import('embla-carousel-react').then((module) => {
-        setEmblaCarousel(() => module.useEmblaCarousel);
-      });
-    }, []);
 
     const onSelect = React.useCallback((api: CarouselApi) => {
       if (!api) {
