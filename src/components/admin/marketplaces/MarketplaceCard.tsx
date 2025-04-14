@@ -5,16 +5,17 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { ExternalLink, Settings } from 'lucide-react';
 
-export type MarketplaceStatus = 'active' | 'inactive' | 'pending' | 'error';
+export type MarketplaceStatus = 'active' | 'inactive' | 'pending' | 'error' | 'connected' | 'not_connected';
 
 interface MarketplaceCardProps {
   title: string;
   description: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   status: MarketplaceStatus;
   lastSync?: string;
   setupLink: string;
-  docsLink: string;
+  docsLink?: string;
+  type: 'amazon' | 'shopee';
 }
 
 export function MarketplaceCard({
@@ -24,20 +25,29 @@ export function MarketplaceCard({
   status,
   lastSync,
   setupLink,
-  docsLink
+  docsLink = '#',
+  type
 }: MarketplaceCardProps) {
   const statusLabel = {
     active: 'Ativo',
     inactive: 'Não Configurado',
     pending: 'Configuração em Andamento',
-    error: 'Erro de Conexão'
+    error: 'Erro de Conexão',
+    connected: 'Conectado',
+    not_connected: 'Não Conectado'
   };
   
   return (
     <Card className="overflow-hidden">
       <CardHeader className="flex flex-row items-center gap-4 pb-2">
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-          {icon}
+          {icon || (
+            <div className={`w-10 h-10 flex items-center justify-center rounded-full ${
+              type === 'amazon' ? 'bg-amber-500' : 'bg-orange-500'
+            } text-white font-bold text-xl`}>
+              {type === 'amazon' ? 'A' : 'S'}
+            </div>
+          )}
         </div>
         <div className="grid gap-1">
           <CardTitle className="text-xl">{title}</CardTitle>
@@ -66,7 +76,7 @@ export function MarketplaceCard({
         <Link to={setupLink} className="w-full">
           <Button variant="default" className="w-full gap-1">
             <Settings className="h-4 w-4 mr-1" />
-            {status === 'inactive' ? 'Configurar Integração' : 'Gerenciar Integração'}
+            {status === 'inactive' || status === 'not_connected' ? 'Configurar Integração' : 'Gerenciar Integração'}
           </Button>
         </Link>
         <a href={docsLink} target="_blank" rel="noopener noreferrer" className="w-full">

@@ -1,14 +1,26 @@
 
-import { useEmblaCarousel } from "embla-carousel-react";
-export { useEmblaCarousel };
+import type { UseEmblaCarouselType } from "embla-carousel-react";
+export type { UseEmblaCarouselType };
 
 export {
   Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "./carousel";
+
+export {
+  CarouselContent
+} from "./carousel-content";
+
+export {
+  CarouselItem
+} from "./carousel-item";
+
+export {
+  CarouselNext
+} from "./carousel-next";
+
+export {
+  CarouselPrevious
+} from "./carousel-previous";
 
 export type {
   CarouselApi,

@@ -1,16 +1,71 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 export type MarketplaceId = 'amazon' | 'shopee';
 
-export function useMarketplaceCredentials(marketplaceId: MarketplaceId) {
+interface MarketplaceCredentials {
+  amazon?: {
+    accessKeyId?: string;
+    secretAccessKey?: string;
+    associateTag?: string;
+  };
+  shopee?: {
+    username?: string;
+    affiliateId?: string;
+  };
+}
+
+export function useMarketplaceCredentials(marketplaceId?: MarketplaceId) {
   const [apiStatus, setApiStatus] = useState<'connected' | 'disconnected' | 'error' | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [credentials, setCredentials] = useState<MarketplaceCredentials>({
+    amazon: {
+      accessKeyId: '',
+      secretAccessKey: '', 
+      associateTag: '7hy01-20',
+    },
+    shopee: {
+      username: '7hyckshop',
+      affiliateId: '18357850294',
+    }
+  });
   const { toast } = useToast();
 
-  const saveCredentials = async (data: Record<string, string>) => {
+  useEffect(() => {
+    // Load credentials from Supabase if available
+    const fetchCredentials = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('marketplace_credentials')
+          .select('*');
+        
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+          const credentialsData: MarketplaceCredentials = {};
+          
+          data.forEach((item) => {
+            if (item.marketplace_id === 'amazon' || item.marketplace_id === 'shopee') {
+              credentialsData[item.marketplace_id] = item.credentials;
+            }
+          });
+          
+          setCredentials(prevState => ({
+            ...prevState,
+            ...credentialsData
+          }));
+        }
+      } catch (error) {
+        console.error('Error fetching credentials:', error);
+      }
+    };
+    
+    fetchCredentials();
+  }, []);
+
+  const saveCredentials = async (id: MarketplaceId, data: Record<string, string>) => {
     setIsLoading(true);
     
     try {
@@ -18,17 +73,23 @@ export function useMarketplaceCredentials(marketplaceId: MarketplaceId) {
       const { error } = await supabase
         .from('marketplace_credentials')
         .upsert({
-          marketplace_id: marketplaceId,
+          marketplace_id: id,
           credentials: data,
           last_updated: new Date().toISOString()
         }, { onConflict: 'marketplace_id' });
       
       if (error) throw error;
       
+      // Update local state
+      setCredentials(prevState => ({
+        ...prevState,
+        [id]: data
+      }));
+      
       setApiStatus('connected');
       toast({
         title: "Credenciais salvas",
-        description: `Suas credenciais da ${getMarketplaceName(marketplaceId)} foram salvas com sucesso.`,
+        description: `Suas credenciais da ${getMarketplaceName(id)} foram salvas com sucesso.`,
       });
     } catch (error) {
       console.error(`Erro ao salvar credenciais: ${error}`);
@@ -50,7 +111,7 @@ export function useMarketplaceCredentials(marketplaceId: MarketplaceId) {
       setApiStatus('connected');
       toast({
         title: "Conexão bem-sucedida",
-        description: `Sua conexão com a API da ${getMarketplaceName(marketplaceId)} está funcionando corretamente.`,
+        description: `Sua conexão com a API da ${marketplaceId ? getMarketplaceName(marketplaceId) : 'marketplace'} está funcionando corretamente.`,
       });
       setIsLoading(false);
     }, 1500);
@@ -60,7 +121,8 @@ export function useMarketplaceCredentials(marketplaceId: MarketplaceId) {
     apiStatus,
     isLoading,
     saveCredentials,
-    testConnection
+    testConnection,
+    credentials
   };
 }
 

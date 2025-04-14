@@ -2,14 +2,14 @@
 import React from 'react';
 import { ExternalLink } from 'lucide-react';
 
-interface TroubleshootingItem {
+export interface TroubleshootingItem {
   title: string;
   description: string;
 }
 
 interface TroubleshootingSectionProps {
   items: TroubleshootingItem[];
-  docsLink: {
+  docsLink?: {
     url: string;
     label: string;
   };
@@ -28,15 +28,17 @@ export function TroubleshootingSection({ items, docsLink }: TroubleshootingSecti
             </p>
           </div>
         ))}
-        <a 
-          href={docsLink.url} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="flex items-center text-sm text-primary hover:underline"
-        >
-          <ExternalLink className="h-4 w-4 mr-1" />
-          {docsLink.label}
-        </a>
+        {docsLink && (
+          <a 
+            href={docsLink.url} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center text-sm text-primary hover:underline"
+          >
+            <ExternalLink className="h-4 w-4 mr-1" />
+            {docsLink.label}
+          </a>
+        )}
       </div>
     </div>
   );
