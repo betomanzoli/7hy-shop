@@ -1,107 +1,49 @@
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { MarketplaceCard } from '@/components/admin/marketplaces/MarketplaceCard';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-
-interface MarketplaceStatus {
-  id: string;
-  status: 'active' | 'inactive' | 'pending' | 'error';
-  lastSync?: string;
-}
-
-interface MarketplaceCredentialsData {
-  marketplace_id: string;
-  last_updated: string;
-}
+import { Button } from '@/components/ui/button';
+import { PlusCircle } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { useMarketplaceCredentials } from '@/hooks/useMarketplaceCredentials';
 
 const Marketplaces = () => {
-  const [marketplaceStatuses, setMarketplaceStatuses] = useState<MarketplaceStatus[]>([
-    { id: 'amazon', status: 'inactive' },
-    { id: 'shopee', status: 'inactive' }
-  ]);
+  const { toast } = useToast();
+  const { credentials } = useMarketplaceCredentials();
   
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchMarketplaceCredentials = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('marketplace_credentials')
-          .select('marketplace_id, last_updated');
-
-        if (error) throw error;
-
-        if (data && data.length > 0) {
-          const newStatuses = [...marketplaceStatuses];
-          
-          data.forEach((item: MarketplaceCredentialsData) => {
-            const index = newStatuses.findIndex(s => s.id === item.marketplace_id);
-            if (index !== -1) {
-              newStatuses[index] = {
-                ...newStatuses[index],
-                status: 'active',
-                lastSync: new Date(item.last_updated).toLocaleDateString('pt-BR', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })
-              };
-            }
-          });
-          
-          setMarketplaceStatuses(newStatuses);
-        }
-      } catch (error) {
-        console.error('Erro ao buscar credenciais:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchMarketplaceCredentials();
-  }, []);
-
+  const handleConnectNew = () => {
+    toast({
+      title: "Informação",
+      description: "Selecione uma das plataformas disponíveis para configurar.",
+    });
+  };
+  
   return (
-    <AdminLayout title="Integrações de Afiliados">
-      <div className="max-w-5xl">
-        <Alert className="mb-6">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Diretrizes de Integração</AlertTitle>
-          <AlertDescription>
-            Comece configurando sua integração com a Amazon. Uma vez funcionando, você pode prosseguir com Shopee. Siga os guias passo a passo para cada plataforma de afiliados.
-          </AlertDescription>
-        </Alert>
+    <AdminLayout title="Marketplaces">
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Plataformas Conectadas</h1>
+        <Button onClick={handleConnectNew}>
+          <PlusCircle className="mr-2 h-4 w-4" />
+          Conectar Nova Plataforma
+        </Button>
+      </div>
+      
+      <div className="grid gap-6 md:grid-cols-2">
+        <MarketplaceCard
+          title="Amazon"
+          description="Maior marketplace global com milhões de produtos em diversas categorias."
+          status={credentials.amazon?.accessKeyId ? "connected" : "not_connected"}
+          setupLink="/admin/marketplaces/amazon"
+          type="amazon"
+        />
         
-        <div className="grid gap-6 md:grid-cols-2">
-          <MarketplaceCard
-            title="Amazon"
-            description="Conectar ao programa Amazon Associates"
-            icon={
-              <div className="text-marketplace-amazon font-bold text-xl">A</div>
-            }
-            status={marketplaceStatuses.find(s => s.id === 'amazon')?.status || 'inactive'}
-            lastSync={marketplaceStatuses.find(s => s.id === 'amazon')?.lastSync}
-            setupLink="/admin/marketplaces/amazon"
-            docsLink="https://associados.amazon.com.br/"
-          />
-          
-          <MarketplaceCard
-            title="Shopee"
-            description="Conectar ao programa Shopee Affiliates"
-            icon={
-              <div className="text-marketplace-shopee font-bold text-xl">S</div>
-            }
-            status={marketplaceStatuses.find(s => s.id === 'shopee')?.status || 'inactive'}
-            lastSync={marketplaceStatuses.find(s => s.id === 'shopee')?.lastSync}
-            setupLink="/admin/marketplaces/shopee"
-            docsLink="https://affiliate.shopee.com.br/"
-          />
-        </div>
+        <MarketplaceCard
+          title="Shopee"
+          description="Marketplace popular no Brasil com foco em produtos a preços acessíveis."
+          status={credentials.shopee?.username ? "connected" : "not_connected"}
+          setupLink="/admin/marketplaces/shopee"
+          type="shopee"
+        />
       </div>
     </AdminLayout>
   );

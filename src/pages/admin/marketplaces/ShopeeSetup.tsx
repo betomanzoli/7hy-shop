@@ -1,97 +1,92 @@
 
 import React from 'react';
 import { MarketplaceSetupLayout } from '@/components/admin/marketplaces/MarketplaceSetupLayout';
-import { AdminSetupGuide } from '@/components/admin/AdminSetupGuide';
+import { ApiCredentialsForm } from '@/components/admin/marketplaces/ApiCredentialsForm';
+import { SetupSteps } from '@/components/admin/marketplaces/SetupSteps';
+import { TroubleshootingSection } from '@/components/admin/marketplaces/TroubleshootingSection';
+import { useToast } from '@/hooks/use-toast';
+import { useMarketplaceCredentials } from '@/hooks/useMarketplaceCredentials';
 
 const ShopeeSetup = () => {
+  const { toast } = useToast();
+  const { saveCredentials, credentials } = useMarketplaceCredentials();
+  
+  const handleSaveCredentials = (data: any) => {
+    saveCredentials('shopee', data);
+    
+    toast({
+      title: "Credenciais salvas",
+      description: "Suas credenciais da Shopee foram salvas com sucesso.",
+    });
+  };
+  
+  const setupSteps = [
+    {
+      title: "Registre-se no Programa de Afiliados da Shopee",
+      description: "Acesse o site de afiliados da Shopee e crie uma conta.",
+      link: "https://affiliate.shopee.com.br/",
+      linkText: "Shopee Affiliates"
+    },
+    {
+      title: "Preencha todas as informações necessárias",
+      description: "Complete seu perfil com informações sobre seus canais e público-alvo."
+    },
+    {
+      title: "Aguarde a aprovação",
+      description: "O time da Shopee irá revisar sua inscrição e entrar em contato."
+    },
+    {
+      title: "Acesse suas credenciais de afiliado",
+      description: "Após aprovado, você terá acesso ao painel com seu ID de afiliado."
+    }
+  ];
+  
+  const troubleshootingItems = [
+    {
+      question: "Não consigo acessar minha conta de afiliado da Shopee",
+      answer: "Verifique se você está usando as credenciais corretas. Se o problema persistir, entre em contato com o suporte da Shopee Affiliates."
+    },
+    {
+      question: "Quanto tempo leva para minha aplicação ser aprovada?",
+      answer: "Normalmente o processo de aprovação leva cerca de 3 a 5 dias úteis."
+    },
+    {
+      question: "Como funcionam as comissões na Shopee?",
+      answer: "As comissões variam de acordo com a categoria do produto, geralmente entre 3% e 10% do valor da venda."
+    }
+  ];
+  
   return (
-    <>
-      <AdminSetupGuide
-        title="Configuração do Shopee Affiliates"
-        description="Siga estes passos para configurar sua integração com o programa de afiliados da Shopee."
-        steps={[
-          {
-            title: "Configure suas credenciais na plataforma",
-            description: "Insira as credenciais no formulário abaixo e teste a conexão."
-          }
-        ]}
-        tips={[
-          "A Shopee prioriza afiliados com foco em produtos asiáticos e eletrônicos.",
-          "Crie conteúdo comparativo entre produtos similares para aumentar as conversões.",
-          "Utilize banners e deep links para categorias específicas, não apenas para a página inicial.",
-          "Consulte o calendário de promoções da Shopee para sincronizar seu conteúdo com as campanhas oficiais."
-        ]}
-        alertInfo={{
-          title: "Informação de Conta",
-          message: "Suas credenciais de afiliado da Shopee já foram configuradas com o ID de afiliado 18357850294 e nome de usuário 7hyckshop.",
-          type: "info"
-        }}
-      />
-      
-      <MarketplaceSetupLayout
-        marketplaceId="shopee"
-        title="Configuração da Shopee"
-        alertMessage="Suas credenciais da Shopee já estão pré-configuradas no sistema com o ID de afiliado 18357850294 e nome de usuário 7hyckshop. Você pode gerenciar configurações adicionais abaixo."
-        steps={[
-          {
-            title: "Credenciais pré-configuradas",
-            description: (
-              <div className="space-y-2">
-                <p>Suas credenciais da Shopee já estão configuradas:</p>
-                <ul className="list-disc ml-5 space-y-2">
-                  <li><strong>ID de Afiliado:</strong> 18357850294</li>
-                  <li><strong>Nome de Usuário:</strong> 7hyckshop</li>
-                </ul>
-                <p>Estas informações serão usadas automaticamente para gerar links de afiliado.</p>
-              </div>
-            ),
-            action: {
-              label: "Acessar Conta de Afiliado",
-              href: "https://affiliate.shopee.com.br/login"
+    <MarketplaceSetupLayout 
+      title="Configuração da Shopee" 
+      description="Configure sua integração com o programa Shopee Affiliates"
+      type="shopee"
+    >
+      <div className="grid gap-8">
+        <ApiCredentialsForm
+          fields={[
+            {
+              name: "username",
+              label: "Nome de Usuário",
+              description: "Seu nome de usuário na plataforma de afiliados",
+              defaultValue: credentials.shopee?.username || "7hyckshop"
+            },
+            {
+              name: "affiliateId",
+              label: "ID de Afiliado",
+              description: "Seu ID único de afiliado Shopee",
+              defaultValue: credentials.shopee?.affiliateId || "18357850294"
             }
-          },
-          {
-            title: "Gestão de Produtos",
-            description: (
-              <div className="space-y-2">
-                <p>Para maximizar seus ganhos como afiliado da Shopee:</p>
-                <ol className="list-decimal ml-5 space-y-2">
-                  <li>Selecione produtos com boas avaliações (4+ estrelas)</li>
-                  <li>Foque em produtos com descontos ativos</li>
-                  <li>Promova produtos com frete grátis</li>
-                  <li>Verifique se os produtos estão em estoque</li>
-                </ol>
-              </div>
-            )
-          }
-        ]}
-        formFields={[
-          {
-            id: "trackingCode",
-            label: "Código de Rastreamento Personalizado (opcional)",
-            type: "text",
-            placeholder: "CUSTOM_CODE",
-            helperText: "Código adicional para rastreamento personalizado, se necessário."
-          }
-        ]}
-        formTitle="Configurações Adicionais da Shopee"
-        formDescription="Suas credenciais principais já estão configuradas. Aqui você pode adicionar configurações opcionais."
-        troubleshootingItems={[
-          {
-            title: "Links de afiliado não funcionando",
-            description: "Certifique-se de que os links estão formatados corretamente e que seu ID de afiliado (18357850294) está sendo usado."
-          },
-          {
-            title: "Problemas com rastreamento",
-            description: "Se os cliques não estiverem sendo registrados, verifique se o parâmetro smtt está incluído nos URLs de afiliado."
-          }
-        ]}
-        docsLink={{
-          url: "https://affiliate.shopee.com.br/faq",
-          label: "Consultar perguntas frequentes"
-        }}
-      />
-    </>
+          ]}
+          onSave={handleSaveCredentials}
+          savedValues={credentials.shopee}
+        />
+        
+        <SetupSteps steps={setupSteps} />
+        
+        <TroubleshootingSection items={troubleshootingItems} />
+      </div>
+    </MarketplaceSetupLayout>
   );
 };
 

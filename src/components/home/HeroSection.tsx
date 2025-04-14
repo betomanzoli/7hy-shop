@@ -1,50 +1,65 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-import { ShoppingBag, ArrowRight } from 'lucide-react';
-import { MarketplaceLogo } from '@/components/marketplace/MarketplaceLogo';
+import { cn } from '@/lib/utils';
+import { MarketplaceType } from '@/components/marketplace/MarketplaceLogo';
+
+interface MarketplaceButtonProps {
+  type: MarketplaceType;
+  href: string;
+  className?: string;
+}
+
+function MarketplaceButton({ type, href, className }: MarketplaceButtonProps) {
+  const baseClasses = "flex-1 py-3 rounded-lg font-medium text-white";
+  
+  const marketplaceClasses = {
+    amazon: "bg-marketplace-amazon hover:bg-marketplace-amazon/90",
+    shopee: "bg-marketplace-shopee hover:bg-marketplace-shopee/90"
+  };
+  
+  const marketplaceNames = {
+    amazon: "Amazon",
+    shopee: "Shopee"
+  };
+
+  return (
+    <a
+      href={href}
+      className={cn(baseClasses, marketplaceClasses[type], className)}
+    >
+      {marketplaceNames[type]}
+    </a>
+  );
+}
 
 export function HeroSection() {
   return (
-    <section className="relative bg-gradient-to-b from-white to-blue-50 dark:from-gray-950 dark:to-gray-900">
-      <div className="container px-4 py-20 md:py-32 flex flex-col items-center text-center">
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-          Seu Hub de Integração <span className="text-brand-600">de Marketplaces</span>
-        </h1>
-        <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl">
-          Descubra produtos da Amazon, Shopee e Mercado Livre em um só lugar. Compre de forma mais inteligente, rápida e fácil com 7hy.shop.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Link to="/products">
-            <Button size="lg" className="gap-2">
-              <ShoppingBag className="h-5 w-5" />
-              Ver Produtos
-            </Button>
-          </Link>
-          <Link to="/about">
-            <Button size="lg" variant="outline" className="gap-2">
-              Saiba Mais
-              <ArrowRight className="h-5 w-5" />
-            </Button>
-          </Link>
-        </div>
-      </div>
-      
-      <div className="container px-4 pb-12 flex flex-col items-center">
-        <div className="w-full max-w-4xl">
-          <p className="text-sm text-center text-muted-foreground mb-6">
-            Integrado com seus marketplaces favoritos
+    <section className="relative bg-gradient-to-b from-muted/50 to-background">
+      <div className="container px-4 py-20 md:py-24">
+        <div className="mx-auto max-w-5xl text-center">
+          <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+            As melhores ofertas<br className="hidden sm:inline" /> em um só lugar
+          </h1>
+          <p className="mx-auto mb-12 max-w-3xl text-lg text-muted-foreground md:text-xl">
+            Descubra produtos incríveis das maiores lojas online com descontos exclusivos. 
+            Curadoria feita especialmente para suas necessidades.
           </p>
-          <div className="flex flex-wrap justify-center gap-8 md:gap-16">
-            <div className="group flex items-center transform transition-all duration-300 hover:scale-110">
-              <MarketplaceLogo type="amazon" size="md" />
-            </div>
-            <div className="group flex items-center transform transition-all duration-300 hover:scale-110">
-              <MarketplaceLogo type="shopee" size="md" />
-            </div>
-            <div className="group flex items-center transform transition-all duration-300 hover:scale-110">
-              <MarketplaceLogo type="mercadolivre" size="md" />
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <Button asChild size="lg" className="sm:w-auto">
+              <a href="/products">Ver Todas as Ofertas</a>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="sm:w-auto">
+              <a href="/about">Saiba Mais</a>
+            </Button>
+          </div>
+          
+          <div className="p-4 bg-card rounded-xl shadow-sm border">
+            <h2 className="mb-4 text-xl font-semibold">Navegue por Marketplace</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <MarketplaceButton type="amazon" href="/amazon" />
+              <MarketplaceButton type="shopee" href="/shopee" />
             </div>
           </div>
         </div>

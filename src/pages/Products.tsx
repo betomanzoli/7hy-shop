@@ -4,30 +4,14 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
-
-// Placeholder component - substituir quando houver uma implementação real
-const ProductsPlaceholder = () => {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {Array.from({ length: 8 }).map((_, index) => (
-        <div key={index} className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-          <div className="bg-muted h-48 animate-pulse"></div>
-          <div className="p-4">
-            <div className="h-4 bg-muted animate-pulse rounded mb-2"></div>
-            <div className="h-4 bg-muted animate-pulse rounded mb-4 w-2/3"></div>
-            <div className="h-8 bg-muted animate-pulse rounded"></div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
+import { ShopeeProductsGrid } from '@/components/products/ShopeeProductsGrid';
+import { getDefaultAffiliateId } from '@/services/affiliateService';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const shopeeAffiliateCode = getDefaultAffiliateId('shopee');
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,21 +48,22 @@ const Products = () => {
           </form>
         </div>
         
-        {isLoading ? (
-          <ProductsPlaceholder />
-        ) : (
-          <>
-            <Alert className="mb-6">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Informação</AlertTitle>
-              <AlertDescription>
-                Estamos em processo de importação de produtos dos diferentes marketplaces. Em breve teremos uma variedade maior de produtos disponíveis.
-              </AlertDescription>
-            </Alert>
-            
-            <ProductsPlaceholder />
-          </>
-        )}
+        <Tabs defaultValue="shopee" className="w-full">
+          <TabsList className="mb-6">
+            <TabsTrigger value="shopee">Shopee</TabsTrigger>
+            <TabsTrigger value="amazon">Amazon</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="shopee">
+            <ShopeeProductsGrid affiliateCode={shopeeAffiliateCode} />
+          </TabsContent>
+          
+          <TabsContent value="amazon">
+            <div className="py-8 text-center">
+              <p className="text-muted-foreground">Produtos da Amazon serão adicionados em breve.</p>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </MainLayout>
   );

@@ -1,21 +1,28 @@
 
-import { type UseEmblaCarouselType } from "embla-carousel-react"
-import useEmblaCarousel from "embla-carousel-react"
+import { type EmblaCarouselType as CarouselApi, type EmblaOptionsType as CarouselOptions, type EmblaPluginType as CarouselPlugin } from "embla-carousel";
+import * as React from "react";
+import { useEmblaCarousel } from "embla-carousel-react";
 
-export type CarouselApi = UseEmblaCarouselType[1]
-export type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
 export type CarouselProps = {
-  opts?: UseCarouselParameters[0]
-  plugins?: UseCarouselParameters[1]
-  orientation?: "horizontal" | "vertical"
-  setApi?: (api: CarouselApi) => void
-}
+  opts?: CarouselOptions;
+  plugins?: CarouselPlugin[];
+  orientation?: "horizontal" | "vertical";
+  setApi?: (api: CarouselApi) => void;
+};
 
 export type CarouselContextProps = {
-  carouselRef: ReturnType<typeof useEmblaCarousel>[0]
-  api: ReturnType<typeof useEmblaCarousel>[1]
-  scrollPrev: () => void
-  scrollNext: () => void
-  canScrollPrev: boolean
-  canScrollNext: boolean
-} & CarouselProps
+  carouselRef: ReturnType<typeof useEmblaCarousel>[0];
+  api: ReturnType<typeof useEmblaCarousel>[1];
+  scrollPrev: () => void;
+  scrollNext: () => void;
+  canScrollPrev: boolean;
+  canScrollNext: boolean;
+} & CarouselProps;
+
+export type CarouselNextProps = {
+  orientation?: "horizontal" | "vertical";
+} & React.HTMLAttributes<HTMLButtonElement>;
+
+export type CarouselPrevProps = {
+  orientation?: "horizontal" | "vertical";
+} & React.HTMLAttributes<HTMLButtonElement>;
