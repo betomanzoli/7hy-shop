@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
-export type MarketplaceId = 'amazon' | 'shopee' | 'mercadolivre';
+export type MarketplaceId = 'amazon' | 'shopee';
 
 export function useMarketplaceCredentials(marketplaceId: MarketplaceId) {
   const [apiStatus, setApiStatus] = useState<'connected' | 'disconnected' | 'error' | null>(null);
@@ -70,8 +70,6 @@ function getMarketplaceName(marketplaceId: MarketplaceId): string {
       return 'Amazon';
     case 'shopee':
       return 'Shopee';
-    case 'mercadolivre':
-      return 'Mercado Livre';
     default:
       return marketplaceId;
   }

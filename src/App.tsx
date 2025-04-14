@@ -10,14 +10,12 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Amazon from "./pages/marketplace/Amazon";
 import Shopee from "./pages/marketplace/Shopee";
-import MercadoLivre from "./pages/marketplace/MercadoLivre";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import Marketplaces from "./pages/admin/marketplaces/Marketplaces";
 import AmazonSetup from "./pages/admin/marketplaces/AmazonSetup";
 import ShopeeSetup from "./pages/admin/marketplaces/ShopeeSetup";
-import MercadoLivreSetup from "./pages/admin/marketplaces/MercadoLivreSetup";
 import ProductsPage from "./pages/admin/products/ProductsPage";
 import OrdersPage from "./pages/admin/orders/OrdersPage";
 import AffiliateAnalytics from "./pages/admin/analytics/AffiliateAnalytics";
@@ -39,7 +37,6 @@ const App = () => (
           <Route path="/contact" element={<Contact />} />
           <Route path="/amazon" element={<Amazon />} />
           <Route path="/shopee" element={<Shopee />} />
-          <Route path="/mercadolivre" element={<MercadoLivre />} />
           <Route path="/cart" element={<Cart />} />
           
           {/* Admin Pages */}
@@ -48,7 +45,6 @@ const App = () => (
           <Route path="/admin/marketplaces" element={<Marketplaces />} />
           <Route path="/admin/marketplaces/amazon" element={<AmazonSetup />} />
           <Route path="/admin/marketplaces/shopee" element={<ShopeeSetup />} />
-          <Route path="/admin/marketplaces/mercadolivre" element={<MercadoLivreSetup />} />
           <Route path="/admin/products" element={<ProductsPage />} />
           <Route path="/admin/orders" element={<OrdersPage />} />
           <Route path="/admin/analytics" element={<AffiliateAnalytics />} />

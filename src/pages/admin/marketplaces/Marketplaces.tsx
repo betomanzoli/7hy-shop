@@ -20,8 +20,7 @@ interface MarketplaceCredentialsData {
 const Marketplaces = () => {
   const [marketplaceStatuses, setMarketplaceStatuses] = useState<MarketplaceStatus[]>([
     { id: 'amazon', status: 'inactive' },
-    { id: 'shopee', status: 'inactive' },
-    { id: 'mercadolivre', status: 'inactive' }
+    { id: 'shopee', status: 'inactive' }
   ]);
   
   const [isLoading, setIsLoading] = useState(true);
@@ -74,11 +73,11 @@ const Marketplaces = () => {
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Diretrizes de Integração</AlertTitle>
           <AlertDescription>
-            Comece configurando sua integração com a Amazon. Uma vez funcionando, você pode prosseguir com Shopee e Mercado Livre. Siga os guias passo a passo para cada plataforma de afiliados.
+            Comece configurando sua integração com a Amazon. Uma vez funcionando, você pode prosseguir com Shopee. Siga os guias passo a passo para cada plataforma de afiliados.
           </AlertDescription>
         </Alert>
         
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2">
           <MarketplaceCard
             title="Amazon"
             description="Conectar ao programa Amazon Associates"
@@ -101,18 +100,6 @@ const Marketplaces = () => {
             lastSync={marketplaceStatuses.find(s => s.id === 'shopee')?.lastSync}
             setupLink="/admin/marketplaces/shopee"
             docsLink="https://affiliate.shopee.com.br/"
-          />
-          
-          <MarketplaceCard
-            title="Mercado Livre"
-            description="Conectar ao programa de afiliados do Mercado Livre"
-            icon={
-              <div className="text-marketplace-mercadolivre font-bold text-xl">M</div>
-            }
-            status={marketplaceStatuses.find(s => s.id === 'mercadolivre')?.status || 'inactive'}
-            lastSync={marketplaceStatuses.find(s => s.id === 'mercadolivre')?.lastSync}
-            setupLink="/admin/marketplaces/mercadolivre"
-            docsLink="https://www.mercadolivre.com.br/brandprotection/affiliates"
           />
         </div>
       </div>

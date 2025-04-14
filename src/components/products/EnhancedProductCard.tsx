@@ -11,7 +11,7 @@ interface Product {
   id: string;
   title: string;
   price: number;
-  marketplace: 'amazon' | 'shopee' | 'mercadolivre';
+  marketplace: 'amazon' | 'shopee';
   imageUrl: string;
   rating?: number;
   originalUrl: string;
@@ -32,14 +32,12 @@ export function EnhancedProductCard({ product, affiliateCode, userId }: Enhanced
   
   const marketplaceNames = {
     amazon: 'Amazon',
-    shopee: 'Shopee',
-    mercadolivre: 'Mercado Livre'
+    shopee: 'Shopee'
   };
   
   const marketplaceColors = {
     amazon: 'bg-amber-100 text-amber-800',
-    shopee: 'bg-orange-100 text-orange-800',
-    mercadolivre: 'bg-yellow-100 text-yellow-800'
+    shopee: 'bg-orange-100 text-orange-800'
   };
   
   const formatPrice = (price: number) => {

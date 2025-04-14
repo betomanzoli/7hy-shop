@@ -4,8 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 // Default affiliate IDs
 const DEFAULT_AFFILIATE_IDS = {
   amazon: "7hy01-20",
-  shopee: "",
-  mercadolivre: ""
+  shopee: "18357850294"
 };
 
 interface ClickTrackingData {
@@ -13,7 +12,7 @@ interface ClickTrackingData {
   productId: string;
   userId?: string;
   referrer?: string;
-  platformType: 'amazon' | 'shopee' | 'mercadolivre';
+  platformType: 'amazon' | 'shopee';
 }
 
 export async function trackAffiliateClick(data: ClickTrackingData): Promise<void> {
@@ -41,7 +40,7 @@ export async function trackAffiliateClick(data: ClickTrackingData): Promise<void
   }
 }
 
-export function generateAffiliateUrl(baseUrl: string, affiliateCode: string, platformType: 'amazon' | 'shopee' | 'mercadolivre'): string {
+export function generateAffiliateUrl(baseUrl: string, affiliateCode: string, platformType: 'amazon' | 'shopee'): string {
   // If no affiliate code is provided, use the default for the platform
   const code = affiliateCode || DEFAULT_AFFILIATE_IDS[platformType];
   
@@ -51,12 +50,8 @@ export function generateAffiliateUrl(baseUrl: string, affiliateCode: string, pla
       return `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}tag=${code}`;
     
     case 'shopee':
-      // Shopee affiliate URL format
+      // Shopee affiliate URL format - usando o ID de afiliado que você forneceu
       return `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}smtt=${code}`;
-    
-    case 'mercadolivre':
-      // Mercado Livre affiliate URL format
-      return `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}af=${code}`;
     
     default:
       return baseUrl;
@@ -66,7 +61,7 @@ export function generateAffiliateUrl(baseUrl: string, affiliateCode: string, pla
 export function handleProductRedirect(
   productUrl: string, 
   affiliateCode: string, 
-  platformType: 'amazon' | 'shopee' | 'mercadolivre',
+  platformType: 'amazon' | 'shopee',
   productId: string,
   marketplaceId: string,
   userId?: string
@@ -90,6 +85,6 @@ export function handleProductRedirect(
 }
 
 // Function to get the default affiliate ID for a platform
-export function getDefaultAffiliateId(platform: 'amazon' | 'shopee' | 'mercadolivre'): string {
+export function getDefaultAffiliateId(platform: 'amazon' | 'shopee'): string {
   return DEFAULT_AFFILIATE_IDS[platform];
 }

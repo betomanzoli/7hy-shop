@@ -9,7 +9,7 @@ interface Product {
   id: string;
   title: string;
   price: number;
-  marketplace: 'amazon' | 'shopee' | 'mercadolivre';
+  marketplace: 'amazon' | 'shopee';
   imageUrl: string;
   rating?: number;
   affiliateUrl: string;
@@ -23,14 +23,12 @@ interface ProductCardProps {
 export function ProductCard({ product, onAddToSite }: ProductCardProps) {
   const marketplaceColors = {
     amazon: 'bg-amber-100 text-amber-800',
-    shopee: 'bg-orange-100 text-orange-800',
-    mercadolivre: 'bg-yellow-100 text-yellow-800'
+    shopee: 'bg-orange-100 text-orange-800'
   };
   
   const marketplaceNames = {
     amazon: 'Amazon',
-    shopee: 'Shopee',
-    mercadolivre: 'Mercado Livre'
+    shopee: 'Shopee'
   };
   
   const formatPrice = (price: number) => {
