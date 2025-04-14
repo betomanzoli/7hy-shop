@@ -23,13 +23,13 @@ export function RedirectModal({ isOpen, onClose, onConfirm, platformName, produc
           </DialogTitle>
           <DialogDescription>
             Você será redirecionado para o site da {platformName} para completar sua compra do produto:
-            <p className="font-bold mt-2">{productTitle}</p>
+            <div className="font-bold mt-2">{productTitle}</div>
           </DialogDescription>
         </DialogHeader>
         <div className="bg-blue-50 p-4 rounded-md text-sm mt-2">
-          <p className="text-blue-700">
+          <div className="text-blue-700">
             Ao comprar através deste link, você nos apoia sem pagar nada a mais por isso. Obrigado pelo seu apoio!
-          </p>
+          </div>
         </div>
         <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:gap-0">
           <Button variant="outline" onClick={onClose}>Cancelar</Button>

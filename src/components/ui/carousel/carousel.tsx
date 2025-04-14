@@ -1,18 +1,74 @@
 
+"use client";
+
 import * as React from "react";
-import useEmblaCarousel from "embla-carousel-react";
+import { emblaCarousel, EmblaCarouselType, EmblaOptionsType } from "embla-carousel";
 import { cn } from "@/lib/utils";
-import { CarouselContext } from "./carousel-context";
-import { CarouselApi } from "./types";
+import { createContext, useContext } from "react";
+
+type CarouselApi = EmblaCarouselType;
+
+type UseCarouselParameters = Parameters<typeof emblaCarousel>;
+type UseCarouselOptions = UseCarouselParameters[0];
+type UseCarouselReturn = [
+  React.RefObject<HTMLDivElement>,
+  CarouselApi | undefined
+];
+
+interface CarouselProps extends React.HTMLAttributes<HTMLDivElement> {
+  opts?: UseCarouselOptions;
+  plugins?: UseCarouselParameters[1];
+  orientation?: "horizontal" | "vertical";
+  setApi?: (api: CarouselApi) => void;
+}
+
+interface CarouselContextProps {
+  carouselRef: React.RefObject<HTMLDivElement>;
+  api: CarouselApi | undefined;
+  opts?: UseCarouselOptions;
+  orientation?: "horizontal" | "vertical";
+  scrollPrev: () => void;
+  scrollNext: () => void;
+  canScrollPrev: boolean;
+  canScrollNext: boolean;
+}
+
+const CarouselContext = createContext<CarouselContextProps | null>(null);
+
+function useCarousel() {
+  const context = useContext(CarouselContext);
+
+  if (!context) {
+    throw new Error("useCarousel must be used within a <Carousel />");
+  }
+
+  return context;
+}
+
+function useEmblaCarousel(
+  options?: UseCarouselOptions,
+  plugins?: UseCarouselParameters[1]
+): UseCarouselReturn {
+  const [emblaRef, setEmblaRef] = React.useState<HTMLDivElement | null>(null);
+  const [emblaApi, setEmblaApi] = React.useState<EmblaCarouselType>();
+
+  React.useEffect(() => {
+    if (!emblaRef) return;
+
+    const api = emblaCarousel(emblaRef, options, plugins);
+    setEmblaApi(api);
+
+    return () => {
+      api.destroy();
+    };
+  }, [emblaRef, options, plugins]);
+
+  return [React.useRef(emblaRef as any), emblaApi];
+}
 
 const Carousel = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
-    opts?: any;
-    plugins?: any[];
-    orientation?: "horizontal" | "vertical";
-    setApi?: (api: CarouselApi) => void;
-  }
+  CarouselProps
 >(
   (
     {
@@ -33,7 +89,6 @@ const Carousel = React.forwardRef<
       },
       plugins
     );
-    
     const [canScrollPrev, setCanScrollPrev] = React.useState(false);
     const [canScrollNext, setCanScrollNext] = React.useState(false);
 
@@ -81,11 +136,12 @@ const Carousel = React.forwardRef<
       }
 
       onSelect(api);
-      api.on("reInit", onSelect);
-      api.on("select", onSelect);
+      api.on("select", () => onSelect(api));
+      api.on("reInit", () => onSelect(api));
 
       return () => {
-        api.off("select", onSelect);
+        api?.off("select", () => onSelect(api));
+        api?.off("reInit", () => onSelect(api));
       };
     }, [api, onSelect]);
 
@@ -93,10 +149,9 @@ const Carousel = React.forwardRef<
       <CarouselContext.Provider
         value={{
           carouselRef,
-          api: api,
+          api,
           opts,
-          orientation:
-            orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
+          orientation,
           scrollPrev,
           scrollNext,
           canScrollPrev,
@@ -117,7 +172,7 @@ const Carousel = React.forwardRef<
     );
   }
 );
-
 Carousel.displayName = "Carousel";
 
-export { Carousel };
+export { Carousel, useCarousel };
+export type { CarouselApi };
