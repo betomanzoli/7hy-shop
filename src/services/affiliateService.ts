@@ -1,5 +1,6 @@
 
 import { supabase } from "@/integrations/supabase/client";
+import { MarketplaceType } from "@/components/marketplace/MarketplaceLogo";
 
 // Default affiliate IDs
 const DEFAULT_AFFILIATE_IDS = {
@@ -12,7 +13,7 @@ interface ClickTrackingData {
   productId: string;
   userId?: string;
   referrer?: string;
-  platformType: 'amazon' | 'shopee';
+  platformType: MarketplaceType;
 }
 
 export async function trackAffiliateClick(data: ClickTrackingData): Promise<void> {
@@ -40,7 +41,7 @@ export async function trackAffiliateClick(data: ClickTrackingData): Promise<void
   }
 }
 
-export function generateAffiliateUrl(baseUrl: string, affiliateCode: string, platformType: 'amazon' | 'shopee'): string {
+export function generateAffiliateUrl(baseUrl: string, affiliateCode: string, platformType: MarketplaceType): string {
   // If no affiliate code is provided, use the default for the platform
   const code = affiliateCode || DEFAULT_AFFILIATE_IDS[platformType];
   
@@ -61,7 +62,7 @@ export function generateAffiliateUrl(baseUrl: string, affiliateCode: string, pla
 export function handleProductRedirect(
   productUrl: string, 
   affiliateCode: string, 
-  platformType: 'amazon' | 'shopee',
+  platformType: MarketplaceType,
   productId: string,
   marketplaceId: string,
   userId?: string
@@ -85,6 +86,6 @@ export function handleProductRedirect(
 }
 
 // Function to get the default affiliate ID for a platform
-export function getDefaultAffiliateId(platform: 'amazon' | 'shopee'): string {
+export function getDefaultAffiliateId(platform: MarketplaceType): string {
   return DEFAULT_AFFILIATE_IDS[platform];
 }

@@ -77,7 +77,7 @@ export function MarketplaceSetupLayout({
           onComplete={() => {
             toast({
               title: "Configuração concluída",
-              description: `Você concluiu o processo de configuração da ${marketplaceId === 'mercadolivre' ? 'do' : 'da'} ${marketplaceId === 'amazon' ? 'Amazon' : marketplaceId === 'shopee' ? 'Shopee' : 'Mercado Livre'}.`,
+              description: `Você concluiu o processo de configuração da ${marketplaceId === 'amazon' ? 'Amazon' : 'Shopee'}.`,
             });
           }}
         />

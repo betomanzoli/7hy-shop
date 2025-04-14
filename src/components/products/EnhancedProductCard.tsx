@@ -6,12 +6,13 @@ import { Badge } from '@/components/ui/badge';
 import { ExternalLink, Star, ShoppingCart } from 'lucide-react';
 import { RedirectModal } from './RedirectModal';
 import { handleProductRedirect, getDefaultAffiliateId } from '@/services/affiliateService';
+import { MarketplaceType } from '@/components/marketplace/MarketplaceLogo';
 
 interface Product {
   id: string;
   title: string;
   price: number;
-  marketplace: 'amazon' | 'shopee';
+  marketplace: MarketplaceType;
   imageUrl: string;
   rating?: number;
   originalUrl: string;

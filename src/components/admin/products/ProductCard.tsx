@@ -4,12 +4,13 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ExternalLink, Star } from 'lucide-react';
+import { MarketplaceType } from '@/components/marketplace/MarketplaceLogo';
 
 interface Product {
   id: string;
   title: string;
   price: number;
-  marketplace: 'amazon' | 'shopee';
+  marketplace: MarketplaceType;
   imageUrl: string;
   rating?: number;
   affiliateUrl: string;

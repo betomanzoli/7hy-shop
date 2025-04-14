@@ -2,7 +2,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 
-type MarketplaceType = 'amazon' | 'shopee';
+export type MarketplaceType = 'amazon' | 'shopee';
 
 interface MarketplaceLogoProps {
   type: MarketplaceType;

@@ -6,12 +6,13 @@ import { ProductCard } from '@/components/admin/products/ProductCard';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
+import { MarketplaceType } from '@/components/marketplace/MarketplaceLogo';
 
 interface Product {
   id: string;
   title: string;
   price: number;
-  marketplace: 'amazon' | 'shopee' | 'mercadolivre';
+  marketplace: MarketplaceType;
   imageUrl: string;
   rating?: number;
   affiliateUrl: string;
