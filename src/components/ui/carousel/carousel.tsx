@@ -2,13 +2,13 @@
 "use client";
 
 import * as React from "react";
-import { emblaCarousel, EmblaCarouselType, EmblaOptionsType } from "embla-carousel";
+import { EmblaCarouselType, EmblaOptionsType } from "embla-carousel";
 import { cn } from "@/lib/utils";
 import { createContext, useContext } from "react";
 
 type CarouselApi = EmblaCarouselType;
 
-type UseCarouselParameters = Parameters<typeof emblaCarousel>;
+type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
 type UseCarouselOptions = UseCarouselParameters[0];
 type UseCarouselReturn = [
   React.RefObject<HTMLDivElement>,
@@ -55,13 +55,16 @@ function useEmblaCarousel(
   React.useEffect(() => {
     if (!emblaRef) return;
 
-    const api = emblaCarousel(emblaRef, options, plugins);
-    setEmblaApi(api);
+    // Importando dinamicamente embla-carousel para evitar o problema com emblaCarousel
+    import('embla-carousel').then(({ default: embla }) => {
+      const api = embla(emblaRef, options, plugins);
+      setEmblaApi(api);
+    });
 
     return () => {
-      api.destroy();
+      if (emblaApi) emblaApi.destroy();
     };
-  }, [emblaRef, options, plugins]);
+  }, [emblaRef, options, plugins, emblaApi]);
 
   return [React.useRef(emblaRef as any), emblaApi];
 }
