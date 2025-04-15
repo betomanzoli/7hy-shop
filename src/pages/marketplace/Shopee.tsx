@@ -3,6 +3,7 @@ import React from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { ShopeeProductsGrid } from '@/components/products/ShopeeProductsGrid';
 import { getDefaultAffiliateId } from '@/services/affiliateService';
+import { CustomerSuggestionForm } from '@/components/products/CustomerSuggestionForm';
 
 const Shopee = () => {
   // Get the default affiliate ID for Shopee
@@ -48,9 +49,11 @@ const Shopee = () => {
             </div>
           </div>
           
-          <h2 className="text-2xl font-bold mb-6">Produtos em Destaque</h2>
-          
           <ShopeeProductsGrid affiliateCode={affiliateCode} />
+          
+          <div className="mt-16 pt-8 border-t">
+            <CustomerSuggestionForm />
+          </div>
         </div>
       </div>
     </MainLayout>

@@ -16,7 +16,7 @@ export function Header() {
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
                 <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle menu</span>
+                <span className="sr-only">Abrir menu</span>
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="pr-0">
@@ -29,16 +29,16 @@ export function Header() {
         
         <nav className="hidden md:flex items-center gap-6">
           <Link to="/" className="text-sm font-medium hover:text-brand-500 transition-colors">
-            Home
+            Início
           </Link>
           <Link to="/products" className="text-sm font-medium hover:text-brand-500 transition-colors">
-            Products
+            Produtos
           </Link>
           <Link to="/about" className="text-sm font-medium hover:text-brand-500 transition-colors">
-            About
+            Sobre
           </Link>
           <Link to="/contact" className="text-sm font-medium hover:text-brand-500 transition-colors">
-            Contact
+            Contato
           </Link>
         </nav>
         
@@ -46,13 +46,13 @@ export function Header() {
           <Link to="/cart">
             <Button variant="ghost" size="icon">
               <ShoppingCart className="h-5 w-5" />
-              <span className="sr-only">Cart</span>
+              <span className="sr-only">Carrinho</span>
             </Button>
           </Link>
           <Link to="/admin-login">
             <Button variant="ghost" size="icon">
               <User className="h-5 w-5" />
-              <span className="sr-only">Account</span>
+              <span className="sr-only">Conta</span>
             </Button>
           </Link>
         </div>

@@ -3,19 +3,45 @@ import React from 'react';
 import { EnhancedProductCard } from './EnhancedProductCard';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { ProductCategoryTabs } from './ProductCategoryTabs';
-import { shopeeProducts, Product, ProductCategory } from '@/data/shopeeProducts';
+import { shopeeProducts, Product, ProductCategory, getWeeklyFeaturedProducts } from '@/data/shopeeProducts';
+import { Star } from 'lucide-react';
 
 interface ShopeeProductsGridProps {
   userId?: string;
   affiliateCode?: string;
+  showFeaturedSection?: boolean;
 }
 
-export function ShopeeProductsGrid({ userId, affiliateCode }: ShopeeProductsGridProps) {
+export function ShopeeProductsGrid({ userId, affiliateCode, showFeaturedSection = true }: ShopeeProductsGridProps) {
   // Get unique categories
   const categories = Array.from(new Set(shopeeProducts.map(product => product.category))) as ProductCategory[];
   
+  // Get weekly featured products
+  const featuredProducts = getWeeklyFeaturedProducts();
+  
   return (
     <div className="w-full">
+      {showFeaturedSection && featuredProducts.length > 0 && (
+        <div className="mb-12">
+          <div className="flex items-center gap-2 mb-6">
+            <Star className="h-6 w-6 fill-yellow-400 text-yellow-400" />
+            <h2 className="text-2xl font-bold">Produtos Selecionados da Semana</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {featuredProducts.map(product => (
+              <EnhancedProductCard 
+                key={product.id}
+                product={product}
+                userId={userId}
+                affiliateCode={affiliateCode}
+                isFeatured={true}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+      
       <Tabs defaultValue="all" className="w-full">
         <ProductCategoryTabs categories={categories} />
         

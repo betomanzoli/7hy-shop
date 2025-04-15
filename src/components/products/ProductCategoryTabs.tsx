@@ -22,7 +22,6 @@ export function ProductCategoryTabs({ categories }: ProductCategoryTabsProps) {
     <TabsList className="mb-6 flex flex-wrap">
       <TabsTrigger value="all">Todos</TabsTrigger>
       {categories.map(category => (
-        categories.includes(category) && 
         <TabsTrigger key={category} value={category}>
           {categoryNames[category]}
         </TabsTrigger>

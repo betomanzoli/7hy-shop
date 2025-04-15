@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search } from 'lucide-react';
+import { Search, Send } from 'lucide-react';
 import { ShopeeProductsGrid } from '@/components/products/ShopeeProductsGrid';
 import { getDefaultAffiliateId } from '@/services/affiliateService';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CustomerSuggestionForm } from '@/components/products/CustomerSuggestionForm';
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -64,6 +65,10 @@ const Products = () => {
             </div>
           </TabsContent>
         </Tabs>
+        
+        <div className="mt-16 pt-8 border-t">
+          <CustomerSuggestionForm />
+        </div>
       </div>
     </MainLayout>
   );

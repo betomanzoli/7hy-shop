@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ExternalLink, Star, ShoppingCart } from 'lucide-react';
+import { ExternalLink, ShoppingCart, Star } from 'lucide-react';
 import { RedirectModal } from './RedirectModal';
 import { handleProductRedirect, getDefaultAffiliateId } from '@/services/affiliateService';
 import { Product } from '@/data/shopeeProducts';
@@ -12,9 +12,10 @@ interface EnhancedProductCardProps {
   product: Product;
   affiliateCode?: string;
   userId?: string;
+  isFeatured?: boolean;
 }
 
-export function EnhancedProductCard({ product, affiliateCode, userId }: EnhancedProductCardProps) {
+export function EnhancedProductCard({ product, affiliateCode, userId, isFeatured }: EnhancedProductCardProps) {
   const [isRedirectModalOpen, setIsRedirectModalOpen] = useState(false);
   
   // Use provided affiliate code or get the default one for the marketplace
@@ -58,12 +59,20 @@ export function EnhancedProductCard({ product, affiliateCode, userId }: Enhanced
   
   return (
     <>
-      <Card className="h-full flex flex-col">
+      <Card className={`h-full flex flex-col ${isFeatured ? 'border-yellow-300 shadow-md' : ''}`}>
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start mb-2">
-            <Badge className={marketplaceColors[product.marketplace]}>
-              {marketplaceNames[product.marketplace]}
-            </Badge>
+            <div className="flex flex-wrap gap-1">
+              <Badge className={marketplaceColors[product.marketplace]}>
+                {marketplaceNames[product.marketplace]}
+              </Badge>
+              {(isFeatured || product.isWeeklyFeatured) && (
+                <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-300">
+                  <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
+                  Destaque
+                </Badge>
+              )}
+            </div>
             {product.rating && (
               <div className="flex items-center text-sm">
                 <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />

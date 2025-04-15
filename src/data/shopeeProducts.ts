@@ -14,9 +14,10 @@ export interface Product {
   originalUrl: string;
   marketplaceId: string;
   category: ProductCategory;
+  isWeeklyFeatured?: boolean;
 }
 
-// Produtos da Shopee com dados reais
+// Produtos da Shopee com dados corretos
 export const shopeeProducts: Product[] = [
   // Electronics Category
   {
@@ -28,7 +29,8 @@ export const shopeeProducts: Product[] = [
     rating: 4.8,
     originalUrl: 'https://s.shopee.com.br/5puqNwGojV',
     marketplaceId: '18357850294',
-    category: 'electronics'
+    category: 'electronics',
+    isWeeklyFeatured: true
   },
   {
     id: 'shopee-2',
@@ -50,7 +52,8 @@ export const shopeeProducts: Product[] = [
     rating: 4.7,
     originalUrl: 'https://s.shopee.com.br/20i7ov4Cj2',
     marketplaceId: '18357850294',
-    category: 'electronics'
+    category: 'electronics',
+    isWeeklyFeatured: true
   },
   {
     id: 'shopee-4',
@@ -85,7 +88,8 @@ export const shopeeProducts: Product[] = [
     rating: 4.3,
     originalUrl: 'https://s.shopee.com.br/4fiszua1ul',
     marketplaceId: '18357850294',
-    category: 'fashion'
+    category: 'fashion',
+    isWeeklyFeatured: true
   },
   {
     id: 'shopee-7',
@@ -109,7 +113,8 @@ export const shopeeProducts: Product[] = [
     rating: 4.7,
     originalUrl: 'https://s.shopee.com.br/x3RQTNCw',
     marketplaceId: '18357850294',
-    category: 'home'
+    category: 'home',
+    isWeeklyFeatured: true
   },
   {
     id: 'shopee-9',
@@ -155,7 +160,8 @@ export const shopeeProducts: Product[] = [
     rating: 4.3,
     originalUrl: 'https://s.shopee.com.br/8fF1lRBxWg',
     marketplaceId: '18357850294',
-    category: 'beauty'
+    category: 'beauty',
+    isWeeklyFeatured: true
   },
   {
     id: 'shopee-13',
@@ -190,7 +196,8 @@ export const shopeeProducts: Product[] = [
     rating: 4.6,
     originalUrl: 'https://s.shopee.com.br/2B1Y1Z3t0q',
     marketplaceId: '18357850294',
-    category: 'accessories'
+    category: 'accessories',
+    isWeeklyFeatured: true
   },
   {
     id: 'shopee-16',
@@ -236,7 +243,8 @@ export const shopeeProducts: Product[] = [
     rating: 4.7,
     originalUrl: 'https://s.shopee.com.br/AKNFkdxZxP',
     marketplaceId: '18357850294',
-    category: 'sports'
+    category: 'sports',
+    isWeeklyFeatured: true
   },
   
   // Other products
@@ -282,7 +290,8 @@ export const shopeeProducts: Product[] = [
     rating: 4.5,
     originalUrl: 'https://s.shopee.com.br/3Au5DXIqXL',
     marketplaceId: '18357850294',
-    category: 'electronics'
+    category: 'electronics',
+    isWeeklyFeatured: true
   },
   {
     id: 'shopee-24',
@@ -307,3 +316,8 @@ export const shopeeProducts: Product[] = [
     category: 'accessories'
   }
 ];
+
+// Função para obter produtos em destaque da semana
+export const getWeeklyFeaturedProducts = (): Product[] => {
+  return shopeeProducts.filter(product => product.isWeeklyFeatured);
+};
