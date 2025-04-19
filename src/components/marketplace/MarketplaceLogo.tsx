@@ -2,7 +2,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 
-export type MarketplaceType = 'amazon' | 'shopee';
+export type MarketplaceType = 'amazon' | 'shopee' | 'mercadolivre';
 
 interface MarketplaceLogoProps {
   type: MarketplaceType;
@@ -38,6 +38,12 @@ export function MarketplaceLogo({ type, size = 'md', withName = true, className 
             <span className={`${fontSize[size]} font-bold`}>S</span>
           </div>
         );
+      case 'mercadolivre':
+        return (
+          <div className={`${dimensions[size]} ${className} flex items-center justify-center bg-yellow-400 text-white rounded-full`}>
+            <span className={`${fontSize[size]} font-bold`}>M</span>
+          </div>
+        );
       default:
         return null;
     }
@@ -49,6 +55,8 @@ export function MarketplaceLogo({ type, size = 'md', withName = true, className 
         return 'Amazon';
       case 'shopee':
         return 'Shopee';
+      case 'mercadolivre':
+        return 'Mercado Livre';
       default:
         return '';
     }

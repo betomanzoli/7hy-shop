@@ -57,6 +57,7 @@ export function CustomerSuggestionForm() {
         productType: values.productType,
         message: values.message,
         createdAt: new Date().toISOString(),
+        processed: false
       };
       
       // Get existing suggestions

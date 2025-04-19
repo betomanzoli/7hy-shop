@@ -15,12 +15,14 @@ function MarketplaceButton({ type, href, className }: MarketplaceButtonProps) {
   
   const marketplaceClasses = {
     amazon: "bg-marketplace-amazon hover:bg-marketplace-amazon/90",
-    shopee: "bg-marketplace-shopee hover:bg-marketplace-shopee/90"
+    shopee: "bg-marketplace-shopee hover:bg-marketplace-shopee/90",
+    mercadolivre: "bg-yellow-400 hover:bg-yellow-500"
   };
   
   const marketplaceNames = {
     amazon: "Amazon",
-    shopee: "Shopee"
+    shopee: "Shopee",
+    mercadolivre: "Mercado Livre"
   };
 
   return (
@@ -57,9 +59,10 @@ export function HeroSection() {
           
           <div className="p-4 bg-card rounded-xl shadow-sm border">
             <h2 className="mb-4 text-xl font-semibold">Navegue por Marketplace</h2>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <MarketplaceButton type="amazon" href="/amazon" />
               <MarketplaceButton type="shopee" href="/shopee" />
+              <MarketplaceButton type="mercadolivre" href="/mercadolivre" />
             </div>
           </div>
         </div>

@@ -12,86 +12,86 @@ export function Footer() {
               <span className="font-bold text-2xl text-brand-700">7hy<span className="text-brand-500">.shop</span></span>
             </Link>
             <p className="text-sm text-muted-foreground mt-2">
-              Your one-stop shop integrating Amazon, Shopee, and Mercado Livre products.
+              Sua loja única integrando produtos Amazon, Shopee e Mercado Livre.
             </p>
           </div>
           
           <div>
-            <h3 className="text-base font-medium mb-4">Shop</h3>
+            <h3 className="text-base font-medium mb-4">Loja</h3>
             <ul className="flex flex-col gap-2">
               <li>
                 <Link to="/products" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  All Products
+                  Todos os Produtos
                 </Link>
               </li>
               <li>
                 <Link to="/products/amazon" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Amazon Products
+                  Produtos Amazon
                 </Link>
               </li>
               <li>
                 <Link to="/products/shopee" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Shopee Products
+                  Produtos Shopee
                 </Link>
               </li>
               <li>
                 <Link to="/products/mercadolivre" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Mercado Livre Products
+                  Produtos Mercado Livre
                 </Link>
               </li>
             </ul>
           </div>
           
           <div>
-            <h3 className="text-base font-medium mb-4">Company</h3>
+            <h3 className="text-base font-medium mb-4">Empresa</h3>
             <ul className="flex flex-col gap-2">
               <li>
                 <Link to="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  About Us
+                  Sobre Nós
                 </Link>
               </li>
               <li>
                 <Link to="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Contact
+                  Contato
                 </Link>
               </li>
               <li>
                 <Link to="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Terms of Service
+                  Termos de Serviço
                 </Link>
               </li>
               <li>
                 <Link to="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Privacy Policy
+                  Política de Privacidade
                 </Link>
               </li>
             </ul>
           </div>
           
           <div className="md:col-span-1 lg:col-span-2">
-            <h3 className="text-base font-medium mb-4">Subscribe to our newsletter</h3>
+            <h3 className="text-base font-medium mb-4">Assine nossa newsletter</h3>
             <form className="flex flex-col md:flex-row gap-2">
               <input 
                 type="email" 
-                placeholder="Email address" 
+                placeholder="Endereço de e-mail" 
                 className="px-3 py-2 bg-background border rounded-md flex-1"
               />
               <button 
                 type="submit" 
                 className="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-md whitespace-nowrap"
               >
-                Subscribe
+                Assinar
               </button>
             </form>
             <p className="text-xs text-muted-foreground mt-2">
-              By subscribing, you agree to our Terms of Service and Privacy Policy.
+              Ao assinar, você concorda com nossos Termos de Serviço e Política de Privacidade.
             </p>
           </div>
         </div>
         
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-t mt-8 pt-8">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} 7hy.shop. All rights reserved.
+            © {new Date().getFullYear()} 7hy.shop. Todos os direitos reservados.
           </p>
           <div className="flex items-center gap-4">
             <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">

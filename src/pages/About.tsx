@@ -44,6 +44,6 @@ const About = () => {
       </div>
     </MainLayout>
   );
-};
+}
 
 export default About;

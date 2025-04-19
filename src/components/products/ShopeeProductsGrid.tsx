@@ -26,6 +26,8 @@ export function ShopeeProductsGrid({ userId, affiliateCode, showFeaturedSection 
       id: shopeeProduct.id,
       title: shopeeProduct.title,
       price: shopeeProduct.price,
+      originalPrice: shopeeProduct.originalPrice,
+      description: shopeeProduct.description,
       imageUrl: shopeeProduct.imageUrl,
       affiliateUrl: shopeeProduct.affiliateUrl,
       marketplace: shopeeProduct.marketplace,

@@ -13,7 +13,11 @@ export interface RedirectModalProps {
 }
 
 export function RedirectModal({ productTitle, affiliateUrl, onClose, marketplace }: RedirectModalProps) {
-  const platformName = marketplace === 'amazon' ? 'Amazon' : 'Shopee';
+  const platformName = marketplace === 'amazon' 
+    ? 'Amazon' 
+    : marketplace === 'shopee' 
+      ? 'Shopee' 
+      : 'Mercado Livre';
   
   const handleConfirm = () => {
     window.open(affiliateUrl, '_blank');
