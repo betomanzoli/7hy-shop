@@ -20,6 +20,8 @@ import ProductsPage from "./pages/admin/products/ProductsPage";
 import OrdersPage from "./pages/admin/orders/OrdersPage";
 import AffiliateAnalytics from "./pages/admin/analytics/AffiliateAnalytics";
 import Cart from "./pages/Cart";
+import ManageProducts from "./pages/admin/products/ManageProducts";
+import CustomerSuggestions from "./pages/admin/products/CustomerSuggestions";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +48,8 @@ const App = () => (
           <Route path="/admin/marketplaces/amazon" element={<AmazonSetup />} />
           <Route path="/admin/marketplaces/shopee" element={<ShopeeSetup />} />
           <Route path="/admin/products" element={<ProductsPage />} />
+          <Route path="/admin/products/manage" element={<ManageProducts />} />
+          <Route path="/admin/products/suggestions" element={<CustomerSuggestions />} />
           <Route path="/admin/orders" element={<OrdersPage />} />
           <Route path="/admin/analytics" element={<AffiliateAnalytics />} />
           

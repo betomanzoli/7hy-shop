@@ -8,7 +8,10 @@ import {
   Package, 
   Settings, 
   LogOut,
-  Store
+  Store,
+  Plus,
+  List,
+  MessageSquare
 } from 'lucide-react';
 import { Logo } from '@/components/ui/logo';
 
@@ -19,12 +22,29 @@ const sidebarLinks = [
     icon: LayoutDashboard,
   },
   {
-    title: 'Products',
+    title: 'Produtos',
     href: '/admin/products',
     icon: ShoppingBag,
+    subItems: [
+      {
+        title: 'Buscar Produtos',
+        href: '/admin/products',
+        icon: List,
+      },
+      {
+        title: 'Gerenciar Produtos',
+        href: '/admin/products/manage',
+        icon: Plus,
+      },
+      {
+        title: 'Sugestões de Clientes',
+        href: '/admin/products/suggestions',
+        icon: MessageSquare,
+      }
+    ]
   },
   {
-    title: 'Orders',
+    title: 'Pedidos',
     href: '/admin/orders',
     icon: Package,
   },
@@ -34,7 +54,7 @@ const sidebarLinks = [
     icon: Store,
   },
   {
-    title: 'Settings',
+    title: 'Configurações',
     href: '/admin/settings',
     icon: Settings,
   },
@@ -54,18 +74,43 @@ export function AdminSidebar() {
             const isActive = location.pathname === link.href || 
                             (link.href !== '/admin' && location.pathname.startsWith(link.href));
             
+            const isOpen = link.subItems && location.pathname.startsWith(link.href);
+            
             return (
-              <Link
-                key={link.href}
-                to={link.href}
-                className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground",
-                  isActive && "bg-muted text-foreground"
+              <React.Fragment key={link.href}>
+                <Link
+                  to={link.href}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground",
+                    isActive && "bg-muted text-foreground"
+                  )}
+                >
+                  <link.icon className="h-4 w-4" />
+                  {link.title}
+                </Link>
+                
+                {link.subItems && isOpen && (
+                  <div className="ml-6 mt-1 space-y-1">
+                    {link.subItems.map((subItem) => {
+                      const isSubActive = location.pathname === subItem.href;
+                      
+                      return (
+                        <Link
+                          key={subItem.href}
+                          to={subItem.href}
+                          className={cn(
+                            "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground text-xs",
+                            isSubActive && "bg-muted text-foreground"
+                          )}
+                        >
+                          <subItem.icon className="h-3 w-3" />
+                          {subItem.title}
+                        </Link>
+                      );
+                    })}
+                  </div>
                 )}
-              >
-                <link.icon className="h-4 w-4" />
-                {link.title}
-              </Link>
+              </React.Fragment>
             );
           })}
         </nav>
@@ -76,7 +121,7 @@ export function AdminSidebar() {
           className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-foreground"
         >
           <LogOut className="h-4 w-4" />
-          Exit Admin
+          Sair do Admin
         </Link>
       </div>
     </aside>

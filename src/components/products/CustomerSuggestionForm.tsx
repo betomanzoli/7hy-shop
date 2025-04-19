@@ -1,39 +1,41 @@
 
 import React, { useState } from 'react';
-import { 
-  Form, 
-  FormControl, 
-  FormField, 
-  FormItem, 
-  FormLabel, 
-  FormMessage,
-  FormDescription
-} from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { MessageSquare, Send } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/components/ui/use-toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { CustomerSuggestion } from '@/types/product';
+import { Loader2 } from 'lucide-react';
 
-// Definir o schema de validação do formulário
+const STORAGE_KEY = 'customer_suggestions';
+
 const formSchema = z.object({
-  name: z.string().min(2, { message: 'O nome deve ter pelo menos 2 caracteres' }),
-  email: z.string().email({ message: 'Email inválido' }),
-  productType: z.string().min(2, { message: 'Digite o tipo de produto que procura' }),
-  message: z.string().min(10, { message: 'A mensagem deve ter pelo menos 10 caracteres' }),
+  name: z.string().min(3, { 
+    message: 'Por favor, digite seu nome completo' 
+  }),
+  email: z.string().email({ 
+    message: 'Por favor, digite um email válido' 
+  }),
+  productType: z.string().min(1, { 
+    message: 'Por favor, selecione um tipo de produto' 
+  }),
+  message: z.string().min(10, { 
+    message: 'A mensagem deve ter pelo menos 10 caracteres' 
+  }).max(500, { 
+    message: 'A mensagem deve ter no máximo 500 caracteres' 
+  }),
 });
 
-type FormValues = z.infer<typeof formSchema>;
-
 export function CustomerSuggestionForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const form = useForm<FormValues>({
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
@@ -43,57 +45,70 @@ export function CustomerSuggestionForm() {
     },
   });
 
-  const onSubmit = async (data: FormValues) => {
-    setIsSubmitting(true);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
     
     try {
-      // Em uma implementação real, você enviaria os dados para o Supabase aqui
-      // Simulando um envio para o backend
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Create a new suggestion
+      const newSuggestion: CustomerSuggestion = {
+        id: Date.now().toString(),
+        name: values.name,
+        email: values.email,
+        productType: values.productType,
+        message: values.message,
+        createdAt: new Date().toISOString(),
+      };
       
-      // Simular sucesso
+      // Get existing suggestions
+      const existingData = localStorage.getItem(STORAGE_KEY);
+      const existing = existingData ? JSON.parse(existingData) : [];
+      
+      // Add the new suggestion
+      const updated = [...existing, newSuggestion];
+      
+      // Save to localStorage
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      
+      // Show success message
       toast({
-        title: "Sugestão enviada!",
-        description: "Obrigado por nos enviar sua sugestão. Analisaremos e entraremos em contato se necessário.",
-        variant: "default",
+        title: "Mensagem enviada!",
+        description: "Obrigado por sua sugestão. Vamos avaliar e responder em breve.",
       });
       
-      // Limpar o formulário
+      // Reset the form
       form.reset();
     } catch (error) {
+      console.error(error);
       toast({
-        title: "Erro ao enviar sugestão",
-        description: "Ocorreu um erro ao enviar sua sugestão. Tente novamente mais tarde.",
+        title: "Erro ao enviar",
+        description: "Houve um problema ao enviar sua mensagem. Tente novamente.",
         variant: "destructive",
       });
-      console.error('Erro ao enviar sugestão:', error);
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="flex items-center gap-2 mb-6">
-        <MessageSquare className="h-6 w-6 text-brand-600" />
-        <h2 className="text-2xl font-bold">Precisa de Ajuda?</h2>
+      <div className="mb-6 text-center">
+        <h2 className="text-2xl font-bold mb-2">Sugestão de Produtos</h2>
+        <p className="text-muted-foreground">
+          Procurando algum produto específico? Deixe sua mensagem e vamos adicionar às nossas recomendações semanais.
+        </p>
       </div>
       
-      <p className="text-muted-foreground mb-6">
-        Não encontrou o produto que procura? Conte-nos o que você gostaria de ver em nossa seleção e podemos incluí-lo em nossa próxima atualização semanal.
-      </p>
-      
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Seu Nome</FormLabel>
+                  <FormLabel>Nome</FormLabel>
                   <FormControl>
-                    <Input placeholder="Digite seu nome" {...field} />
+                    <Input placeholder="Seu nome completo" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -107,7 +122,7 @@ export function CustomerSuggestionForm() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Digite seu email" type="email" {...field} />
+                    <Input placeholder="seu@email.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -120,10 +135,23 @@ export function CustomerSuggestionForm() {
             name="productType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Qual produto você procura?</FormLabel>
-                <FormControl>
-                  <Input placeholder="Ex: Fones de ouvido com cancelamento de ruído" {...field} />
-                </FormControl>
+                <FormLabel>Tipo de produto</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione uma categoria" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="electronics">Eletrônicos</SelectItem>
+                    <SelectItem value="fashion">Moda</SelectItem>
+                    <SelectItem value="home">Casa & Decoração</SelectItem>
+                    <SelectItem value="beauty">Beleza & Cuidados</SelectItem>
+                    <SelectItem value="accessories">Acessórios</SelectItem>
+                    <SelectItem value="sports">Esportes</SelectItem>
+                    <SelectItem value="other">Outros</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -134,33 +162,27 @@ export function CustomerSuggestionForm() {
             name="message"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Detalhes</FormLabel>
+                <FormLabel>Mensagem</FormLabel>
                 <FormControl>
                   <Textarea 
-                    placeholder="Nos conte mais detalhes sobre o produto que você está procurando..." 
-                    className="min-h-[120px]" 
-                    {...field} 
+                    placeholder="Descreva o produto que você está procurando..."
+                    className="min-h-[120px]"
+                    {...field}
                   />
                 </FormControl>
-                <FormDescription>
-                  Quanto mais detalhes você fornecer, melhor poderemos ajudá-lo.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
           
-          <Button type="submit" className="w-full sm:w-auto" disabled={isSubmitting}>
-            {isSubmitting ? (
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? (
               <>
-                <span className="animate-spin mr-2">⭮</span>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Enviando...
               </>
             ) : (
-              <>
-                <Send className="mr-2 h-4 w-4" />
-                Enviar Sugestão
-              </>
+              'Enviar Sugestão'
             )}
           </Button>
         </form>

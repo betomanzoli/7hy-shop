@@ -1,127 +1,134 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ExternalLink, ShoppingCart, Star } from 'lucide-react';
+import { ExternalLink, Star } from 'lucide-react';
+import { MarketplaceLogo } from '@/components/marketplace/MarketplaceLogo';
 import { RedirectModal } from './RedirectModal';
-import { handleProductRedirect, getDefaultAffiliateId } from '@/services/affiliateService';
-import { Product } from '@/data/shopeeProducts';
+import { Product } from '@/types/product';
+import { formatCurrency } from '@/lib/utils';
 
 interface EnhancedProductCardProps {
   product: Product;
-  affiliateCode?: string;
   userId?: string;
+  affiliateCode?: string;
   isFeatured?: boolean;
 }
 
-export function EnhancedProductCard({ product, affiliateCode, userId, isFeatured }: EnhancedProductCardProps) {
-  const [isRedirectModalOpen, setIsRedirectModalOpen] = useState(false);
+export function EnhancedProductCard({ 
+  product, 
+  userId, 
+  affiliateCode, 
+  isFeatured = false 
+}: EnhancedProductCardProps) {
+  const [showRedirectModal, setShowRedirectModal] = useState(false);
   
-  // Use provided affiliate code or get the default one for the marketplace
-  const effectiveAffiliateCode = affiliateCode || getDefaultAffiliateId(product.marketplace);
-  
-  const marketplaceNames = {
-    amazon: 'Amazon',
-    shopee: 'Shopee'
+  const handleViewProduct = () => {
+    setShowRedirectModal(true);
   };
   
-  const marketplaceColors = {
-    amazon: 'bg-amber-100 text-amber-800',
-    shopee: 'bg-orange-100 text-orange-800'
-  };
-  
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(price);
-  };
-  
-  const handleBuyClick = () => {
-    setIsRedirectModalOpen(true);
-  };
-  
-  const handleConfirmRedirect = () => {
-    const affiliateUrl = handleProductRedirect(
-      product.originalUrl,
-      effectiveAffiliateCode,
-      product.marketplace,
-      product.id,
-      product.marketplaceId,
-      userId
-    );
+  const getDiscountPercentage = () => {
+    if (!product.originalPrice || product.originalPrice <= product.price) return null;
     
-    // Open in new tab
-    window.open(affiliateUrl, '_blank');
-    setIsRedirectModalOpen(false);
+    const discount = ((product.originalPrice - product.price) / product.originalPrice) * 100;
+    return Math.round(discount);
   };
   
+  const discountPercentage = getDiscountPercentage();
+  
+  // Function to get final affiliate URL (add tracking if needed)
+  const getFinalAffiliateUrl = () => {
+    let url = product.affiliateUrl;
+    
+    // If a user ID is provided, add it to the URL
+    if (userId) {
+      url += url.includes('?') ? '&' : '?';
+      url += `ref=${userId}`;
+    }
+    
+    // If an affiliate code is provided, add it to the URL
+    if (affiliateCode) {
+      url += url.includes('?') ? '&' : '?';
+      url += `aff=${affiliateCode}`;
+    }
+    
+    return url;
+  };
+
   return (
     <>
-      <Card className={`h-full flex flex-col ${isFeatured ? 'border-yellow-300 shadow-md' : ''}`}>
-        <CardHeader className="pb-2">
-          <div className="flex justify-between items-start mb-2">
-            <div className="flex flex-wrap gap-1">
-              <Badge className={marketplaceColors[product.marketplace]}>
-                {marketplaceNames[product.marketplace]}
-              </Badge>
-              {(isFeatured || product.isWeeklyFeatured) && (
-                <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-300">
-                  <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                  Destaque
-                </Badge>
-              )}
-            </div>
-            {product.rating && (
-              <div className="flex items-center text-sm">
-                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
-                <span>{product.rating}</span>
+      <Card className={`h-full flex flex-col overflow-hidden group transition-all ${
+        isFeatured ? 'shadow-md hover:shadow-xl border-amber-200 dark:border-amber-800' : 'hover:shadow-md'
+      }`}>
+        <div className="relative">
+          <div className="aspect-[4/3] overflow-hidden bg-muted">
+            <img 
+              src={product.imageUrl || "https://placehold.co/400x300?text=Sem+Imagem"} 
+              alt={product.title} 
+              className="object-cover w-full h-full transition-transform group-hover:scale-105"
+            />
+          </div>
+          
+          <div className="absolute top-2 left-2 flex flex-col gap-2">
+            <MarketplaceLogo 
+              type={product.marketplace} 
+              className="w-8 h-8"
+            />
+            
+            {isFeatured && (
+              <div className="bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded-md shadow-sm flex items-center">
+                <Star className="h-3 w-3 mr-1 fill-white" />
+                Destaque
               </div>
             )}
           </div>
-          <div className="aspect-square w-full bg-muted/40 rounded-md overflow-hidden mb-2">
-            <img 
-              src={product.imageUrl} 
-              alt={product.title}
-              className="w-full h-full object-contain"
-            />
+          
+          {discountPercentage && (
+            <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md shadow-sm">
+              -{discountPercentage}%
+            </div>
+          )}
+        </div>
+        
+        <CardContent className="flex-grow pt-4">
+          <div className="mb-2 space-y-1">
+            <h3 className="font-semibold line-clamp-2 h-[2.5rem]">{product.title}</h3>
+            
+            <div className="flex items-baseline gap-2">
+              <span className="text-xl font-bold">{formatCurrency(product.price)}</span>
+              {product.originalPrice && product.originalPrice > product.price && (
+                <span className="text-sm text-muted-foreground line-through">{formatCurrency(product.originalPrice)}</span>
+              )}
+            </div>
+            
+            {product.rating && (
+              <div className="flex items-center text-amber-500">
+                <Star className="h-4 w-4 fill-amber-500 mr-1" />
+                <span>{product.rating.toFixed(1)}</span>
+              </div>
+            )}
           </div>
-          <CardTitle className="text-base line-clamp-2">{product.title}</CardTitle>
-          <CardDescription className="text-lg font-bold text-foreground">
-            {formatPrice(product.price)}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex-grow">
-          {/* Espaço para conteúdo adicional se necessário */}
         </CardContent>
-        <CardFooter className="flex flex-col gap-2">
+        
+        <CardFooter className="pt-0">
           <Button 
-            className="w-full"
-            variant="default"
-            onClick={handleBuyClick}
+            className="w-full gap-2" 
+            onClick={handleViewProduct}
           >
-            <ShoppingCart className="h-4 w-4 mr-2" />
-            Comprar Agora
-          </Button>
-          <Button 
-            className="w-full"
-            variant="outline"
-            onClick={handleBuyClick}
-          >
-            <ExternalLink className="h-4 w-4 mr-2" />
-            Ver na Loja
+            <ExternalLink className="h-4 w-4" />
+            Ver na loja
           </Button>
         </CardFooter>
       </Card>
       
-      <RedirectModal
-        isOpen={isRedirectModalOpen}
-        onClose={() => setIsRedirectModalOpen(false)}
-        onConfirm={handleConfirmRedirect}
-        platformName={marketplaceNames[product.marketplace]}
-        productTitle={product.title}
-      />
+      {showRedirectModal && (
+        <RedirectModal
+          productTitle={product.title}
+          affiliateUrl={getFinalAffiliateUrl()}
+          onClose={() => setShowRedirectModal(false)}
+          marketplace={product.marketplace}
+        />
+      )}
     </>
   );
 }
