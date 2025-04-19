@@ -3,18 +3,25 @@ import React from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, AlertCircle } from 'lucide-react';
+import { MarketplaceType } from '@/components/marketplace/MarketplaceLogo';
 
-interface RedirectModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  platformName: string;
+export interface RedirectModalProps {
   productTitle: string;
+  affiliateUrl: string;
+  onClose: () => void;
+  marketplace: MarketplaceType;
 }
 
-export function RedirectModal({ isOpen, onClose, onConfirm, platformName, productTitle }: RedirectModalProps) {
+export function RedirectModal({ productTitle, affiliateUrl, onClose, marketplace }: RedirectModalProps) {
+  const platformName = marketplace === 'amazon' ? 'Amazon' : 'Shopee';
+  
+  const handleConfirm = () => {
+    window.open(affiliateUrl, '_blank');
+    onClose();
+  };
+  
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
@@ -33,7 +40,7 @@ export function RedirectModal({ isOpen, onClose, onConfirm, platformName, produc
         </div>
         <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:gap-0">
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
-          <Button onClick={onConfirm} className="gap-2">
+          <Button onClick={handleConfirm} className="gap-2">
             <ExternalLink className="h-4 w-4" />
             Ir para {platformName}
           </Button>

@@ -12,6 +12,7 @@ export interface Product {
   imageUrl: string;
   rating?: number;
   originalUrl: string;
+  affiliateUrl: string;
   marketplaceId: string;
   category: ProductCategory;
   isWeeklyFeatured?: boolean;
@@ -28,6 +29,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134207-7qukw-liu9vk4qlsz5bb',
     rating: 4.8,
     originalUrl: 'https://s.shopee.com.br/5puqNwGojV',
+    affiliateUrl: 'https://s.shopee.com.br/5puqNwGojV',
     marketplaceId: '18357850294',
     category: 'electronics',
     isWeeklyFeatured: true
@@ -40,6 +42,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134207-7r98p-lq5p1qp2wdm48b',
     rating: 4.5,
     originalUrl: 'https://s.shopee.com.br/5VHzzLHc6C',
+    affiliateUrl: 'https://s.shopee.com.br/5VHzzLHc6C',
     marketplaceId: '18357850294',
     category: 'electronics'
   },
@@ -51,6 +54,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134201-7r98p-lpj6kgdawz417f',
     rating: 4.7,
     originalUrl: 'https://s.shopee.com.br/20i7ov4Cj2',
+    affiliateUrl: 'https://s.shopee.com.br/20i7ov4Cj2',
     marketplaceId: '18357850294',
     category: 'electronics',
     isWeeklyFeatured: true
@@ -63,6 +67,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/7af4a3c8f40142c44096136c92b0df5d',
     rating: 4.6,
     originalUrl: 'https://s.shopee.com.br/VtK2BIJIG',
+    affiliateUrl: 'https://s.shopee.com.br/VtK2BIJIG',
     marketplaceId: '18357850294',
     category: 'electronics'
   },
@@ -76,6 +81,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134201-7r98s-lqfqtbcr6l7m12',
     rating: 4.5,
     originalUrl: 'https://s.shopee.com.br/7KjeAmzsqz',
+    affiliateUrl: 'https://s.shopee.com.br/7KjeAmzsqz',
     marketplaceId: '18357850294',
     category: 'fashion'
   },
@@ -87,6 +93,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/sg-11134201-7rbmk-llx1q2q3jgpja0',
     rating: 4.3,
     originalUrl: 'https://s.shopee.com.br/4fiszua1ul',
+    affiliateUrl: 'https://s.shopee.com.br/4fiszua1ul',
     marketplaceId: '18357850294',
     category: 'fashion',
     isWeeklyFeatured: true
@@ -99,6 +106,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134207-7r98r-lpv4emn6mxu49f',
     rating: 4.5,
     originalUrl: 'https://s.shopee.com.br/7fMUZTWCG3',
+    affiliateUrl: 'https://s.shopee.com.br/7fMUZTWCG3',
     marketplaceId: '18357850294',
     category: 'fashion'
   },
@@ -112,6 +120,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/sg-11134201-7rbm1-ln9rjthhkgm66c',
     rating: 4.7,
     originalUrl: 'https://s.shopee.com.br/x3RQTNCw',
+    affiliateUrl: 'https://s.shopee.com.br/x3RQTNCw',
     marketplaceId: '18357850294',
     category: 'home',
     isWeeklyFeatured: true
@@ -124,6 +133,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134207-7qukw-livdl0xt0j4b46',
     rating: 4.4,
     originalUrl: 'https://s.shopee.com.br/1qOhcnr7hN',
+    affiliateUrl: 'https://s.shopee.com.br/1qOhcnr7hN',
     marketplaceId: '18357850294',
     category: 'home'
   },
@@ -135,6 +145,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134201-7r98o-lp48eapiqwdc5d',
     rating: 4.6,
     originalUrl: 'https://s.shopee.com.br/4fit01Jvzh',
+    affiliateUrl: 'https://s.shopee.com.br/4fit01Jvzh',
     marketplaceId: '18357850294',
     category: 'home'
   },
@@ -148,6 +159,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134207-7r98o-lp67c25o1vhd65',
     rating: 4.6,
     originalUrl: 'https://s.shopee.com.br/9zkPLsG5Qt',
+    affiliateUrl: 'https://s.shopee.com.br/9zkPLsG5Qt',
     marketplaceId: '18357850294',
     category: 'beauty'
   },
@@ -159,6 +171,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134207-7qukv-li8hn9ntwfl17e',
     rating: 4.3,
     originalUrl: 'https://s.shopee.com.br/8fF1lRBxWg',
+    affiliateUrl: 'https://s.shopee.com.br/8fF1lRBxWg',
     marketplaceId: '18357850294',
     category: 'beauty',
     isWeeklyFeatured: true
@@ -171,6 +184,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134207-7qukw-lk1pq1h9w0t3be',
     rating: 4.5,
     originalUrl: 'https://s.shopee.com.br/5VHzzeaPDB',
+    affiliateUrl: 'https://s.shopee.com.br/5VHzzeaPDB',
     marketplaceId: '18357850294',
     category: 'beauty'
   },
@@ -184,6 +198,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/58ca507add7f50c40c9793a6d2e62087',
     rating: 4.4,
     originalUrl: 'https://s.shopee.com.br/5fbQBzCxrn',
+    affiliateUrl: 'https://s.shopee.com.br/5fbQBzCxrn',
     marketplaceId: '18357850294',
     category: 'accessories'
   },
@@ -195,6 +210,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/d1264466dfeadca5f7f40f9ec3df6b9a',
     rating: 4.6,
     originalUrl: 'https://s.shopee.com.br/2B1Y1Z3t0q',
+    affiliateUrl: 'https://s.shopee.com.br/2B1Y1Z3t0q',
     marketplaceId: '18357850294',
     category: 'accessories',
     isWeeklyFeatured: true
@@ -207,6 +223,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134207-7r98o-lpfdnnucdtqc7c',
     rating: 4.3,
     originalUrl: 'https://s.shopee.com.br/6AXgmvfSHz',
+    affiliateUrl: 'https://s.shopee.com.br/6AXgmvfSHz',
     marketplaceId: '18357850294',
     category: 'accessories'
   },
@@ -220,6 +237,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134207-7r98p-lqhvwm6iq7qf56',
     rating: 4.5,
     originalUrl: 'https://s.shopee.com.br/x3Rbkvd8',
+    affiliateUrl: 'https://s.shopee.com.br/x3Rbkvd8',
     marketplaceId: '18357850294',
     category: 'sports'
   },
@@ -231,6 +249,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134201-7qukw-lkc2yrjlnlkv97',
     rating: 4.3,
     originalUrl: 'https://s.shopee.com.br/30af19qEJi',
+    affiliateUrl: 'https://s.shopee.com.br/30af19qEJi',
     marketplaceId: '18357850294',
     category: 'sports'
   },
@@ -242,6 +261,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134201-23030-hl9wt75w88nvf3',
     rating: 4.7,
     originalUrl: 'https://s.shopee.com.br/AKNFkdxZxP',
+    affiliateUrl: 'https://s.shopee.com.br/AKNFkdxZxP',
     marketplaceId: '18357850294',
     category: 'sports',
     isWeeklyFeatured: true
@@ -256,6 +276,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134201-7qukw-ljfgxbz3zgw9ba',
     rating: 4.6,
     originalUrl: 'https://s.shopee.com.br/4L62bcp9MY',
+    affiliateUrl: 'https://s.shopee.com.br/4L62bcp9MY',
     marketplaceId: '18357850294',
     category: 'other'
   },
@@ -267,6 +288,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134207-7qukw-ljjcrmcqh6j8a2',
     rating: 4.4,
     originalUrl: 'https://s.shopee.com.br/AUgfwynGhs',
+    affiliateUrl: 'https://s.shopee.com.br/AUgfwynGhs',
     marketplaceId: '18357850294',
     category: 'other'
   },
@@ -278,6 +300,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/c7dc6ec4eb0e75b1d9ddb736d95559d8',
     rating: 4.2,
     originalUrl: 'https://s.shopee.com.br/8fF1ldOdqy',
+    affiliateUrl: 'https://s.shopee.com.br/8fF1ldOdqy',
     marketplaceId: '18357850294',
     category: 'other'
   },
@@ -289,6 +312,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/sg-11134201-22100-3f3kk8xpg3iv2f',
     rating: 4.5,
     originalUrl: 'https://s.shopee.com.br/3Au5DXIqXL',
+    affiliateUrl: 'https://s.shopee.com.br/3Au5DXIqXL',
     marketplaceId: '18357850294',
     category: 'electronics',
     isWeeklyFeatured: true
@@ -301,6 +325,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134207-7qukw-lk2r3liwkcl9e6',
     rating: 4.7,
     originalUrl: 'https://s.shopee.com.br/qWARGMrBM',
+    affiliateUrl: 'https://s.shopee.com.br/qWARGMrBM',
     marketplaceId: '18357850294',
     category: 'home'
   },
@@ -312,6 +337,7 @@ export const shopeeProducts: Product[] = [
     imageUrl: 'https://down-br.img.susercontent.com/file/br-11134207-7qukz-lkcc1bkx12eu4e',
     rating: 4.3,
     originalUrl: 'https://s.shopee.com.br/9zkPM7EMHW',
+    affiliateUrl: 'https://s.shopee.com.br/9zkPM7EMHW',
     marketplaceId: '18357850294',
     category: 'accessories'
   }

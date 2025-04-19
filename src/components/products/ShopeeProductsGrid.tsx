@@ -3,8 +3,9 @@ import React from 'react';
 import { EnhancedProductCard } from './EnhancedProductCard';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { ProductCategoryTabs } from './ProductCategoryTabs';
-import { shopeeProducts, Product, ProductCategory, getWeeklyFeaturedProducts } from '@/data/shopeeProducts';
+import { shopeeProducts, ProductCategory, getWeeklyFeaturedProducts } from '@/data/shopeeProducts';
 import { Star } from 'lucide-react';
+import { Product } from '@/types/product';
 
 interface ShopeeProductsGridProps {
   userId?: string;
@@ -19,6 +20,21 @@ export function ShopeeProductsGrid({ userId, affiliateCode, showFeaturedSection 
   // Get weekly featured products
   const featuredProducts = getWeeklyFeaturedProducts();
   
+  // Convert shopeeProducts to match the Product type from types/product.ts
+  const convertToProductType = (shopeeProduct: typeof shopeeProducts[0]): Product => {
+    return {
+      id: shopeeProduct.id,
+      title: shopeeProduct.title,
+      price: shopeeProduct.price,
+      imageUrl: shopeeProduct.imageUrl,
+      affiliateUrl: shopeeProduct.affiliateUrl,
+      marketplace: shopeeProduct.marketplace,
+      category: shopeeProduct.category,
+      rating: shopeeProduct.rating,
+      featured: shopeeProduct.isWeeklyFeatured
+    };
+  };
+  
   return (
     <div className="w-full">
       {showFeaturedSection && featuredProducts.length > 0 && (
@@ -32,7 +48,7 @@ export function ShopeeProductsGrid({ userId, affiliateCode, showFeaturedSection 
             {featuredProducts.map(product => (
               <EnhancedProductCard 
                 key={product.id}
-                product={product}
+                product={convertToProductType(product)}
                 userId={userId}
                 affiliateCode={affiliateCode}
                 isFeatured={true}
@@ -50,7 +66,7 @@ export function ShopeeProductsGrid({ userId, affiliateCode, showFeaturedSection 
             {shopeeProducts.map(product => (
               <EnhancedProductCard 
                 key={product.id}
-                product={product}
+                product={convertToProductType(product)}
                 userId={userId}
                 affiliateCode={affiliateCode}
               />
@@ -66,7 +82,7 @@ export function ShopeeProductsGrid({ userId, affiliateCode, showFeaturedSection 
                 .map(product => (
                   <EnhancedProductCard 
                     key={product.id}
-                    product={product}
+                    product={convertToProductType(product)}
                     userId={userId}
                     affiliateCode={affiliateCode}
                   />

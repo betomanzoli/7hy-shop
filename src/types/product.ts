@@ -23,4 +23,5 @@ export interface CustomerSuggestion {
   message: string;
   productType: string;
   createdAt: string;
+  processed?: boolean;
 }

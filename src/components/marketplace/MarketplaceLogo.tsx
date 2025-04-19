@@ -8,9 +8,10 @@ interface MarketplaceLogoProps {
   type: MarketplaceType;
   size?: 'sm' | 'md' | 'lg';
   withName?: boolean;
+  className?: string;
 }
 
-export function MarketplaceLogo({ type, size = 'md', withName = true }: MarketplaceLogoProps) {
+export function MarketplaceLogo({ type, size = 'md', withName = true, className = '' }: MarketplaceLogoProps) {
   const dimensions = {
     sm: 'w-8 h-8',
     md: 'w-10 h-10',
@@ -27,13 +28,13 @@ export function MarketplaceLogo({ type, size = 'md', withName = true }: Marketpl
     switch (type) {
       case 'amazon':
         return (
-          <div className={`${dimensions[size]} flex items-center justify-center bg-marketplace-amazon text-white rounded-full`}>
+          <div className={`${dimensions[size]} ${className} flex items-center justify-center bg-marketplace-amazon text-white rounded-full`}>
             <span className={`${fontSize[size]} font-bold`}>A</span>
           </div>
         );
       case 'shopee':
         return (
-          <div className={`${dimensions[size]} flex items-center justify-center bg-marketplace-shopee text-white rounded-full`}>
+          <div className={`${dimensions[size]} ${className} flex items-center justify-center bg-marketplace-shopee text-white rounded-full`}>
             <span className={`${fontSize[size]} font-bold`}>S</span>
           </div>
         );
