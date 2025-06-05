@@ -3,7 +3,7 @@ import React from 'react';
 import { EnhancedProductCard } from './EnhancedProductCard';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { ProductCategoryTabs } from './ProductCategoryTabs';
-import { shopeeProducts, ProductCategory, getWeeklyFeaturedProducts } from '@/data/shopeeProducts';
+import { shopeeProducts, ProductCategory, getWeeklyFeaturedProducts, ShopeeProduct } from '@/data/shopeeProducts';
 import { Star } from 'lucide-react';
 import { Product } from '@/types/product';
 
@@ -21,7 +21,7 @@ export function ShopeeProductsGrid({ userId, affiliateCode, showFeaturedSection 
   const featuredProducts = getWeeklyFeaturedProducts();
   
   // Convert shopeeProducts to match the Product type from types/product.ts
-  const convertToProductType = (shopeeProduct: typeof shopeeProducts[0]): Product => {
+  const convertToProductType = (shopeeProduct: ShopeeProduct): Product => {
     return {
       id: shopeeProduct.id,
       title: shopeeProduct.title,

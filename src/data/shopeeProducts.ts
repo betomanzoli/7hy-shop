@@ -3,23 +3,25 @@ import { MarketplaceType } from '@/components/marketplace/MarketplaceLogo';
 // Define product category types
 export type ProductCategory = 'electronics' | 'fashion' | 'home' | 'beauty' | 'accessories' | 'sports' | 'other';
 
-// Define product interface
-export interface Product {
+// Define product interface for Shopee products
+export interface ShopeeProduct {
   id: string;
   title: string;
   price: number;
+  originalPrice?: number;
+  description?: string;
   marketplace: MarketplaceType;
   imageUrl: string;
   rating?: number;
   originalUrl: string;
-  affiliateUrl: string;
+  affiliateUrl?: string;
   marketplaceId: string;
   category: ProductCategory;
   isWeeklyFeatured?: boolean;
 }
 
 // Produtos da Shopee com dados corretos
-export const shopeeProducts: Product[] = [
+export const shopeeProducts: ShopeeProduct[] = [
   // Electronics Category
   {
     id: 'shopee-1',
@@ -344,6 +346,6 @@ export const shopeeProducts: Product[] = [
 ];
 
 // Função para obter produtos em destaque da semana
-export const getWeeklyFeaturedProducts = (): Product[] => {
+export const getWeeklyFeaturedProducts = (): ShopeeProduct[] => {
   return shopeeProducts.filter(product => product.isWeeklyFeatured);
 };
