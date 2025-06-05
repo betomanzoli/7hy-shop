@@ -21,6 +21,12 @@ export interface MarketplaceCredentials {
   shopee?: ShopeeCredentials;
 }
 
+interface MarketplaceCredentialsRow {
+  marketplace_id: string;
+  credentials: any;
+  last_updated: string;
+}
+
 export function useMarketplaceCredentials(marketplaceId?: MarketplaceId) {
   const [apiStatus, setApiStatus] = useState<'connected' | 'disconnected' | 'error' | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +48,7 @@ export function useMarketplaceCredentials(marketplaceId?: MarketplaceId) {
     const fetchCredentials = async () => {
       try {
         const { data, error } = await supabase
-          .from('marketplace_credentials')
+          .from('marketplace_credentials' as any)
           .select('*');
         
         if (error) throw error;
@@ -53,7 +59,7 @@ export function useMarketplaceCredentials(marketplaceId?: MarketplaceId) {
             shopee: {}
           };
           
-          data.forEach((item) => {
+          (data as MarketplaceCredentialsRow[]).forEach((item) => {
             if (item.marketplace_id === 'amazon') {
               credentialsData.amazon = item.credentials as AmazonCredentials;
             } else if (item.marketplace_id === 'shopee') {
@@ -80,7 +86,7 @@ export function useMarketplaceCredentials(marketplaceId?: MarketplaceId) {
     try {
       // Save credentials to Supabase
       const { error } = await supabase
-        .from('marketplace_credentials')
+        .from('marketplace_credentials' as any)
         .upsert({
           marketplace_id: id,
           credentials: data,
