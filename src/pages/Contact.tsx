@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const Contact = () => {
   const { toast } = useToast();
@@ -20,10 +21,10 @@ const Contact = () => {
   return (
     <MainLayout>
       <div className="container px-4 py-12">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <h1 className="text-4xl font-bold mb-8">Entre em Contato</h1>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
               <h2 className="text-2xl font-semibold mb-4">Fale Conosco</h2>
               <p className="text-muted-foreground mb-6">
@@ -66,12 +67,8 @@ const Contact = () => {
                 
                 <Button type="submit" className="w-full">Enviar Mensagem</Button>
               </form>
-            </div>
-            
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Informações de Contato</h2>
               
-              <div className="space-y-6">
+              <div className="mt-8 space-y-6">
                 <div>
                   <h3 className="text-base font-medium mb-1">Horário de Atendimento</h3>
                   <p className="text-muted-foreground">Segunda a Sexta: 9h às 18h</p>
@@ -92,13 +89,76 @@ const Contact = () => {
                     </a>
                   </div>
                 </div>
+              </div>
+            </div>
+            
+            <div>
+              <div className="bg-muted/40 p-8 rounded-xl">
+                <h2 className="text-2xl font-semibold mb-6">Perguntas Frequentes (FAQ)</h2>
                 
-                <div className="bg-muted p-6 rounded-lg mt-8">
-                  <h3 className="text-base font-medium mb-2">Perguntas Frequentes</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Confira nossas perguntas frequentes antes de entrar em contato.
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger>Como o 7hy.shop funciona?</AccordionTrigger>
+                    <AccordionContent>
+                      O 7hy.shop é uma plataforma que agrega produtos dos melhores marketplaces (Amazon e Shopee) em um só lugar. Quando você clica em um produto, é redirecionado para o site oficial do marketplace para finalizar a compra.
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-2">
+                    <AccordionTrigger>Os preços são os mesmos dos sites originais?</AccordionTrigger>
+                    <AccordionContent>
+                      Sim! Você verá exatamente os mesmos preços que estão nos sites oficiais dos marketplaces. Não adicionamos nenhuma taxa ou custo extra ao produto.
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-3">
+                    <AccordionTrigger>Como vocês ganham dinheiro?</AccordionTrigger>
+                    <AccordionContent>
+                      Somos parceiros oficiais dos programas de afiliados da Amazon e Shopee. Quando você realiza uma compra através dos nossos links, recebemos uma pequena comissão, sem qualquer custo adicional para você.
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-4">
+                    <AccordionTrigger>Onde faço o pagamento da compra?</AccordionTrigger>
+                    <AccordionContent>
+                      Todas as compras e pagamentos são realizados diretamente nos sites oficiais dos marketplaces (Amazon ou Shopee). O 7hy.shop apenas direciona você para o produto desejado no site oficial.
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-5">
+                    <AccordionTrigger>Como funciona a garantia e devolução?</AccordionTrigger>
+                    <AccordionContent>
+                      As políticas de garantia e devolução seguem as regras do marketplace onde você realizou a compra (Amazon ou Shopee). Você terá todas as proteções oferecidas por essas plataformas.
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-6">
+                    <AccordionTrigger>Posso sugerir produtos para o site?</AccordionTrigger>
+                    <AccordionContent>
+                      Sim! Na página de produtos, há um formulário onde você pode sugerir produtos que gostaria de ver no nosso site. Analisamos todas as sugestões e adicionamos produtos relevantes regularmente.
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-7">
+                    <AccordionTrigger>Vocês têm aplicativo móvel?</AccordionTrigger>
+                    <AccordionContent>
+                      Atualmente não temos um aplicativo móvel, mas nosso site é totalmente responsivo e funciona perfeitamente em smartphones e tablets. Estamos considerando desenvolver um app no futuro.
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-8">
+                    <AccordionTrigger>Como posso acompanhar as melhores ofertas?</AccordionTrigger>
+                    <AccordionContent>
+                      Você pode se inscrever em nossa newsletter no rodapé do site para receber as melhores ofertas semanalmente. Também atualizamos nossa seção "Produtos Selecionados da Semana" regularmente.
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+                
+                <div className="mt-8 p-4 bg-brand-50 dark:bg-brand-950 rounded-lg">
+                  <h3 className="text-lg font-semibold mb-2">Não encontrou sua resposta?</h3>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Entre em contato conosco através do formulário ao lado. Nossa equipe responde em até 24 horas.
                   </p>
-                  <Button variant="outline" size="sm">Ver FAQ</Button>
                 </div>
               </div>
             </div>

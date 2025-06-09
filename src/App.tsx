@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import Products from "./pages/Products";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 import Amazon from "./pages/marketplace/Amazon";
 import Shopee from "./pages/marketplace/Shopee";
 import NotFound from "./pages/NotFound";
@@ -37,6 +39,8 @@ const App = () => (
           <Route path="/products" element={<Products />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="/amazon" element={<Amazon />} />
           <Route path="/shopee" element={<Shopee />} />
           <Route path="/cart" element={<Cart />} />

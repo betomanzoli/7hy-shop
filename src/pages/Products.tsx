@@ -94,7 +94,6 @@ const Products = () => {
             <TabsTrigger value="all">Todos</TabsTrigger>
             <TabsTrigger value="shopee">Shopee</TabsTrigger>
             <TabsTrigger value="amazon">Amazon</TabsTrigger>
-            <TabsTrigger value="mercadolivre">Mercado Livre</TabsTrigger>
           </TabsList>
           
           <TabsContent value="all">
@@ -123,16 +122,6 @@ const Products = () => {
             ) : (
               <div className="py-8 text-center">
                 <p className="text-muted-foreground">Nenhum produto da Amazon encontrado. Tente uma nova busca ou volte mais tarde.</p>
-              </div>
-            )}
-          </TabsContent>
-          
-          <TabsContent value="mercadolivre">
-            {getProductsByMarketplace('mercadolivre').length > 0 ? (
-              <ProductGrid products={getProductsByMarketplace('mercadolivre')} />
-            ) : (
-              <div className="py-8 text-center">
-                <p className="text-muted-foreground">Nenhum produto do Mercado Livre encontrado. Tente uma nova busca ou volte mais tarde.</p>
               </div>
             )}
           </TabsContent>
