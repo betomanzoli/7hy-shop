@@ -1,95 +1,163 @@
-
-import React, { useState } from 'react';
-import { AdminLayout } from '@/components/admin/AdminLayout';
-import { ProductSearch } from '@/components/admin/products/ProductSearch';
-import { ProductCard } from '@/components/admin/products/ProductCard';
-import { useToast } from '@/hooks/use-toast';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
-import { MarketplaceType } from '@/components/marketplace/MarketplaceLogo';
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { MoreHorizontal, PlusCircle, Search, Edit, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface Product {
   id: string;
   title: string;
   price: number;
-  marketplace: MarketplaceType;
-  imageUrl: string;
-  rating?: number;
-  affiliateUrl: string;
+  marketplace: string;
+  status: string;
+  createdAt: string;
 }
 
-const ProductsPage = () => {
+export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
-  const { toast } = useToast();
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const handleProductsFound = (foundProducts: Product[]) => {
-    setProducts(foundProducts);
-  };
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
-  const handleAddToSite = (product: Product) => {
-    if (featuredProducts.some(p => p.id === product.id)) {
-      toast({
-        title: "Produto já adicionado",
-        description: "Este produto já está na lista de produtos em destaque",
-      });
-      return;
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      // Simulação de chamada de API para o backend Flask
+      const response = await fetch('http://localhost:5000/api/products' );
+      if (!response.ok) {
+        throw new Error('Erro ao buscar produtos');
+      }
+      const data = await response.json();
+      setProducts(data.products.map((p: any) => ({
+        id: p.id,
+        title: p.title,
+        price: p.price,
+        marketplace: p.marketplace,
+        status: p.status,
+        createdAt: new Date(p.created_at).toLocaleDateString(),
+      })));
+    } catch (error) {
+      console.error('Erro ao carregar produtos:', error);
+      toast.error('Erro ao carregar produtos.');
+    } finally {
+      setLoading(false);
     }
-    
-    setFeaturedProducts([...featuredProducts, product]);
-    
-    toast({
-      title: "Produto adicionado",
-      description: "Produto adicionado com sucesso aos destaques do site",
-    });
   };
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    // Implementar lógica de busca real aqui, possivelmente chamando a API com um parâmetro de busca
+  };
+
+  const handleEdit = (productId: string) => {
+    toast.info(`Editar produto: ${productId}`);
+    // Implementar navegação para página de edição ou modal
+  };
+
+  const handleDelete = async (productId: string) => {
+    if (window.confirm('Tem certeza que deseja excluir este produto?')) {
+      try {
+        const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
+          method: 'DELETE',
+        } );
+        if (!response.ok) {
+          throw new Error('Erro ao excluir produto');
+        }
+        toast.success('Produto excluído com sucesso!');
+        fetchProducts(); // Recarrega a lista de produtos
+      } catch (error) {
+        console.error('Erro ao excluir produto:', error);
+        toast.error('Erro ao excluir produto.');
+      }
+    }
+  };
+
+  const filteredProducts = products.filter(product =>
+    product.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <AdminLayout title="Pesquisa de Produtos">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-6">
-          <ProductSearch onProductsFound={handleProductsFound} />
-        </div>
-        
-        {featuredProducts.length > 0 && (
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold mb-4">Produtos em Destaque</h2>
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {featuredProducts.map(product => (
-                <ProductCard 
-                  key={`featured-${product.id}`} 
-                  product={product} 
-                />
-              ))}
-            </div>
+    <div className="container mx-auto py-8">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-2xl font-bold">Gerenciar Produtos</CardTitle>
+          <Button onClick={() => toast.info('Navegar para adicionar novo produto')}>
+            <PlusCircle className="mr-2 h-4 w-4" /> Adicionar Produto
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center py-4">
+            <Input
+              placeholder="Buscar produtos..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="max-w-sm"
+            />
+            <Search className="ml-2 h-4 w-4 text-gray-500" />
           </div>
-        )}
-        
-        {products.length > 0 ? (
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Resultados da Busca</h2>
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {products.map(product => (
-                <ProductCard 
-                  key={product.id} 
-                  product={product} 
-                  onAddToSite={handleAddToSite}
-                />
-              ))}
+          {loading ? (
+            <p>Carregando produtos...</p>
+          ) : (
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Título</TableHead>
+                    <TableHead>Preço</TableHead>
+                    <TableHead>Marketplace</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Criado Em</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredProducts.length ? (
+                    filteredProducts.map((product) => (
+                      <TableRow key={product.id}>
+                        <TableCell className="font-medium">{product.title}</TableCell>
+                        <TableCell>R$ {product.price.toFixed(2)}</TableCell>
+                        <TableCell>{product.marketplace}</TableCell>
+                        <TableCell>{product.status}</TableCell>
+                        <TableCell>{product.createdAt}</TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="h-8 w-8 p-0">
+                                <span className="sr-only">Abrir menu</span>
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => handleEdit(product.id)}>
+                                <Edit className="mr-2 h-4 w-4" /> Editar
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleDelete(product.id)}>
+                                <Trash2 className="mr-2 h-4 w-4" /> Excluir
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={6} className="h-24 text-center">
+                        Nenhum produto encontrado.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
             </div>
-          </div>
-        ) : (
-          <Alert>
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Nenhum resultado</AlertTitle>
-            <AlertDescription>
-              Use a caixa de pesquisa acima para buscar produtos nas plataformas conectadas.
-            </AlertDescription>
-          </Alert>
-        )}
-      </div>
-    </AdminLayout>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
-};
-
-export default ProductsPage;
+}
