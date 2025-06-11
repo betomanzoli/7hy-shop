@@ -5,9 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { ProductFromDB } from '@/hooks/useProducts';
 
-interface ProductForComparison {
+interface ComparisonProduct {
   id: string;
   title: string;
   price: number;
@@ -16,11 +15,25 @@ interface ProductForComparison {
   rating?: number;
   reviewCount?: number;
   affiliateUrl: string;
+  isInStock?: boolean;
+  shippingInfo?: {
+    cost: number;
+    estimatedDays: number;
+  };
+  sellerInfo?: {
+    name: string;
+    rating?: number;
+  };
+  specifications?: {
+    [key: string]: string;
+  };
+  features?: string[];
+  category?: string;
 }
 
 export default function ComparisonPage() {
   const [productUrls, setProductUrls] = useState<string[]>(['', '']);
-  const [productsToCompare, setProductsToCompare] = useState<ProductForComparison[]>([]);
+  const [productsToCompare, setProductsToCompare] = useState<ComparisonProduct[]>([]);
   const [loading, setLoading] = useState(false);
 
   const handleUrlChange = (index: number, value: string) => {
@@ -38,7 +51,7 @@ export default function ComparisonPage() {
     setProductUrls(newUrls);
   };
 
-  const fetchProductDetails = async (url: string): Promise<ProductForComparison | null> => {
+  const fetchProductDetails = async (url: string): Promise<ComparisonProduct | null> => {
     try {
       // Tentar usar o backend Flask primeiro
       const response = await fetch('http://localhost:5000/api/scrape-product', {
@@ -60,7 +73,13 @@ export default function ComparisonPage() {
         imageUrl: data.image_url,
         rating: data.rating,
         reviewCount: data.review_count,
-        affiliateUrl: url // Por enquanto usar a URL original
+        affiliateUrl: url,
+        isInStock: data.is_in_stock || true,
+        shippingInfo: data.shipping_info || { cost: 0, estimatedDays: 5 },
+        sellerInfo: { name: data.seller_name || 'Vendedor' },
+        specifications: data.specifications || {},
+        features: data.features || [],
+        category: data.category || 'Geral'
       };
     } catch (error: any) {
       console.error(`Erro ao buscar produto da URL ${url}:`, error);
@@ -79,7 +98,7 @@ export default function ComparisonPage() {
       return;
     }
 
-    const fetchedProducts: ProductForComparison[] = [];
+    const fetchedProducts: ComparisonProduct[] = [];
     for (const url of validUrls) {
       const product = await fetchProductDetails(url);
       if (product) {

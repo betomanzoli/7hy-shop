@@ -34,7 +34,7 @@ const ManageProducts = () => {
           currency: 'BRL',
           affiliate_url: product.affiliateUrl,
           original_url: product.affiliateUrl,
-          image_url: product.image,
+          image_url: product.imageUrl,
           marketplace: product.marketplace as any,
           marketplace_id: product.id,
           rating: product.rating,

@@ -29,14 +29,20 @@ export default function ProductsPage() {
         .select(`
           id,
           title,
+          description,
+          short_description,
           price,
           original_price,
+          currency,
+          affiliate_url,
+          image_url,
           marketplace,
-          is_featured,
-          is_deal,
           rating,
           review_count,
+          is_featured,
+          is_deal,
           seller_name,
+          category_id,
           created_at,
           categories:category_id (
             name,
@@ -185,7 +191,7 @@ export default function ProductsPage() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <MarketplaceLogo marketplace={product.marketplace} size="sm" />
+                          <MarketplaceLogo type={product.marketplace} size="sm" />
                         </TableCell>
                         <TableCell>
                           {product.categories ? (

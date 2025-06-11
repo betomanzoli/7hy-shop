@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Star, ExternalLink } from 'lucide-react';
 import { MarketplaceLogo } from '@/components/marketplace/MarketplaceLogo';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ProductGridProps {
   products: ProductFromDB[];
@@ -90,7 +91,7 @@ export function ProductGridWithSupabase({ products, loading }: ProductGridProps)
             </div>
             
             <div className="flex items-center gap-2 mb-2">
-              <MarketplaceLogo marketplace={product.marketplace} size="sm" />
+              <MarketplaceLogo type={product.marketplace} size="sm" />
               {product.categories && (
                 <Badge variant="outline" className="text-xs">
                   {product.categories.name}
