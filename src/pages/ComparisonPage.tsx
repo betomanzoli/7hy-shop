@@ -9,7 +9,7 @@ interface ComparisonProduct {
   id: string;
   title: string;
   price: number;
-  marketplace: string;
+  marketplace: "amazon" | "shopee" | "mercadolivre";
   imageUrl: string;
   rating?: number;
   reviewCount?: number;
@@ -72,7 +72,7 @@ export default function ComparisonPage() {
         id: data.marketplace_id || data.id,
         title: data.title,
         price: data.price,
-        marketplace: data.marketplace,
+        marketplace: data.marketplace as "amazon" | "shopee" | "mercadolivre",
         imageUrl: data.image_url,
         rating: data.rating,
         reviewCount: data.review_count,
