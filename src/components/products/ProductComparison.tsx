@@ -31,7 +31,7 @@ interface ComparisonProduct {
   price: number;
   originalPrice?: number;
   imageUrl: string;
-  marketplace: 'amazon' | 'shopee';
+  marketplace: 'amazon' | 'shopee' | 'mercadolivre';
   rating: number;
   reviewCount: number;
   affiliateUrl: string;
@@ -220,8 +220,14 @@ export function ProductComparison({ products, onAddToWishlist, onShare }: Produc
           {/* Título e marketplace */}
           <div>
             <h3 className="font-semibold text-sm line-clamp-2 mb-2">{product.title}</h3>
-            <Badge variant={product.marketplace === 'amazon' ? 'default' : 'secondary'}>
-              {product.marketplace === 'amazon' ? 'Amazon' : 'Shopee'}
+            <Badge variant={
+              product.marketplace === 'amazon' ? 'default' : 
+              product.marketplace === 'shopee' ? 'secondary' : 
+              'outline'
+            }>
+              {product.marketplace === 'amazon' ? 'Amazon' : 
+               product.marketplace === 'shopee' ? 'Shopee' : 
+               'Mercado Livre'}
             </Badge>
           </div>
 
@@ -406,4 +412,3 @@ export function ProductComparison({ products, onAddToWishlist, onShare }: Produc
     </div>
   );
 }
-
