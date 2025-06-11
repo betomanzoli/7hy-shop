@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { ProductComparison } from '@/components/products/ProductComparison';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,28 +10,28 @@ interface ComparisonProduct {
   id: string;
   title: string;
   price: number;
-  marketplace: "amazon" | "shopee" | "mercadolivre";
+  originalPrice?: number;
   imageUrl: string;
-  rating?: number;
-  reviewCount?: number;
+  marketplace: "amazon" | "shopee" | "mercadolivre";
+  rating: number;
+  reviewCount: number;
   affiliateUrl: string;
-  isInStock?: boolean;
-  shippingInfo?: {
-    cost: number;
+  isInStock: boolean;
+  shippingInfo: {
+    isFree: boolean;
     estimatedDays: number;
+    cost?: number;
   };
-  sellerInfo?: {
+  sellerInfo: {
     name: string;
-    rating?: number;
+    rating: number;
+    isVerified: boolean;
   };
-  specifications?: {
-    [key: string]: string;
-  };
-  features?: string[];
-  category?: string;
-  priceHistory?: Array<{
-    price: number;
+  specifications: Record<string, any>;
+  features: string[];
+  priceHistory: Array<{
     date: string;
+    price: number;
   }>;
 }
 
@@ -72,17 +73,25 @@ export default function ComparisonPage() {
         id: data.marketplace_id || data.id,
         title: data.title,
         price: data.price,
+        originalPrice: data.original_price,
         marketplace: data.marketplace as "amazon" | "shopee" | "mercadolivre",
         imageUrl: data.image_url,
-        rating: data.rating,
-        reviewCount: data.review_count,
+        rating: data.rating || 0,
+        reviewCount: data.review_count || 0,
         affiliateUrl: url,
         isInStock: data.is_in_stock || true,
-        shippingInfo: data.shipping_info || { cost: 0, estimatedDays: 5 },
-        sellerInfo: { name: data.seller_name || 'Vendedor' },
+        shippingInfo: {
+          isFree: data.shipping_info?.is_free || false,
+          estimatedDays: data.shipping_info?.estimated_days || 5,
+          cost: data.shipping_info?.cost
+        },
+        sellerInfo: {
+          name: data.seller_name || 'Vendedor',
+          rating: data.seller_rating || 0,
+          isVerified: data.seller_verified || false
+        },
         specifications: data.specifications || {},
         features: data.features || [],
-        category: data.category || 'Geral',
         priceHistory: data.price_history || []
       };
     } catch (error: any) {
