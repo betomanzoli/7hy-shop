@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import { ProductComparison } from '@/components/products/ProductComparison';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { ProductFromDB } from '@/hooks/useProducts';
 
 interface ProductForComparison {
   id: string;
@@ -11,7 +13,9 @@ interface ProductForComparison {
   price: number;
   marketplace: string;
   imageUrl: string;
-  // Adicione outros campos relevantes para comparação
+  rating?: number;
+  reviewCount?: number;
+  affiliateUrl: string;
 }
 
 export default function ComparisonPage() {
@@ -36,30 +40,30 @@ export default function ComparisonPage() {
 
   const fetchProductDetails = async (url: string): Promise<ProductForComparison | null> => {
     try {
-      // Chamada para o endpoint de scraping da sua API Flask
+      // Tentar usar o backend Flask primeiro
       const response = await fetch('http://localhost:5000/api/scrape-product', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url } ),
+        body: JSON.stringify({ url }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Erro ao extrair dados do produto.');
+        throw new Error('Serviço de scraping indisponível');
       }
 
       const data = await response.json();
-      // Mapear os dados do scraper para o formato esperado pelo ProductComparison
       return {
-        id: data.marketplace_id || data.id, // Usar marketplace_id ou um ID gerado
+        id: data.marketplace_id || data.id,
         title: data.title,
         price: data.price,
         marketplace: data.marketplace,
         imageUrl: data.image_url,
-        // ... outros campos que você queira passar para comparação
+        rating: data.rating,
+        reviewCount: data.review_count,
+        affiliateUrl: url // Por enquanto usar a URL original
       };
     } catch (error: any) {
-      console.error(`Erro ao buscar detalhes do produto da URL ${url}:`, error);
+      console.error(`Erro ao buscar produto da URL ${url}:`, error);
       toast.error(`Falha ao carregar produto: ${error.message}`);
       return null;
     }
@@ -68,6 +72,7 @@ export default function ComparisonPage() {
   const handleCompare = async () => {
     setLoading(true);
     const validUrls = productUrls.filter(url => url.trim() !== '');
+    
     if (validUrls.length < 2) {
       toast.error('Por favor, insira pelo menos duas URLs de produtos para comparar.');
       setLoading(false);
@@ -122,7 +127,10 @@ export default function ComparisonPage() {
               Adicionar mais URL
             </Button>
           </div>
-          <Button onClick={handleCompare} disabled={loading || productUrls.filter(url => url.trim() !== '').length < 2}>
+          <Button 
+            onClick={handleCompare} 
+            disabled={loading || productUrls.filter(url => url.trim() !== '').length < 2}
+          >
             {loading ? 'Carregando...' : 'Comparar Produtos'}
           </Button>
         </CardContent>

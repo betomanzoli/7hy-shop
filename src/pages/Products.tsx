@@ -1,54 +1,47 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CustomerSuggestionForm } from '@/components/products/CustomerSuggestionForm';
-import { ProductGrid } from '@/components/products/ProductGrid';
-import { Product } from '@/types/product';
+import { ProductGridWithSupabase } from '@/components/products/ProductGridWithSupabase';
+import { useProducts } from '@/hooks/useProducts';
+import { useCategories } from '@/hooks/useCategories';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [currentSearchTerm, setCurrentSearchTerm] = useState('');
+  const [selectedMarketplace, setSelectedMarketplace] = useState<'amazon' | 'shopee' | 'all'>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  const { categories } = useCategories();
   
-  // Load products from localStorage
-  useEffect(() => {
-    const storedProducts = localStorage.getItem('affiliate_products');
-    if (storedProducts) {
-      const parsedProducts = JSON.parse(storedProducts);
-      setProducts(parsedProducts);
-      setFilteredProducts(parsedProducts);
-    }
-  }, []);
+  // Fetch products based on current filters
+  const { products, loading } = useProducts({
+    searchTerm: currentSearchTerm,
+    marketplace: selectedMarketplace === 'all' ? null : selectedMarketplace,
+    categoryId: selectedCategory === 'all' ? null : selectedCategory,
+  });
+
+  // Fetch featured products separately
+  const { products: featuredProducts, loading: featuredLoading } = useProducts({
+    featuredOnly: true,
+    limit: 8
+  });
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    
-    // Filter products by search term
-    const results = products.filter(product =>
-      product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    
-    // Simulate loading
-    setTimeout(() => {
-      setFilteredProducts(results);
-      setIsLoading(false);
-    }, 500);
+    setCurrentSearchTerm(searchTerm);
   };
 
-  const getFeaturedProducts = () => {
-    return products.filter(p => p.featured);
-  };
-
-  const getProductsByMarketplace = (marketplace: string) => {
-    return filteredProducts.filter(p => p.marketplace === marketplace);
+  const getFilteredProducts = () => {
+    if (selectedMarketplace === 'all') {
+      return products;
+    }
+    return products.filter(p => p.marketplace === selectedMarketplace);
   };
 
   return (
@@ -56,7 +49,7 @@ const Products = () => {
       <div className="container px-4 py-8">
         <h1 className="text-3xl font-bold mb-6">Produtos</h1>
         
-        <div className="mb-8">
+        <div className="mb-8 space-y-4">
           <form onSubmit={handleSearch} className="flex gap-2 max-w-md">
             <Input
               type="text"
@@ -65,8 +58,8 @@ const Products = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="flex-1"
             />
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? (
+            <Button type="submit" disabled={loading}>
+              {loading ? (
                 <span className="animate-spin mr-2">⭮</span>
               ) : (
                 <Search className="mr-2 h-4 w-4" />
@@ -74,9 +67,25 @@ const Products = () => {
               Buscar
             </Button>
           </form>
+
+          <div className="flex gap-4 flex-wrap">
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Todas as categorias" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas as categorias</SelectItem>
+                {categories.map(category => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         
-        {getFeaturedProducts().length > 0 && (
+        {featuredProducts.length > 0 && (
           <div className="mb-12">
             <div className="flex items-center gap-2 mb-6">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-yellow-500">
@@ -85,11 +94,11 @@ const Products = () => {
               <h2 className="text-2xl font-bold">Produtos Selecionados da Semana</h2>
             </div>
             
-            <ProductGrid products={getFeaturedProducts()} />
+            <ProductGridWithSupabase products={featuredProducts} loading={featuredLoading} />
           </div>
         )}
         
-        <Tabs defaultValue="all" className="w-full">
+        <Tabs value={selectedMarketplace} onValueChange={(value) => setSelectedMarketplace(value as any)} className="w-full">
           <TabsList className="mb-6">
             <TabsTrigger value="all">Todos</TabsTrigger>
             <TabsTrigger value="shopee">Shopee</TabsTrigger>
@@ -97,33 +106,15 @@ const Products = () => {
           </TabsList>
           
           <TabsContent value="all">
-            {filteredProducts.length > 0 ? (
-              <ProductGrid products={filteredProducts} />
-            ) : (
-              <div className="py-8 text-center">
-                <p className="text-muted-foreground">Nenhum produto encontrado. Tente uma nova busca ou volte mais tarde.</p>
-              </div>
-            )}
+            <ProductGridWithSupabase products={products} loading={loading} />
           </TabsContent>
           
           <TabsContent value="shopee">
-            {getProductsByMarketplace('shopee').length > 0 ? (
-              <ProductGrid products={getProductsByMarketplace('shopee')} />
-            ) : (
-              <div className="py-8 text-center">
-                <p className="text-muted-foreground">Nenhum produto da Shopee encontrado. Tente uma nova busca ou volte mais tarde.</p>
-              </div>
-            )}
+            <ProductGridWithSupabase products={getFilteredProducts()} loading={loading} />
           </TabsContent>
           
           <TabsContent value="amazon">
-            {getProductsByMarketplace('amazon').length > 0 ? (
-              <ProductGrid products={getProductsByMarketplace('amazon')} />
-            ) : (
-              <div className="py-8 text-center">
-                <p className="text-muted-foreground">Nenhum produto da Amazon encontrado. Tente uma nova busca ou volte mais tarde.</p>
-              </div>
-            )}
+            <ProductGridWithSupabase products={getFilteredProducts()} loading={loading} />
           </TabsContent>
         </Tabs>
         

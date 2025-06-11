@@ -5,73 +5,116 @@ import {
   Card, 
   CardContent, 
   CardDescription, 
-  CardFooter, 
   CardHeader, 
   CardTitle 
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ProductForm } from '@/components/admin/products/ProductForm';
-import { ProductsList } from '@/components/admin/products/ProductsList';
 import { useToast } from '@/hooks/use-toast';
-import { MarketplaceType } from '@/components/marketplace/MarketplaceLogo';
 import { Product } from '@/types/product';
-
-// Mock storage for products - in a real app this would use Supabase or another database
-const STORAGE_KEY = 'affiliate_products';
-
-const loadProducts = (): Product[] => {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  return saved ? JSON.parse(saved) : [];
-};
-
-const saveProducts = (products: Product[]) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
-};
+import { ProductFromDB, useProducts } from '@/hooks/useProducts';
+import { ProductGridWithSupabase } from '@/components/products/ProductGridWithSupabase';
+import { supabase } from '@/integrations/supabase/client';
 
 const ManageProducts = () => {
-  const [products, setProducts] = useState<Product[]>(loadProducts);
   const { toast } = useToast();
+  const { products, loading, refetch } = useProducts({});
+  const { products: featuredProducts, loading: featuredLoading, refetch: refetchFeatured } = useProducts({ featuredOnly: true });
 
-  useEffect(() => {
-    saveProducts(products);
-  }, [products]);
+  const handleAddProduct = async (product: Product) => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .insert({
+          title: product.title,
+          description: product.description,
+          short_description: product.category,
+          price: product.price,
+          original_price: product.originalPrice,
+          currency: 'BRL',
+          affiliate_url: product.affiliateUrl,
+          original_url: product.affiliateUrl,
+          image_url: product.image,
+          marketplace: product.marketplace as any,
+          marketplace_id: product.id,
+          rating: product.rating,
+          review_count: 0,
+          is_featured: product.featured || false,
+          is_deal: false,
+          seller_name: 'Vendedor',
+          status: 'active'
+        });
 
-  const handleAddProduct = (product: Product) => {
-    // Generate a unique ID
-    const newProduct = {
-      ...product,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-    };
-    
-    setProducts([...products, newProduct]);
-    
-    toast({
-      title: "Produto adicionado com sucesso",
-      description: `${product.title} foi adicionado à lista de produtos.`,
-    });
+      if (error) throw error;
+
+      toast({
+        title: "Produto adicionado com sucesso",
+        description: `${product.title} foi adicionado à lista de produtos.`,
+      });
+
+      refetch();
+    } catch (error: any) {
+      console.error('Erro ao adicionar produto:', error);
+      toast({
+        title: "Erro ao adicionar produto",
+        description: error.message || "Ocorreu um erro ao adicionar o produto.",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleRemoveProduct = (productId: string) => {
-    setProducts(products.filter(p => p.id !== productId));
-    
-    toast({
-      title: "Produto removido",
-      description: "O produto foi removido da lista.",
-    });
+  const handleRemoveProduct = async (productId: string) => {
+    try {
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', productId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Produto removido",
+        description: "O produto foi removido da lista.",
+      });
+
+      refetch();
+      refetchFeatured();
+    } catch (error: any) {
+      console.error('Erro ao remover produto:', error);
+      toast({
+        title: "Erro ao remover produto",
+        description: error.message || "Ocorreu um erro ao remover o produto.",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleFeatureProduct = (productId: string, featured: boolean) => {
-    setProducts(products.map(p => 
-      p.id === productId ? { ...p, featured } : p
-    ));
-    
-    toast({
-      title: featured ? "Produto destacado" : "Destaque removido",
-      description: featured 
-        ? "O produto foi adicionado aos destaques da semana." 
-        : "O produto foi removido dos destaques da semana.",
-    });
+  const handleFeatureProduct = async (productId: string, featured: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('products')
+        .update({ is_featured: featured })
+        .eq('id', productId);
+
+      if (error) throw error;
+
+      toast({
+        title: featured ? "Produto destacado" : "Destaque removido",
+        description: featured 
+          ? "O produto foi adicionado aos destaques da semana." 
+          : "O produto foi removido dos destaques da semana.",
+      });
+
+      refetch();
+      refetchFeatured();
+    } catch (error: any) {
+      console.error('Erro ao atualizar produto:', error);
+      toast({
+        title: "Erro ao atualizar produto",
+        description: error.message || "Ocorreu um erro ao atualizar o produto.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -103,15 +146,11 @@ const ManageProducts = () => {
               <CardHeader>
                 <CardTitle>Todos os Produtos</CardTitle>
                 <CardDescription>
-                  Gerencie todos os produtos cadastrados
+                  Gerencie todos os produtos cadastrados ({products.length} produtos)
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ProductsList 
-                  products={products} 
-                  onRemove={handleRemoveProduct}
-                  onFeature={handleFeatureProduct}
-                />
+                <ProductGridWithSupabase products={products} loading={loading} />
               </CardContent>
             </Card>
           </TabsContent>
@@ -121,15 +160,11 @@ const ManageProducts = () => {
               <CardHeader>
                 <CardTitle>Produtos em Destaque</CardTitle>
                 <CardDescription>
-                  Gerencie os produtos que aparecem na seção de destaques da semana
+                  Gerencie os produtos que aparecem na seção de destaques da semana ({featuredProducts.length} produtos)
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ProductsList 
-                  products={products.filter(p => p.featured)} 
-                  onRemove={handleRemoveProduct}
-                  onFeature={handleFeatureProduct}
-                />
+                <ProductGridWithSupabase products={featuredProducts} loading={featuredLoading} />
               </CardContent>
             </Card>
           </TabsContent>
