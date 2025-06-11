@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { ProductComparison } from '@/components/products/ProductComparison';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -29,6 +28,10 @@ interface ComparisonProduct {
   };
   features?: string[];
   category?: string;
+  priceHistory?: Array<{
+    price: number;
+    date: string;
+  }>;
 }
 
 export default function ComparisonPage() {
@@ -79,7 +82,8 @@ export default function ComparisonPage() {
         sellerInfo: { name: data.seller_name || 'Vendedor' },
         specifications: data.specifications || {},
         features: data.features || [],
-        category: data.category || 'Geral'
+        category: data.category || 'Geral',
+        priceHistory: data.price_history || []
       };
     } catch (error: any) {
       console.error(`Erro ao buscar produto da URL ${url}:`, error);
