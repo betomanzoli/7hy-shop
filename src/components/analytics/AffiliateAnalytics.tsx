@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -107,7 +106,7 @@ export function AffiliateAnalytics() {
     const estimatedCommissionRate = 0.05; // 5% de comissão média
     const estimatedConversionRate = 0.03; // 3% de conversão média
 
-    const totalClicks =  ||  ||clicks.length;
+    const totalClicks = clicks.length || 0;
     const estimatedConversions = Math.floor(totalClicks * estimatedConversionRate);
     const estimatedCommissions = estimatedConversions * 50 * estimatedCommissionRate; // R$ 50 ticket médio
 
