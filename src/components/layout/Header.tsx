@@ -1,7 +1,9 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
+import { Logo } from '@/components/ui/logo';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,12 +22,7 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">7</span>
-            </div>
-            <span className="font-bold text-xl">7hy-Shop</span>
-          </Link>
+          <Logo />
         </div>
 
         {/* Desktop Navigation */}

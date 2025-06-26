@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { ProductGridWithSupabase } from '@/components/products/ProductGridWithSu
 import { useProducts } from '@/hooks/useProducts';
 import { useCategories } from '@/hooks/useCategories';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,7 +18,13 @@ const Products = () => {
   const [selectedMarketplace, setSelectedMarketplace] = useState<'amazon' | 'shopee' | 'all'>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
+  const { trackPageView, trackSearch } = useAnalytics();
   const { categories } = useCategories();
+  
+  // Track page view on mount
+  useEffect(() => {
+    trackPageView('products');
+  }, [trackPageView]);
   
   // Fetch products based on current filters
   const { products, loading } = useProducts({
@@ -35,6 +42,12 @@ const Products = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setCurrentSearchTerm(searchTerm);
+    
+    // Track search event
+    trackSearch(searchTerm, {
+      marketplace: selectedMarketplace,
+      category: selectedCategory,
+    });
   };
 
   const getFilteredProducts = () => {

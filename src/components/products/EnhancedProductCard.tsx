@@ -1,134 +1,143 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Star } from 'lucide-react';
-import { MarketplaceLogo } from '@/components/marketplace/MarketplaceLogo';
-import { RedirectModal } from './RedirectModal';
+import { Badge } from '@/components/ui/badge';
+import { Star, ExternalLink, Heart } from 'lucide-react';
 import { Product } from '@/types/product';
-import { formatCurrency } from '@/lib/utils';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 interface EnhancedProductCardProps {
   product: Product;
-  userId?: string;
-  affiliateCode?: string;
-  isFeatured?: boolean;
+  onWishlistToggle?: (product: Product) => void;
+  isInWishlist?: boolean;
+  context?: string;
 }
 
-export function EnhancedProductCard({ 
+export const EnhancedProductCard = ({ 
   product, 
-  userId, 
-  affiliateCode, 
-  isFeatured = false 
-}: EnhancedProductCardProps) {
-  const [showRedirectModal, setShowRedirectModal] = useState(false);
-  
-  const handleViewProduct = () => {
-    setShowRedirectModal(true);
+  onWishlistToggle, 
+  isInWishlist = false,
+  context = 'product_grid'
+}: EnhancedProductCardProps) => {
+  const { trackProductView, trackProductClick } = useAnalytics();
+
+  React.useEffect(() => {
+    // Track product view when card is rendered
+    trackProductView(product.id, {
+      title: product.title,
+      price: product.price,
+      marketplace: product.marketplace,
+      context,
+    });
+  }, [product.id, trackProductView, context]);
+
+  const handleProductClick = () => {
+    trackProductClick(product.id, context);
+    window.open(product.affiliate_url, '_blank');
   };
-  
-  const getDiscountPercentage = () => {
-    if (!product.originalPrice || product.originalPrice <= product.price) return null;
-    
-    const discount = ((product.originalPrice - product.price) / product.originalPrice) * 100;
-    return Math.round(discount);
+
+  const handleWishlistClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onWishlistToggle) {
+      onWishlistToggle(product);
+    }
   };
-  
-  const discountPercentage = getDiscountPercentage();
-  
-  // Function to get final affiliate URL (add tracking if needed)
-  const getFinalAffiliateUrl = () => {
-    let url = product.affiliateUrl;
-    
-    // If a user ID is provided, add it to the URL
-    if (userId) {
-      url += url.includes('?') ? '&' : '?';
-      url += `ref=${userId}`;
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(price);
+  };
+
+  const getMarketplaceBadgeColor = (marketplace: string) => {
+    switch (marketplace.toLowerCase()) {
+      case 'amazon':
+        return 'bg-orange-500 text-white';
+      case 'shopee':
+        return 'bg-red-500 text-white';
+      default:
+        return 'bg-gray-500 text-white';
     }
-    
-    // If an affiliate code is provided, add it to the URL
-    if (affiliateCode) {
-      url += url.includes('?') ? '&' : '?';
-      url += `aff=${affiliateCode}`;
-    }
-    
-    return url;
   };
 
   return (
-    <>
-      <Card className={`h-full flex flex-col overflow-hidden group transition-all ${
-        isFeatured ? 'shadow-md hover:shadow-xl border-amber-200 dark:border-amber-800' : 'hover:shadow-md'
-      }`}>
-        <div className="relative">
-          <div className="aspect-[4/3] overflow-hidden bg-muted">
-            <img 
-              src={product.imageUrl || "https://placehold.co/400x300?text=Sem+Imagem"} 
-              alt={product.title} 
-              className="object-cover w-full h-full transition-transform group-hover:scale-105"
+    <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer" onClick={handleProductClick}>
+      <CardContent className="p-4">
+        <div className="relative mb-4">
+          {product.image_url && (
+            <img
+              src={product.image_url}
+              alt={product.title}
+              className="w-full h-48 object-cover rounded-md group-hover:scale-105 transition-transform duration-300"
             />
-          </div>
+          )}
           
-          <div className="absolute top-2 left-2 flex flex-col gap-2">
-            <MarketplaceLogo 
-              type={product.marketplace} 
-              className="w-8 h-8"
-            />
-            
-            {isFeatured && (
-              <div className="bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded-md shadow-sm flex items-center">
-                <Star className="h-3 w-3 mr-1 fill-white" />
-                Destaque
-              </div>
-            )}
-          </div>
-          
-          {discountPercentage && (
-            <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md shadow-sm">
-              -{discountPercentage}%
+          {/* Wishlist Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-2 right-2 h-8 w-8 p-0 bg-white/80 hover:bg-white"
+            onClick={handleWishlistClick}
+          >
+            <Heart className={`h-4 w-4 ${isInWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+          </Button>
+
+          {/* Marketplace Badge */}
+          <Badge className={`absolute top-2 left-2 ${getMarketplaceBadgeColor(product.marketplace)}`}>
+            {product.marketplace.toUpperCase()}
+          </Badge>
+
+          {/* Deal Badge */}
+          {product.is_deal && (
+            <Badge className="absolute bottom-2 left-2 bg-green-500 text-white">
+              OFERTA
+            </Badge>
+          )}
+        </div>
+
+        <h3 className="font-semibold text-sm line-clamp-2 mb-2 group-hover:text-primary transition-colors">
+          {product.title}
+        </h3>
+
+        <div className="flex items-center gap-2 mb-2">
+          {product.rating && (
+            <div className="flex items-center gap-1">
+              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+              <span className="text-sm text-gray-600">
+                {product.rating} ({product.review_count || 0})
+              </span>
             </div>
           )}
         </div>
-        
-        <CardContent className="flex-grow pt-4">
-          <div className="mb-2 space-y-1">
-            <h3 className="font-semibold line-clamp-2 h-[2.5rem]">{product.title}</h3>
-            
-            <div className="flex items-baseline gap-2">
-              <span className="text-xl font-bold">{formatCurrency(product.price)}</span>
-              {product.originalPrice && product.originalPrice > product.price && (
-                <span className="text-sm text-muted-foreground line-through">{formatCurrency(product.originalPrice)}</span>
-              )}
-            </div>
-            
-            {product.rating && (
-              <div className="flex items-center text-amber-500">
-                <Star className="h-4 w-4 fill-amber-500 mr-1" />
-                <span>{product.rating.toFixed(1)}</span>
-              </div>
+
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-bold text-green-600">
+              {formatPrice(product.price)}
+            </span>
+            {product.original_price && product.original_price > product.price && (
+              <span className="text-sm text-gray-500 line-through">
+                {formatPrice(product.original_price)}
+              </span>
             )}
           </div>
-        </CardContent>
-        
-        <CardFooter className="pt-0">
-          <Button 
-            className="w-full gap-2" 
-            onClick={handleViewProduct}
-          >
-            <ExternalLink className="h-4 w-4" />
-            Ver na loja
-          </Button>
-        </CardFooter>
-      </Card>
-      
-      {showRedirectModal && (
-        <RedirectModal
-          productTitle={product.title}
-          affiliateUrl={getFinalAffiliateUrl()}
-          onClose={() => setShowRedirectModal(false)}
-          marketplace={product.marketplace}
-        />
-      )}
-    </>
+          
+          {product.original_price && product.original_price > product.price && (
+            <div className="text-sm text-green-600 font-medium">
+              Economize {formatPrice(product.original_price - product.price)}
+            </div>
+          )}
+        </div>
+      </CardContent>
+
+      <CardFooter className="p-4 pt-0">
+        <Button className="w-full group-hover:bg-primary/90" onClick={handleProductClick}>
+          <ExternalLink className="h-4 w-4 mr-2" />
+          Ver Produto
+        </Button>
+      </CardFooter>
+    </Card>
   );
-}
+};

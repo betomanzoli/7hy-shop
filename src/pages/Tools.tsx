@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SavingsCalculator } from '@/components/tools/SavingsCalculator';
@@ -9,8 +9,22 @@ import { PriceAlertSystem } from '@/components/notifications/PriceAlertSystem';
 import { PointsSystem } from '@/components/gamification/PointsSystem';
 import { DealOfTheDay } from '@/components/engagement/DealOfTheDay';
 import { Calculator, TrendingUp, Bell, Trophy, Target, Flame } from 'lucide-react';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 const Tools = () => {
+  const { trackPageView, trackToolUsage } = useAnalytics();
+
+  useEffect(() => {
+    trackPageView('tools');
+  }, [trackPageView]);
+
+  const handleTabChange = (tabValue: string) => {
+    trackToolUsage(tabValue, {
+      action: 'tab_accessed',
+      timestamp: new Date().toISOString(),
+    });
+  };
+
   return (
     <MainLayout>
       <div className="container mx-auto px-4 py-8">
@@ -21,7 +35,7 @@ const Tools = () => {
           </p>
         </div>
 
-        <Tabs defaultValue="deal" className="w-full">
+        <Tabs defaultValue="deal" className="w-full" onValueChange={handleTabChange}>
           <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6">
             <TabsTrigger value="deal" className="flex items-center">
               <Flame className="w-4 h-4 mr-2" />
