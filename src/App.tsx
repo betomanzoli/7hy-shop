@@ -45,6 +45,9 @@ const App = () => (
           <Route path="/shopee" element={<Shopee />} />
           <Route path="/cart" element={<Cart />} />
           
+          {/* New Promo Landing Page */}
+          <Route path="/promo" element={<PromoLanding />} />
+          
           {/* Admin Pages */}
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminDashboard />} />
@@ -53,6 +56,7 @@ const App = () => (
           <Route path="/admin/marketplaces/shopee" element={<ShopeeSetup />} />
           <Route path="/admin/products" element={<ProductsPage />} />
           <Route path="/admin/products/manage" element={<ManageProducts />} />
+          <Route path="/admin/products/new" element={<NewProductPage />} />
           <Route path="/admin/products/suggestions" element={<CustomerSuggestions />} />
           <Route path="/admin/orders" element={<OrdersPage />} />
           <Route path="/admin/analytics" element={<AffiliateAnalytics />} />
