@@ -24,6 +24,9 @@ import AffiliateAnalytics from "./pages/admin/analytics/AffiliateAnalytics";
 import Cart from "./pages/Cart";
 import ManageProducts from "./pages/admin/products/ManageProducts";
 import CustomerSuggestions from "./pages/admin/products/CustomerSuggestions";
+import Tools from "./pages/Tools";
+import PromoLanding from "./pages/PromoLanding";
+import NewProductPage from "./pages/admin/products/NewProductPage";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +40,7 @@ const App = () => (
           {/* Front-end Pages */}
           <Route path="/" element={<Index />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/tools" element={<Tools />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/terms" element={<Terms />} />
