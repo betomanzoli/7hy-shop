@@ -50,7 +50,7 @@ export function ProductsList({ products, onRemove, onFeature }: ProductsListProp
                 <div className="flex items-start gap-3">
                   <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
                     <img 
-                      src={product.imageUrl || "https://placehold.co/100x100"} 
+                      src={product.image_url || "https://placehold.co/100x100"} 
                       alt={product.title} 
                       className="w-full h-full object-cover"
                     />
@@ -71,9 +71,9 @@ export function ProductsList({ products, onRemove, onFeature }: ProductsListProp
               <TableCell>
                 <div>
                   <div className="font-semibold">{formatCurrency(product.price)}</div>
-                  {product.originalPrice && product.originalPrice > product.price && (
+                  {product.original_price && product.original_price > product.price && (
                     <div className="text-sm text-muted-foreground line-through">
-                      {formatCurrency(product.originalPrice)}
+                      {formatCurrency(product.original_price)}
                     </div>
                   )}
                 </div>
