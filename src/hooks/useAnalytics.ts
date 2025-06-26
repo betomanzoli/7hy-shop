@@ -1,8 +1,8 @@
 
-import { useCallback } from 'react';
+import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
-export interface AnalyticsEvent {
+interface AnalyticsEvent {
   event_type: string;
   product_id?: string;
   event_data?: Record<string, any>;
@@ -12,23 +12,37 @@ export interface AnalyticsEvent {
 }
 
 export const useAnalytics = () => {
-  const trackEvent = useCallback(async (event: AnalyticsEvent) => {
+  // Função para validar UUID
+  const isValidUUID = (uuid: string): boolean => {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(uuid);
+  };
+
+  const trackEvent = async (event: AnalyticsEvent) => {
     try {
-      const sessionId = sessionStorage.getItem('session_id') || 
-        crypto.randomUUID();
+      // Verificar se há um product_id e se é um UUID válido
+      if (event.product_id && !isValidUUID(event.product_id)) {
+        console.log('Skipping analytics for invalid UUID product ID:', event.product_id);
+        return;
+      }
+
+      // Obter ID do usuário autenticado
+      const { data: { user } } = await supabase.auth.getUser();
       
-      if (!sessionStorage.getItem('session_id')) {
-        sessionStorage.setItem('session_id', sessionId);
+      if (!user) {
+        console.log('No authenticated user for analytics');
+        return;
       }
 
       const analyticsData = {
+        user_id: user.id,
         event_type: event.event_type,
         product_id: event.product_id || null,
         event_data: event.event_data || {},
-        session_id: sessionId,
-        user_agent: navigator.userAgent,
-        referrer: document.referrer || null,
-        user_id: (await supabase.auth.getUser()).data.user?.id || null,
+        session_id: event.session_id || crypto.randomUUID(),
+        user_agent: event.user_agent || navigator.userAgent,
+        referrer: event.referrer || document.referrer,
+        ip_address: null // Will be handled by Supabase if needed
       };
 
       const { error } = await supabase
@@ -39,71 +53,74 @@ export const useAnalytics = () => {
         console.error('Analytics tracking error:', error);
       }
     } catch (error) {
-      console.error('Failed to track analytics event:', error);
+      console.error('Analytics error:', error);
     }
-  }, []);
+  };
 
-  const trackSearch = useCallback((searchTerm: string, filters?: Record<string, any>) => {
+  const trackPageView = (page: string) => {
     trackEvent({
-      event_type: 'search',
-      event_data: {
-        search_term: searchTerm,
-        filters: filters || {},
-        timestamp: new Date().toISOString(),
-      },
+      event_type: 'page_view',
+      event_data: { page }
     });
-  }, [trackEvent]);
+  };
 
-  const trackProductView = useCallback((productId: string, productData?: Record<string, any>) => {
+  const trackProductView = (productId: string, productTitle?: string) => {
+    // Só fazer tracking se for um UUID válido
+    if (!isValidUUID(productId)) {
+      console.log('Skipping product view tracking for invalid UUID:', productId);
+      return;
+    }
+    
     trackEvent({
       event_type: 'product_view',
       product_id: productId,
-      event_data: {
-        product_data: productData || {},
-        timestamp: new Date().toISOString(),
-      },
+      event_data: { product_title: productTitle }
     });
-  }, [trackEvent]);
+  };
 
-  const trackProductClick = useCallback((productId: string, context?: string) => {
+  const trackProductClick = (productId: string, productTitle?: string, affiliateUrl?: string) => {
+    // Só fazer tracking se for um UUID válido
+    if (!isValidUUID(productId)) {
+      console.log('Skipping product click tracking for invalid UUID:', productId);
+      return;
+    }
+
     trackEvent({
       event_type: 'product_click',
       product_id: productId,
-      event_data: {
-        context: context || 'unknown',
-        timestamp: new Date().toISOString(),
-      },
+      event_data: { 
+        product_title: productTitle,
+        affiliate_url: affiliateUrl
+      }
     });
-  }, [trackEvent]);
+  };
 
-  const trackPageView = useCallback((page: string, additionalData?: Record<string, any>) => {
+  const trackSearch = (searchTerm: string, resultsCount?: number) => {
     trackEvent({
-      event_type: 'page_view',
-      event_data: {
-        page,
-        ...additionalData,
-        timestamp: new Date().toISOString(),
-      },
+      event_type: 'search',
+      event_data: { 
+        search_term: searchTerm,
+        results_count: resultsCount
+      }
     });
-  }, [trackEvent]);
+  };
 
-  const trackToolUsage = useCallback((toolName: string, toolData?: Record<string, any>) => {
+  const trackToolUsage = (toolName: string, toolData?: Record<string, any>) => {
     trackEvent({
       event_type: 'tool_usage',
-      event_data: {
+      event_data: { 
         tool_name: toolName,
-        tool_data: toolData || {},
-        timestamp: new Date().toISOString(),
-      },
+        ...toolData
+      }
     });
-  }, [trackEvent]);
+  };
 
   return {
     trackEvent,
-    trackSearch,
+    trackPageView,
     trackProductView,
     trackProductClick,
-    trackPageView,
-    trackToolUsage,
+    trackSearch,
+    trackToolUsage
   };
 };

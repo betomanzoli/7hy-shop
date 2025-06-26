@@ -45,15 +45,22 @@ export function ProductGridWithSupabase({ products, loading }: ProductGridProps)
   }
 
   const handleProductClick = (product: ProductFromDB) => {
-    // Track click analytics
+    // Track click analytics - only for products with valid UUID
     const trackClick = async () => {
       try {
-        await supabase.from('affiliate_clicks').insert({
-          product_id: product.id,
-          marketplace_id: product.marketplace,
-          clicked_at: new Date().toISOString(),
-          referrer: window.location.href
-        });
+        // Verificar se o product.id é um UUID válido antes de tentar inserir
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        
+        if (uuidRegex.test(product.id)) {
+          await supabase.from('affiliate_clicks').insert({
+            product_id: product.id,
+            marketplace_id: product.marketplace,
+            clicked_at: new Date().toISOString(),
+            referrer: window.location.href
+          });
+        } else {
+          console.log('Skipping analytics for non-UUID product ID:', product.id);
+        }
       } catch (error) {
         console.error('Error tracking click:', error);
       }
