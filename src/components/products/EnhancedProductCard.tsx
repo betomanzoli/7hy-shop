@@ -12,13 +12,19 @@ interface EnhancedProductCardProps {
   onWishlistToggle?: (product: Product) => void;
   isInWishlist?: boolean;
   context?: string;
+  userId?: string;
+  affiliateCode?: string;
+  isFeatured?: boolean;
 }
 
 export const EnhancedProductCard = ({ 
   product, 
   onWishlistToggle, 
   isInWishlist = false,
-  context = 'product_grid'
+  context = 'product_grid',
+  userId,
+  affiliateCode,
+  isFeatured = false
 }: EnhancedProductCardProps) => {
   const { trackProductView, trackProductClick } = useAnalytics();
 

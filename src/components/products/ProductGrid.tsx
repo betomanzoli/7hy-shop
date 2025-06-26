@@ -14,7 +14,6 @@ export function ProductGrid({ products }: ProductGridProps) {
         <EnhancedProductCard 
           key={product.id}
           product={product}
-          isFeatured={product.featured}
         />
       ))}
     </div>

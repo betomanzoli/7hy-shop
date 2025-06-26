@@ -5,13 +5,15 @@ export interface Product {
   id: string;
   title: string;
   price: number;
-  originalPrice?: number;
+  original_price?: number;
   description?: string;
-  imageUrl: string;
-  affiliateUrl: string;
+  image_url: string;
+  affiliate_url: string;
   marketplace: MarketplaceType;
   category: string;
   rating?: number;
+  review_count?: number;
+  is_deal?: boolean;
   featured?: boolean;
   createdAt?: string;
 }

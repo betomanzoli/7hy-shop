@@ -26,13 +26,14 @@ export function ShopeeProductsGrid({ userId, affiliateCode, showFeaturedSection 
       id: shopeeProduct.id,
       title: shopeeProduct.title,
       price: shopeeProduct.price,
-      originalPrice: shopeeProduct.originalPrice,
+      original_price: shopeeProduct.originalPrice,
       description: shopeeProduct.description || '',
-      imageUrl: shopeeProduct.imageUrl,
-      affiliateUrl: shopeeProduct.affiliateUrl || shopeeProduct.originalUrl,
+      image_url: shopeeProduct.imageUrl,
+      affiliate_url: shopeeProduct.affiliateUrl || shopeeProduct.originalUrl,
       marketplace: shopeeProduct.marketplace,
       category: shopeeProduct.category,
       rating: shopeeProduct.rating,
+      is_deal: shopeeProduct.isWeeklyFeatured,
       featured: shopeeProduct.isWeeklyFeatured
     };
   };
