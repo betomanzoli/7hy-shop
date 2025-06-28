@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Input } from '@/components/ui/input';
@@ -43,11 +42,8 @@ const Products = () => {
     e.preventDefault();
     setCurrentSearchTerm(searchTerm);
     
-    // Track search event
-    trackSearch(searchTerm, {
-      marketplace: selectedMarketplace,
-      category: selectedCategory,
-    });
+    // Track search event with results count
+    trackSearch(searchTerm, products.length);
   };
 
   const getFilteredProducts = () => {
