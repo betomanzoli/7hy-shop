@@ -57,12 +57,31 @@ export function HeroSection() {
       <div className="container px-4 py-20 md:py-24">
         <div className="mx-auto max-w-5xl text-center">
           <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-            As melhores ofertas<br className="hidden sm:inline" /> em um só lugar
+            O Assistente Inteligente<br className="hidden sm:inline" /> para Compras Multi-marketplace
           </h1>
           <p className="mx-auto mb-12 max-w-3xl text-lg text-muted-foreground md:text-xl">
-            Descubra produtos incríveis das maiores lojas online com descontos exclusivos. 
-            Curadoria feita especialmente para suas necessidades.
+            Compare preços, calcule economia real e tome decisões inteligentes entre Amazon, Shopee e MercadoLivre. 
+            Ferramentas exclusivas que vão além da simples comparação.
           </p>
+          
+          {/* Value Propositions */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
+            <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border">
+              <div className="text-2xl mb-2">🧮</div>
+              <h3 className="font-semibold mb-1">Calculadora Inteligente</h3>
+              <p className="text-sm text-muted-foreground">Calcule economia real incluindo frete e condições</p>
+            </div>
+            <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border">
+              <div className="text-2xl mb-2">📊</div>
+              <h3 className="font-semibold mb-1">Comparação Avançada</h3>
+              <p className="text-sm text-muted-foreground">Compare até 3 produtos lado a lado com análise completa</p>
+            </div>
+            <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border">
+              <div className="text-2xl mb-2">🎯</div>
+              <h3 className="font-semibold mb-1">Alertas Personalizados</h3>
+              <p className="text-sm text-muted-foreground">Receba notificações quando preços caírem</p>
+            </div>
+          </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Button asChild size="lg" className="sm:w-auto">
