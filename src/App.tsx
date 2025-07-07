@@ -12,6 +12,7 @@ import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Amazon from "./pages/marketplace/Amazon";
 import Shopee from "./pages/marketplace/Shopee";
+import MercadoLivre from "./pages/marketplace/MercadoLivre";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -47,6 +48,7 @@ const App = () => (
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/amazon" element={<Amazon />} />
           <Route path="/shopee" element={<Shopee />} />
+          <Route path="/mercadolivre" element={<MercadoLivre />} />
           <Route path="/cart" element={<Cart />} />
           
           {/* New Promo Landing Page */}

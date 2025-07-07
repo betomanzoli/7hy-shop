@@ -14,6 +14,7 @@ const Header = () => {
     { name: 'Ferramentas', href: '/tools' },
     { name: 'Amazon', href: '/amazon' },
     { name: 'Shopee', href: '/shopee' },
+    { name: 'MercadoLivre', href: '/mercadolivre' },
     { name: 'Sobre', href: '/about' },
     { name: 'Contato', href: '/contact' },
   ];
