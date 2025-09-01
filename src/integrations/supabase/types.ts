@@ -7,10 +7,10 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "13.0.4"
   }
   public: {
     Tables: {
@@ -43,6 +43,92 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      automation_jobs: {
+        Row: {
+          config: Json | null
+          created_at: string | null
+          error_count: number | null
+          id: string
+          is_active: boolean | null
+          job_name: string
+          job_type: string
+          last_error: string | null
+          last_run: string | null
+          next_run: string | null
+          run_count: number | null
+          schedule: string
+          updated_at: string | null
+        }
+        Insert: {
+          config?: Json | null
+          created_at?: string | null
+          error_count?: number | null
+          id?: string
+          is_active?: boolean | null
+          job_name: string
+          job_type: string
+          last_error?: string | null
+          last_run?: string | null
+          next_run?: string | null
+          run_count?: number | null
+          schedule: string
+          updated_at?: string | null
+        }
+        Update: {
+          config?: Json | null
+          created_at?: string | null
+          error_count?: number | null
+          id?: string
+          is_active?: boolean | null
+          job_name?: string
+          job_type?: string
+          last_error?: string | null
+          last_run?: string | null
+          next_run?: string | null
+          run_count?: number | null
+          schedule?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      automation_logs: {
+        Row: {
+          created_at: string | null
+          details: Json | null
+          duration_ms: number | null
+          id: string
+          job_id: string | null
+          message: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string | null
+          details?: Json | null
+          duration_ms?: number | null
+          id?: string
+          job_id?: string | null
+          message?: string | null
+          status: string
+        }
+        Update: {
+          created_at?: string | null
+          details?: Json | null
+          duration_ms?: number | null
+          id?: string
+          job_id?: string | null
+          message?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_logs_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "automation_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       categories: {
         Row: {
@@ -90,6 +176,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      email_queue: {
+        Row: {
+          attempts: number | null
+          created_at: string | null
+          error_message: string | null
+          html_content: string
+          id: string
+          max_attempts: number | null
+          scheduled_for: string | null
+          sent_at: string | null
+          status: string | null
+          subject: string
+          template_data: Json | null
+          template_name: string | null
+          to_email: string
+        }
+        Insert: {
+          attempts?: number | null
+          created_at?: string | null
+          error_message?: string | null
+          html_content: string
+          id?: string
+          max_attempts?: number | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string | null
+          subject: string
+          template_data?: Json | null
+          template_name?: string | null
+          to_email: string
+        }
+        Update: {
+          attempts?: number | null
+          created_at?: string | null
+          error_message?: string | null
+          html_content?: string
+          id?: string
+          max_attempts?: number | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string | null
+          subject?: string
+          template_data?: Json | null
+          template_name?: string | null
+          to_email?: string
+        }
+        Relationships: []
       }
       marketplace_credentials: {
         Row: {
@@ -1013,18 +1147,18 @@ export type Database = {
     Functions: {
       get_product_recommendations: {
         Args: {
-          user_id_param: string
-          product_id_param?: string
           limit_count?: number
+          product_id_param?: string
+          user_id_param: string
         }
         Returns: {
           id: string
-          title: string
-          price: number
           image_url: string
-          rating: number
           marketplace: Database["public"]["Enums"]["marketplace_type"]
+          price: number
+          rating: number
           relevance_score: number
+          title: string
         }[]
       }
       gtrgm_compress: {
@@ -1049,27 +1183,27 @@ export type Database = {
       }
       search_products: {
         Args: {
-          search_term?: string
           category_filter?: string
-          marketplace_filter?: Database["public"]["Enums"]["marketplace_type"]
-          min_price?: number
-          max_price?: number
-          min_rating?: number
-          sort_by?: string
           limit_count?: number
+          marketplace_filter?: Database["public"]["Enums"]["marketplace_type"]
+          max_price?: number
+          min_price?: number
+          min_rating?: number
           offset_count?: number
+          search_term?: string
+          sort_by?: string
         }
         Returns: {
-          id: string
-          title: string
-          price: number
-          original_price: number
-          image_url: string
-          rating: number
-          marketplace: Database["public"]["Enums"]["marketplace_type"]
           category_name: string
+          id: string
+          image_url: string
           is_featured: boolean
+          marketplace: Database["public"]["Enums"]["marketplace_type"]
+          original_price: number
+          price: number
           rank: number
+          rating: number
+          title: string
         }[]
       }
       set_limit: {
