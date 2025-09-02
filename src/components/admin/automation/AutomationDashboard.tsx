@@ -41,7 +41,7 @@ interface AutomationJob {
 interface AutomationLog {
   id: string;
   job_id: string;
-  status: 'success' | 'error' | 'partial_success';
+  status: string; // Changed from union type to string
   message: string;
   details: any;
   duration_ms: number;
@@ -154,6 +154,15 @@ export function AutomationDashboard() {
       return <Badge variant="destructive">Com Erros</Badge>;
     }
     return <Badge variant="default">Ativo</Badge>;
+  };
+
+  const getLogStatusIcon = (status: string) => {
+    switch (status) {
+      case 'success': return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case 'error': return <XCircle className="h-4 w-4 text-red-500" />;
+      case 'partial_success': return <AlertCircle className="h-4 w-4 text-yellow-500" />;
+      default: return <AlertCircle className="h-4 w-4 text-gray-500" />;
+    }
   };
 
   const formatDuration = (ms: number) => {
@@ -331,9 +340,7 @@ export function AutomationDashboard() {
             {logs.slice(0, 10).map((log) => (
               <div key={log.id} className="flex items-center justify-between p-3 border rounded">
                 <div className="flex items-center space-x-3">
-                  {log.status === 'success' && <CheckCircle className="h-4 w-4 text-green-500" />}
-                  {log.status === 'error' && <XCircle className="h-4 w-4 text-red-500" />}
-                  {log.status === 'partial_success' && <AlertCircle className="h-4 w-4 text-yellow-500" />}
+                  {getLogStatusIcon(log.status)}
                   
                   <div>
                     <p className="font-medium">{log.message}</p>
