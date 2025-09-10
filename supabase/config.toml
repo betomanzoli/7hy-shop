@@ -3,3 +3,6 @@ project_id = "yzhidpsmzabrxnkucfpt"
 
 [functions.track-affiliate-click]
 verify_jwt = false
+
+[functions.complete-system-activation]
+verify_jwt = false
