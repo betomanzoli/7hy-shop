@@ -18,7 +18,9 @@ import {
   Mail,
   TrendingUp,
   Search,
-  Bot
+  Bot,
+  Zap,
+  Rocket
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -53,6 +55,7 @@ export function AutomationDashboard() {
   const [logs, setLogs] = useState<AutomationLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [runningJobs, setRunningJobs] = useState<Set<string>>(new Set());
+  const [activatingSystem, setActivatingSystem] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -101,6 +104,42 @@ export function AutomationDashboard() {
     } catch (error) {
       console.error('Erro ao atualizar job:', error);
       toast.error('Erro ao atualizar job');
+    }
+  };
+
+  const activateCompleteSystem = async () => {
+    setActivatingSystem(true);
+    
+    try {
+      toast.loading('🚀 Ativando sistema completo com seus IDs de afiliado...', {
+        id: 'system-activation'
+      });
+
+      const { data, error } = await supabase.functions.invoke('auto-activate-system', {
+        body: {}
+      });
+
+      if (error) throw error;
+
+      toast.success(
+        `🎉 Sistema ativado com sucesso! ${data.summary.successful_steps}/${data.summary.total_steps} passos concluídos`,
+        { id: 'system-activation' }
+      );
+      
+      // Mostrar detalhes da ativação
+      console.log('Resultado da ativação:', data);
+      
+      // Recarregar dados
+      fetchData();
+      
+    } catch (error) {
+      console.error('Erro na ativação do sistema:', error);
+      toast.error(
+        `Erro na ativação: ${error.message}`,
+        { id: 'system-activation' }
+      );
+    } finally {
+      setActivatingSystem(false);
     }
   };
 
@@ -208,6 +247,68 @@ export function AutomationDashboard() {
 
   return (
     <div className="space-y-6">
+      {/* Ativação Completa do Sistema */}
+      <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-secondary/5">
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <Rocket className="h-5 w-5 text-primary" />
+            <span>Ativação Completa do Sistema</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Ative automaticamente TODO o sistema com seus IDs de afiliado configurados:
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span>Amazon ID: <strong>7hy01-20</strong></span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span>Shopee ID: <strong>18357850294</strong></span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span>Configurar Cron Jobs</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span>Importar Produtos</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span>Gerar Recomendações</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span>Processar Analytics</span>
+              </div>
+            </div>
+            
+            <Button 
+              onClick={activateCompleteSystem}
+              disabled={activatingSystem}
+              className="w-full md:w-auto"
+              size="lg"
+            >
+              {activatingSystem ? (
+                <>
+                  <RotateCcw className="h-5 w-5 mr-2 animate-spin" />
+                  Ativando Sistema...
+                </>
+              ) : (
+                <>
+                  <Zap className="h-5 w-5 mr-2" />
+                  Ativar Sistema Completo
+                </>
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Métricas Gerais */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
