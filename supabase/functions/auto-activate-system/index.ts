@@ -24,21 +24,71 @@ const handler = async (req: Request): Promise<Response> => {
     let totalSuccess = 0;
     let totalErrors = 0;
 
-    // Configurar IDs de afiliado
-    const affiliateConfig = {
-      amazon_associate_id: "7hy01-20",
-      shopee_affiliate_id: "18357850294",
+    // Configurar IDs de afiliado - usar existentes se disponíveis, senão usar defaults
+    let affiliateConfig = {
+      amazon_associate_id: "7hy01-20", // Default fallback
+      shopee_affiliate_id: "18357850294", // Default fallback
       configured_at: new Date().toISOString()
     };
 
-    // 1. Salvar configurações de afiliado
+    // Buscar credenciais existentes primeiro
     try {
+      const { data: existingCreds } = await supabase
+        .from('marketplace_credentials')
+        .select('marketplace_id, credentials')
+        .in('marketplace_id', ['amazon', 'shopee']);
+
+      if (existingCreds && existingCreds.length > 0) {
+        existingCreds.forEach((cred: any) => {
+          if (cred.marketplace_id === 'amazon' && cred.credentials?.associateTag) {
+            affiliateConfig.amazon_associate_id = cred.credentials.associateTag;
+            console.log('Usando ID Amazon existente:', cred.credentials.associateTag);
+          } else if (cred.marketplace_id === 'shopee' && cred.credentials?.affiliateId) {
+            affiliateConfig.shopee_affiliate_id = cred.credentials.affiliateId;
+            console.log('Usando ID Shopee existente:', cred.credentials.affiliateId);
+          }
+        });
+      } else {
+        console.log('Nenhuma credencial existente encontrada, usando defaults');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar credenciais existentes:', error);
+      console.log('Usando configuração padrão');
+    }
+
+    // 1. Garantir que credenciais individuais por marketplace existem
+    try {
+      // Salvar/atualizar credenciais Amazon
+      const { error: amazonError } = await supabase
+        .from('marketplace_credentials')
+        .upsert({
+          marketplace_id: 'amazon',
+          credentials: {
+            associateTag: affiliateConfig.amazon_associate_id
+          }
+        }, { onConflict: 'marketplace_id' });
+
+      if (amazonError) throw amazonError;
+
+      // Salvar/atualizar credenciais Shopee  
+      const { error: shopeeError } = await supabase
+        .from('marketplace_credentials')
+        .upsert({
+          marketplace_id: 'shopee',
+          credentials: {
+            affiliateId: affiliateConfig.shopee_affiliate_id
+          }
+        }, { onConflict: 'marketplace_id' });
+
+      if (shopeeError) throw shopeeError;
+
+      // Também manter o registro de configuração do sistema para compatibilidade
       const { error: configError } = await supabase
         .from('marketplace_credentials')
         .upsert({
           marketplace_id: 'system_config',
           credentials: affiliateConfig
-        });
+        }, { onConflict: 'marketplace_id' });
 
       if (configError) throw configError;
       
@@ -103,7 +153,7 @@ const handler = async (req: Request): Promise<Response> => {
           'Authorization': `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ affiliate_id: "18357850294" })
+        body: JSON.stringify({ affiliate_id: affiliateConfig.shopee_affiliate_id })
       });
 
       const importResult = await importResponse.json();

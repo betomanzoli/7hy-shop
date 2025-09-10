@@ -153,6 +153,26 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     console.log('Iniciando importação de produtos da Shopee...');
 
+    // Buscar IDs de afiliado dinâmicos
+    let shopeeAffiliateId = '18357850294'; // Default fallback
+    
+    try {
+      const { data: credentials } = await supabase
+        .from('marketplace_credentials')
+        .select('credentials')
+        .eq('marketplace_id', 'shopee')
+        .single();
+
+      if (credentials?.credentials?.affiliateId) {
+        shopeeAffiliateId = credentials.credentials.affiliateId;
+        console.log('ID de afiliado Shopee carregado:', shopeeAffiliateId);
+      } else {
+        console.log('Usando ID de afiliado Shopee padrão:', shopeeAffiliateId);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar credenciais Shopee, usando default:', error);
+    }
+
     // Primeiro, vamos criar as categorias se não existirem
     const categories = [
       { name: 'Eletrônicos', slug: 'electronics' },
@@ -188,16 +208,24 @@ const handler = async (req: Request): Promise<Response> => {
       return acc;
     }, {});
 
-    // Preparar produtos para inserção
-    const productsToInsert = shopeeProducts.map(product => ({
-      title: product.title,
-      price: product.price,
-      original_price: null,
-      marketplace: product.marketplace,
-      image_url: product.image_url,
-      rating: product.rating,
-      original_url: product.original_url,
-      affiliate_url: product.affiliate_url,
+    // Preparar produtos para inserção com IDs de afiliado dinâmicos
+    const productsToInsert = shopeeProducts.map(product => {
+      // Otimizar URL de afiliado com ID dinâmico
+      let affiliateUrl = product.original_url;
+      if (!product.original_url.includes('smtt=')) {
+        const separator = product.original_url.includes('?') ? '&' : '?';
+        affiliateUrl = `${product.original_url}${separator}smtt=${shopeeAffiliateId}`;
+      }
+
+      return {
+        title: product.title,
+        price: product.price,
+        original_price: null,
+        marketplace: product.marketplace,
+        image_url: product.image_url,
+        rating: product.rating,
+        original_url: product.original_url,
+        affiliate_url: affiliateUrl,
       marketplace_id: product.marketplace_id,
       category_id: categoryMap[product.category] || null,
       is_featured: product.is_featured,

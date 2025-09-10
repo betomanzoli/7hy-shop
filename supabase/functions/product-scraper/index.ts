@@ -79,15 +79,17 @@ serve(async (req) => {
       throw new Error('Não foi possível extrair dados do produto');
     }
 
-    // Otimizar links de afiliado
-    productData = await optimizeAffiliateLinks(productData, url);
+    // Criar cliente Supabase para buscar IDs de afiliado
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+
+    // Otimizar links de afiliado com IDs dinâmicos
+    productData = await optimizeAffiliateLinks(productData, url, supabase);
 
     // Salvar no banco se solicitado
     if (save_to_db) {
-      const supabase = createClient(
-        Deno.env.get('SUPABASE_URL') ?? '',
-        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-      );
 
       const { data, error } = await supabase
         .from('products')
@@ -282,11 +284,33 @@ function extractMarketplaceId(url: string, marketplace: string): string {
   return Math.random().toString(36).substring(2, 15);
 }
 
-async function optimizeAffiliateLinks(productData: ProductData, originalUrl: string): Promise<ProductData> {
-  const affiliateIds = {
-    amazon: '7hy01-20',
-    shopee: '18357850294'
+async function optimizeAffiliateLinks(productData: ProductData, originalUrl: string, supabase: any): Promise<ProductData> {
+  // Buscar IDs de afiliado dinâmicamente do banco de dados
+  let affiliateIds = {
+    amazon: '7hy01-20',      // Default fallback
+    shopee: '18357850294'    // Default fallback
   };
+
+  try {
+    const { data: credentials } = await supabase
+      .from('marketplace_credentials')
+      .select('marketplace_id, credentials')
+      .in('marketplace_id', ['amazon', 'shopee']);
+
+    if (credentials && credentials.length > 0) {
+      credentials.forEach((cred: any) => {
+        if (cred.marketplace_id === 'amazon' && cred.credentials?.associateTag) {
+          affiliateIds.amazon = cred.credentials.associateTag;
+        } else if (cred.marketplace_id === 'shopee' && cred.credentials?.affiliateId) {
+          affiliateIds.shopee = cred.credentials.affiliateId;
+        }
+      });
+    }
+    
+    console.log('IDs de afiliado carregados:', affiliateIds);
+  } catch (error) {
+    console.error('Erro ao buscar IDs de afiliado, usando defaults:', error);
+  }
 
   let optimizedUrl = originalUrl;
 
@@ -300,6 +324,8 @@ async function optimizeAffiliateLinks(productData: ProductData, originalUrl: str
       optimizedUrl = `${originalUrl}${separator}smtt=${affiliateIds.shopee}`;
     }
   }
+
+  console.log(`URL otimizada para ${productData.marketplace}: ${optimizedUrl}`);
 
   return {
     ...productData,
