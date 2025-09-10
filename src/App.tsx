@@ -28,6 +28,7 @@ import CustomerSuggestions from "./pages/admin/products/CustomerSuggestions";
 import Tools from "./pages/Tools";
 import PromoLanding from "./pages/PromoLanding";
 import NewProductPage from "./pages/admin/products/NewProductPage";
+import AutomationPage from "./pages/admin/automation/AutomationPage";
 
 const queryClient = new QueryClient();
 
@@ -66,6 +67,7 @@ const App = () => (
           <Route path="/admin/products/suggestions" element={<CustomerSuggestions />} />
           <Route path="/admin/orders" element={<OrdersPage />} />
           <Route path="/admin/analytics" element={<AffiliateAnalytics />} />
+          <Route path="/admin/automation" element={<AutomationPage />} />
           
           {/* 404 Catch-all Route */}
           <Route path="*" element={<NotFound />} />

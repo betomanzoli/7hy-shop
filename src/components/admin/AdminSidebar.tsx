@@ -11,7 +11,8 @@ import {
   Store,
   Plus,
   List,
-  MessageSquare
+  MessageSquare,
+  Bot
 } from 'lucide-react';
 import { Logo } from '@/components/ui/logo';
 
@@ -52,6 +53,11 @@ const sidebarLinks = [
     title: 'Marketplaces',
     href: '/admin/marketplaces',
     icon: Store,
+  },
+  {
+    title: 'Automação',
+    href: '/admin/automation',
+    icon: Bot,
   },
   {
     title: 'Configurações',
