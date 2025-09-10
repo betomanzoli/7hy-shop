@@ -111,6 +111,24 @@ export function AutomationDashboard() {
     setActivatingSystem(true);
     
     try {
+      // Passo 1: Configurar cron jobs agora que pg_cron está ativado
+      toast.loading('⚙️ Configurando cron jobs...', {
+        id: 'system-activation'
+      });
+
+      const { data: cronData, error: cronError } = await supabase.functions.invoke('setup-cron-jobs', {
+        body: {}
+      });
+
+      if (cronError) {
+        console.error('Erro ao configurar cron jobs:', cronError);
+        toast.error('❌ Erro ao configurar cron jobs');
+        return;
+      }
+
+      console.log('Cron jobs configurados:', cronData);
+
+      // Passo 2: Ativar sistema completo
       toast.loading('🚀 Ativando sistema completo com seus IDs de afiliado...', {
         id: 'system-activation'
       });
