@@ -212,10 +212,10 @@ const handler = async (req: Request): Promise<Response> => {
       tags: JSON.stringify([product.category, 'shopee', 'promoção'])
     }));
 
-    // Inserir produtos (usando upsert para evitar duplicatas baseado no marketplace_id)
+    // Inserir produtos (usando upsert para evitar duplicatas baseado na constraint unique_marketplace_product)
     const { data: insertedProducts, error: insertError } = await supabase
       .from('products')
-      .upsert(productsToInsert, { onConflict: 'marketplace_id' })
+      .upsert(productsToInsert, { onConflict: 'marketplace,marketplace_id' })
       .select();
 
     if (insertError) {
