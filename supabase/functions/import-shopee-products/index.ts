@@ -226,19 +226,20 @@ const handler = async (req: Request): Promise<Response> => {
         rating: product.rating,
         original_url: product.original_url,
         affiliate_url: affiliateUrl,
-      marketplace_id: product.marketplace_id,
-      category_id: categoryMap[product.category] || null,
-      is_featured: product.is_featured,
-      short_description: product.short_description,
-      description: `${product.short_description}. Produto disponível na Shopee com entrega rápida e garantia.`,
-      currency: 'BRL',
-      status: 'active',
-      is_deal: false,
-      is_in_stock: true,
-      review_count: Math.floor(Math.random() * 500) + 50, // Reviews simuladas
-      sales_count: Math.floor(Math.random() * 1000) + 100, // Vendas simuladas
-      tags: JSON.stringify([product.category, 'shopee', 'promoção'])
-    }));
+        marketplace_id: product.marketplace_id,
+        category_id: categoryMap[product.category] || null,
+        is_featured: product.is_featured,
+        short_description: product.short_description,
+        description: `${product.short_description}. Produto disponível na Shopee com entrega rápida e garantia.`,
+        currency: 'BRL',
+        status: 'active',
+        is_deal: false,
+        is_in_stock: true,
+        review_count: Math.floor(Math.random() * 500) + 50, // Reviews simuladas
+        sales_count: Math.floor(Math.random() * 1000) + 100, // Vendas simuladas
+        tags: JSON.stringify([product.category, 'shopee', 'promoção'])
+      };
+    });
 
     // Inserir produtos (usando upsert para evitar duplicatas baseado na constraint unique_marketplace_product)
     const { data: insertedProducts, error: insertError } = await supabase
